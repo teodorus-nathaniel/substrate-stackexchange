@@ -109,7 +109,7 @@ export default function Sidebar({ className, ...props }: Props) {
               const { content, title } = data
               return (
                 <motion.div
-                  className='pb-6 space-y-1 flex flex-col'
+                  className='pb-6 flex flex-col space-y-1'
                   key={title}
                 >
                   <motion.p
@@ -118,7 +118,7 @@ export default function Sidebar({ className, ...props }: Props) {
                   >
                     {title}
                   </motion.p>
-                  <div className={clsx('px-2 flex flex-col')}>
+                  <div className={clsx('px-2 flex flex-col', 'space-y-1')}>
                     {content.map((link) => (
                       <SidebarLink
                         {...link}
@@ -146,16 +146,20 @@ function SidebarLink({
   ...props
 }: LinkData & { selected: boolean } & LinkProps) {
   return (
-    <motion.div
-      variants={contentVariants}
-      className={clsx(
-        'px-2 py-1.5',
-        selected ? 'bg-bg-200 font-bold' : '',
-        'rounded-md',
-        className
-      )}
-    >
-      <Link href={to} key={text} {...props}>
+    <motion.div variants={contentVariants}>
+      <Link
+        className={clsx(
+          'block',
+          'px-2 py-1.5',
+          'hover:bg-bg-200',
+          selected ? 'bg-bg-200 font-bold text-brand' : '',
+          'rounded-md',
+          className
+        )}
+        href={to}
+        key={text}
+        {...props}
+      >
         {text}
       </Link>
     </motion.div>
