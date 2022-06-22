@@ -1,12 +1,29 @@
 import Link, { LinkProps } from '#/components/Link'
+import { NORMAL_TRANSITION } from '#/lib/constants/transition'
+import { TransitionVariants } from '#/lib/helpers/types'
 import clsx from 'clsx'
+import { AnimatePresence, HTMLMotionProps, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
-import { HTMLProps } from 'react'
+import { useState } from 'react'
 import { BsChevronLeft } from 'react-icons/bs'
 
 const WIDTH = 225
 
-interface Props extends HTMLProps<HTMLDivElement> {}
+const containerVariants: TransitionVariants = {
+  close: { opacity: 0 },
+  open: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05
+    }
+  }
+}
+const contentVariants: TransitionVariants = {
+  close: { opacity: 0, x: -25, transition: NORMAL_TRANSITION },
+  open: { opacity: 1, x: 0, transition: NORMAL_TRANSITION }
+}
+
+interface Props extends HTMLMotionProps<'aside'> {}
 
 type LinkData = { text: string; to: string }
 type NestedLinks = {
@@ -33,11 +50,12 @@ const links: (NestedLinks | LinkData)[] = [
   }
 ]
 
-export default function Sidebar({ className, style, ...props }: Props) {
+export default function Sidebar({ className, ...props }: Props) {
   const { pathname } = useRouter()
+  const [isOpen, setIsOpen] = useState(true)
 
   return (
-    <aside
+    <motion.aside
       className={clsx(
         'flex flex-col',
         'px-4 py-6',
@@ -45,47 +63,75 @@ export default function Sidebar({ className, style, ...props }: Props) {
         'rounded-md',
         className
       )}
-      style={{ width: WIDTH, ...style }}
+      animate={{
+        width: isOpen ? WIDTH : 0,
+        paddingLeft: !isOpen ? 0 : undefined,
+        paddingRight: !isOpen ? 0 : undefined
+      }}
       {...props}
     >
       <button
         className={clsx(
-          'p-2 bg-bg-100',
-          'absolute right-1 top-0 translate-x-full',
-          'z-10',
-          'text-lg'
+          'p-2 bg-bg-100 text-lg',
+          'absolute right-1 top-0 translate-x-full z-10'
         )}
+        onClick={() => setIsOpen((prev) => !prev)}
       >
-        <BsChevronLeft />
+        <BsChevronLeft
+          className={clsx(
+            'transition duration-150',
+            isOpen ? '' : 'rotate-180'
+          )}
+        />
       </button>
-      {links.map((data) => {
-        if ('to' in data) {
-          return (
-            <SidebarLink
-              className={clsx('mb-2')}
-              {...data}
-              selected={data.to === pathname}
-            />
-          )
-        }
-        const { content, title } = data
-        return (
-          <div className='pb-6 space-y-1 flex flex-col' key={title}>
-            <p className='font-bold px-2 py-1.5'>{title}</p>
-            <div className={clsx('px-2 flex flex-col')}>
-              {content.map((link) => (
-                <SidebarLink
-                  {...link}
-                  className={clsx('!px-6')}
-                  selected={link.to === pathname}
-                  key={link.to}
-                />
-              ))}
-            </div>
-          </div>
-        )
-      })}
-    </aside>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            variants={containerVariants}
+            transition={NORMAL_TRANSITION}
+            initial='close'
+            animate='open'
+            exit='close'
+          >
+            {links.map((data) => {
+              if ('to' in data) {
+                return (
+                  <SidebarLink
+                    className={clsx('mb-2')}
+                    {...data}
+                    selected={data.to === pathname}
+                  />
+                )
+              }
+              const { content, title } = data
+              return (
+                <motion.div
+                  className='pb-6 space-y-1 flex flex-col'
+                  key={title}
+                >
+                  <motion.p
+                    variants={contentVariants}
+                    className='font-bold px-2 py-1.5'
+                  >
+                    {title}
+                  </motion.p>
+                  <div className={clsx('px-2 flex flex-col')}>
+                    {content.map((link) => (
+                      <SidebarLink
+                        {...link}
+                        className={clsx('!px-6')}
+                        selected={link.to === pathname}
+                        key={link.to}
+                      />
+                    ))}
+                  </div>
+                </motion.div>
+              )
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.aside>
   )
 }
 
@@ -97,18 +143,18 @@ function SidebarLink({
   ...props
 }: LinkData & { selected: boolean } & LinkProps) {
   return (
-    <Link
-      href={to}
-      key={text}
+    <motion.div
+      variants={contentVariants}
       className={clsx(
         'px-2 py-1.5',
         selected ? 'bg-bg-200 font-bold' : '',
         'rounded-md',
         className
       )}
-      {...props}
     >
-      {text}
-    </Link>
+      <Link href={to} key={text} {...props}>
+        {text}
+      </Link>
+    </motion.div>
   )
 }
