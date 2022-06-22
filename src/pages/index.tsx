@@ -1,16 +1,14 @@
-import type { NextPage } from "next";
-import ConnectWalletButton from "../components/ConnectWalletButton";
+import type { NextPage } from 'next'
 
 const Home: NextPage = () => {
   return (
     <div>
-      <h1 className="text-center text-2xl font-bold">
+      <h1 className='text-center text-2xl font-bold'>
         Welcome to Substrate StackExchange!
       </h1>
-      <h2 className="text-center text-lg">Powered by Subsocial</h2>
-      <ConnectWalletButton />
+      <h2 className='text-center text-lg'>Powered by Subsocial</h2>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

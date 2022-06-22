@@ -1,12 +1,12 @@
-import clsx from "clsx";
-import Image, { ImageProps } from "next/image";
+import clsx from 'clsx'
+import Image, { ImageProps } from 'next/image'
 import AspectRatioContainer, {
-  AspectRatioContainerProps,
-} from "./AspectRatioContainer";
+  AspectRatioContainerProps
+} from './AspectRatioContainer'
 
 export interface ImageContainerProps extends ImageProps {
-  aspectRatio?: AspectRatioContainerProps["aspectRatio"];
-  containerClassName?: string;
+  aspectRatio?: AspectRatioContainerProps['aspectRatio']
+  containerClassName?: string
 }
 
 export default function ImageContainer({
@@ -16,12 +16,12 @@ export default function ImageContainer({
 }: ImageContainerProps) {
   const content = (
     <Image
-      className={clsx("object-center object-cover")}
-      layout={aspectRatio ? "fill" : "responsive"}
+      className={clsx('object-center object-cover')}
+      layout={aspectRatio ? 'fill' : 'responsive'}
       {...imageProps}
-      alt={imageProps.alt ?? ""}
+      alt={imageProps.alt ?? ''}
     />
-  );
+  )
 
   return aspectRatio ? (
     <AspectRatioContainer
@@ -32,5 +32,5 @@ export default function ImageContainer({
     </AspectRatioContainer>
   ) : (
     <div>{content}</div>
-  );
+  )
 }

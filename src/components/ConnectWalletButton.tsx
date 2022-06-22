@@ -1,16 +1,16 @@
-import { WalletSelect } from "@talisman-connect/components";
-import Button from "./Button";
+import { WalletSelect } from '@talisman-connect/components'
+import Button from './Button'
 
-type Props = {};
+type Props = {}
 
 export default function ConnectWalletButton({}: Props) {
   return (
     <WalletSelect
-      dappName="Substrate StackExchange"
+      dappName='Substrate StackExchange'
       onWalletSelected={(wallet) => {
-        console.log(wallet);
+        console.log(wallet)
       }}
       triggerComponent={<Button>Connect to wallet</Button>}
     />
-  );
+  )
 }

@@ -1,17 +1,17 @@
-import clsx from "clsx";
-import React, { HTMLProps } from "react";
+import clsx from 'clsx'
+import React, { HTMLProps } from 'react'
 
 const aspectRatios = {
-  "16:9": clsx("pt-[56.25%]"),
-  "3:4": clsx("pt-[133.33%]"),
-  "4:3": clsx("pt-[80%]"),
-  "5:3": clsx("pt-[60%]"),
-  "3:2": clsx("pt-[66.67%]"),
-  "1:1": clsx("pt-[100%]"),
-};
+  '16:9': clsx('pt-[56.25%]'),
+  '3:4': clsx('pt-[133.33%]'),
+  '4:3': clsx('pt-[80%]'),
+  '5:3': clsx('pt-[60%]'),
+  '3:2': clsx('pt-[66.67%]'),
+  '1:1': clsx('pt-[100%]')
+}
 
 export interface AspectRatioContainerProps extends HTMLProps<HTMLDivElement> {
-  aspectRatio: keyof typeof aspectRatios;
+  aspectRatio: keyof typeof aspectRatios
 }
 
 const AspectRatioContainer = React.forwardRef<
@@ -26,17 +26,17 @@ const AspectRatioContainer = React.forwardRef<
       {...props}
       ref={ref}
       className={clsx(
-        "w-full relative overflow-hidden",
-        "bg-gray-500",
+        'w-full relative overflow-hidden',
+        'bg-gray-500',
         aspectRatios[aspectRatio],
         className
       )}
     >
-      <div className={clsx("w-full h-full", "top-0 left-0", "absolute")}>
+      <div className={clsx('w-full h-full', 'top-0 left-0', 'absolute')}>
         {children}
       </div>
     </div>
-  );
-});
+  )
+})
 
-export default AspectRatioContainer;
+export default AspectRatioContainer
