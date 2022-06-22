@@ -1,4 +1,5 @@
 import Link, { LinkProps } from '#/components/Link'
+import { hoverRingClassName } from '#/lib/constants/common-classnames'
 import { NORMAL_TRANSITION } from '#/lib/constants/transition'
 import { TransitionVariants } from '#/lib/helpers/types'
 import clsx from 'clsx'
@@ -73,7 +74,9 @@ export default function Sidebar({ className, ...props }: Props) {
       <button
         className={clsx(
           'p-2 bg-bg-100 text-lg',
-          'absolute right-1 top-0 translate-x-full z-10'
+          'absolute right-1 top-0 translate-x-full z-10',
+          'rounded-r-md',
+          hoverRingClassName
         )}
         onClick={() => setIsOpen((prev) => !prev)}
       >
