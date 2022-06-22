@@ -3,12 +3,11 @@ import RouterLink from 'next/link'
 import { forwardRef, HTMLProps } from 'react'
 
 export interface LinkProps extends HTMLProps<HTMLAnchorElement> {
-  noAnimation?: boolean
   ref?: any
 }
 
 const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
-  { className, href = '', noAnimation, ...anchorProps },
+  { className, href = '', ...anchorProps },
   ref
 ) {
   const classes = clsx('relative cursor-pointer', className)
