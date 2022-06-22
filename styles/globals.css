@@ -1,6 +1,5 @@
 :root {
-  --color-brand: 230 0 122;
-  --color-text: 248 248 248;
+  --color-brand: 31 173 113;
 }
 
 @tailwind base;
