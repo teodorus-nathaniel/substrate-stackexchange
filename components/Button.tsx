@@ -7,9 +7,9 @@ type Styles = `${Variants}-${Colors}`
 
 const styles: Record<Styles, string> = {
   'filled-brand': clsx(
-    'bg-brand text-white',
-    'enabled:hover:bg-brand/90 enabled:hover:ring-brand/40 enabled:hover:ring-2 enabled:hover:ring-offset-1',
-    'enabled:focus:bg-brand/90 enabled:focus:ring-brand/40 enabled:focus:ring-2 enabled:focus:ring-offset-1 focus:outline-none',
+    'bg-brand text-white ring-offset-bg-0',
+    'enabled:hover:brightness-105 enabled:hover:ring-brand/75 enabled:hover:ring-2 enabled:hover:ring-offset-2',
+    'enabled:focus:brightness-105 enabled:focus:ring-brand/75 enabled:focus:ring-2 enabled:focus:ring-offset-2 focus:outline-none',
     'enabled:active:brightness-90 enabled:active:bg-brand',
     'disabled:opacity-75'
   ),
