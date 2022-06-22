@@ -59,7 +59,7 @@ export default function Sidebar({ className, ...props }: Props) {
     <motion.aside
       className={clsx(
         'flex flex-col',
-        'px-4 py-6',
+        'p-4',
         'bg-bg-100',
         'rounded-md',
         className
