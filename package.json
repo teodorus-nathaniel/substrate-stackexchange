@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.6.5",
+    "@popperjs/core": "^2.11.5",
     "@subsocial/api": "^0.6.11",
     "@subsocial/definitions": "^0.6.11",
     "@subsocial/types": "^0.6.11",
@@ -23,9 +24,11 @@
     "clsx": "^1.1.1",
     "framer-motion": "^6.3.13",
     "next": "12.1.6",
+    "nextjs-progressbar": "^0.0.14",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
+    "react-popper": "^2.3.0",
     "use-breakpoint": "^3.0.3",
     "use-hooks": "^2.0.0-rc.5"
   },

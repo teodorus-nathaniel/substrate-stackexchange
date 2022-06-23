@@ -9,6 +9,10 @@ const variants = {
     'enabled:active:brightness-90 enabled:active:bg-brand',
     'disabled:opacity-75'
   ),
+  'outlined-red': clsx(
+    hoverRingClassName,
+    'border border-red-500 text-red-500'
+  ),
   unstyled: clsx('hover:bg-gray-700', 'active:bg-gray-800')
 }
 
@@ -19,14 +23,15 @@ const sizes = {
   content: clsx()
 }
 
-interface Props extends Omit<HTMLProps<HTMLButtonElement>, 'size'> {
-  children: any
+export interface ButtonProps
+  extends Omit<Omit<HTMLProps<HTMLButtonElement>, 'size'>, 'ref'> {
+  children?: any
   className?: string
   size?: keyof typeof sizes
   variant?: keyof typeof variants
 }
 
-const Button = forwardRef<HTMLButtonElement, Props>(function Button(
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
     children,
     className,

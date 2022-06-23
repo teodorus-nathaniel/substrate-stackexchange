@@ -1,8 +1,8 @@
 import { Dialog } from '@headlessui/react'
 import clsx from 'clsx'
-import { HTMLProps } from 'react'
 import { BsX } from 'react-icons/bs'
 import Button from './Button'
+import Card, { CardProps } from './Card'
 
 const sizes = {
   xl: clsx('max-w-screen-xl'),
@@ -19,7 +19,7 @@ export interface ModalProps {
   title?: string
   desc?: string
   children?: any
-  panelProps?: HTMLProps<HTMLDivElement>
+  panelProps?: CardProps
 }
 
 export default function Modal({
@@ -33,7 +33,7 @@ export default function Modal({
   panelProps
 }: ModalProps) {
   return (
-    <Dialog open={isOpen} onClose={handleClose}>
+    <Dialog open={isOpen} onClose={handleClose} className={clsx('z-50')}>
       <div
         className={clsx('fixed inset-0', 'bg-black/30 backdrop-blur-sm')}
         aria-hidden='true'
@@ -51,16 +51,11 @@ export default function Modal({
             sizes[size]
           )}
         >
-          <Dialog.Panel
-            className={clsx(
-              'mx-auto w-full',
-              'rounded-md bg-bg-200',
-              'relative'
-            )}
-          >
-            <div
+          <Dialog.Panel className={clsx('mx-auto w-full', 'relative')}>
+            <Card
               {...panelProps}
               className={clsx(
+                'bg-bg-200',
                 'flex flex-col',
                 'p-4 min-h-[4em]',
                 panelProps?.className
@@ -78,7 +73,7 @@ export default function Modal({
               {title && <Dialog.Title>{title}</Dialog.Title>}
               {desc && <Dialog.Description>{desc}</Dialog.Description>}
               {children}
-            </div>
+            </Card>
           </Dialog.Panel>
         </div>
       </div>

@@ -6,6 +6,7 @@ import '@talisman-connect/components/talisman-connect-components.esm.css'
 import '@talisman-connect/ui/talisman-connect-ui.esm.css'
 import clsx from 'clsx'
 import type { AppProps } from 'next/app'
+import NextNProgress from 'nextjs-progressbar'
 import '../styles/globals.css'
 
 const NAVBAR_HEIGHT = 75
@@ -13,6 +14,7 @@ const NAVBAR_HEIGHT = 75
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <CommonContextProvidersWrapper>
+      <NextNProgress />
       <Container>
         <Navbar height={NAVBAR_HEIGHT} />
         <div className={clsx('flex items-stretch', 'w-full pt-4')}>

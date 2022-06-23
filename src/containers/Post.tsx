@@ -17,13 +17,15 @@ export default function Post({ className, ...props }: Props) {
       )}
       {...props}
     >
-      <Link
-        variant='primary'
-        href='https://google.com'
-        className={clsx('text-xl')}
-      >
-        Function to see whether transaction is finalized
-      </Link>
+      <div className='flex'>
+        <Link
+          variant='primary'
+          href='https://google.com'
+          className={clsx('text-xl')}
+        >
+          Function to see whether transaction is finalized
+        </Link>
+      </div>
       <div className={clsx('flex flex-wrap space-x-2 pt-2')}>
         <Link href='https://google.com'>
           <Chip>storage</Chip>
