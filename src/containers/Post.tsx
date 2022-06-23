@@ -40,7 +40,12 @@ export default function Post({ className, ...props }: Props) {
         ...
       </p>
       <div className={clsx('flex justify-between', 'pt-4')}>
-        <ReactionButtons />
+        <ReactionButtons
+          downVoteCount={20}
+          isDownVoted
+          isUpVoted={false}
+          upVoteCount={123}
+        />
         <div className={clsx('text-sm', 'flex items-center', 'space-x-1')}>
           <UserProfileLink className={clsx('font-sm')} />
           <p className='text-text-secondary'>asked 5 hours ago</p>
