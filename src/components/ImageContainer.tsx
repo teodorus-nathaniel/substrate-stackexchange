@@ -12,16 +12,29 @@ export interface ImageContainerProps extends ImageProps {
 export default function ImageContainer({
   aspectRatio,
   containerClassName,
+  src,
   ...imageProps
 }: ImageContainerProps) {
-  const content = (
-    <Image
-      className={clsx('object-center object-cover')}
-      layout={aspectRatio ? 'fill' : 'responsive'}
-      {...imageProps}
-      alt={imageProps.alt ?? ''}
-    />
-  )
+  const content =
+    typeof src === 'string' ? (
+      <img
+        className={clsx(
+          'object-center object-cover',
+          aspectRatio && 'absolute top-0 left-0 w-full h-full'
+        )}
+        src={src}
+        {...imageProps}
+        alt={imageProps.alt ?? ''}
+      />
+    ) : (
+      <Image
+        src={src}
+        className={clsx('object-center object-cover')}
+        layout={aspectRatio ? 'fill' : 'responsive'}
+        {...imageProps}
+        alt={imageProps.alt ?? ''}
+      />
+    )
 
   return aspectRatio ? (
     <AspectRatioContainer
