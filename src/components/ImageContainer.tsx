@@ -16,7 +16,7 @@ export default function ImageContainer({
   ...imageProps
 }: ImageContainerProps) {
   let content
-  if (src === 'string') {
+  if (typeof src === 'string') {
     content = (
       <img
         className={clsx(

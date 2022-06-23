@@ -27,7 +27,6 @@ const AspectRatioContainer = React.forwardRef<
       ref={ref}
       className={clsx(
         'w-full relative overflow-hidden',
-        'bg-gray-500',
         aspectRatios[aspectRatio],
         className
       )}
