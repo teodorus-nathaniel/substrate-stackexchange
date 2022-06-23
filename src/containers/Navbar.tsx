@@ -1,5 +1,5 @@
-import Brand from '#/components/Brand'
-import ConnectWalletButton from '#/components/ConnectWalletButton'
+import Brand from '#/containers/Brand'
+import ConnectWalletButton from '#/containers/ConnectWalletButton'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
 

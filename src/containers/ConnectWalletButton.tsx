@@ -1,7 +1,7 @@
+import Button from '#/components/Button'
 import { WalletSelect } from '@talisman-connect/components'
-import Button from './Button'
 
-type Props = {}
+interface Props {}
 
 export default function ConnectWalletButton({}: Props) {
   return (

@@ -1,6 +1,9 @@
 import Button from '#/components/Button'
 import clsx from 'clsx'
+import { HTMLProps } from 'react'
 import { BsHandThumbsDown, BsHandThumbsUp } from 'react-icons/bs'
+
+interface Props extends HTMLProps<HTMLDivElement> {}
 
 export default function ReactionButtons() {
   return (

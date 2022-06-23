@@ -1,7 +1,7 @@
 import BrandImage from '#/assets/brand.png'
+import ImageContainer from '#/components/ImageContainer'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
-import ImageContainer from './ImageContainer'
 
 export default function Brand({
   className,
