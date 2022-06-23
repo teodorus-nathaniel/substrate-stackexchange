@@ -56,21 +56,7 @@ export default function Sidebar({ className, ...props }: Props) {
   const [isOpen, setIsOpen] = useState(true)
 
   return (
-    <motion.aside
-      className={clsx(
-        'flex flex-col',
-        'p-4',
-        'bg-bg-100',
-        'rounded-md',
-        className
-      )}
-      animate={{
-        width: isOpen ? WIDTH : 0,
-        paddingLeft: !isOpen ? 0 : undefined,
-        paddingRight: !isOpen ? 0 : undefined
-      }}
-      {...props}
-    >
+    <div className={clsx('relative', className)}>
       <button
         className={clsx(
           'p-2 bg-bg-100 text-lg',
@@ -87,54 +73,66 @@ export default function Sidebar({ className, ...props }: Props) {
           )}
         />
       </button>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            variants={containerVariants}
-            transition={NORMAL_TRANSITION}
-            initial='close'
-            animate='open'
-            exit='close'
-          >
-            {links.map((data) => {
-              if ('to' in data) {
+      <motion.aside
+        className={clsx('flex flex-col', 'p-4', 'bg-bg-100', 'rounded-md')}
+        animate={{
+          width: isOpen ? WIDTH : 0,
+          opacity: isOpen ? 1 : 0,
+          paddingLeft: !isOpen ? 0 : undefined,
+          paddingRight: !isOpen ? 0 : undefined
+        }}
+        {...props}
+      >
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              variants={containerVariants}
+              transition={NORMAL_TRANSITION}
+              initial='close'
+              animate='open'
+              exit='close'
+            >
+              {links.map((data) => {
+                if ('to' in data) {
+                  return (
+                    <SidebarLink
+                      key={data.to}
+                      className={clsx('mb-2')}
+                      {...data}
+                      selected={data.to === pathname}
+                    />
+                  )
+                }
+                const { content, title } = data
                 return (
-                  <SidebarLink
-                    className={clsx('mb-2')}
-                    {...data}
-                    selected={data.to === pathname}
-                  />
-                )
-              }
-              const { content, title } = data
-              return (
-                <motion.div
-                  className='pb-6 flex flex-col space-y-1'
-                  key={title}
-                >
-                  <motion.p
-                    variants={contentVariants}
-                    className='font-bold px-2 py-1.5'
+                  <motion.div
+                    className='pb-6 flex flex-col space-y-1'
+                    key={title}
                   >
-                    {title}
-                  </motion.p>
-                  <div className={clsx('px-2 flex flex-col', 'space-y-1')}>
-                    {content.map((link) => (
-                      <SidebarLink
-                        {...link}
-                        className={clsx('!px-6')}
-                        selected={link.to === pathname}
-                        key={link.to}
-                      />
-                    ))}
-                  </div>
-                </motion.div>
-              )
-            })}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.aside>
+                    <motion.p
+                      variants={contentVariants}
+                      className='font-bold px-2 py-1.5'
+                    >
+                      {title}
+                    </motion.p>
+                    <div className={clsx('px-2 flex flex-col', 'space-y-1')}>
+                      {content.map((link) => (
+                        <SidebarLink
+                          {...link}
+                          className={clsx('!px-6')}
+                          selected={link.to === pathname}
+                          key={link.to}
+                        />
+                      ))}
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.aside>
+    </div>
   )
 }
 
