@@ -1,6 +1,8 @@
 import Button, { ButtonProps } from '#/components/Button'
 import ImageContainer from '#/components/ImageContainer'
 import PopOver from '#/components/PopOver'
+import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
+import { useGetProfile } from '#/services/subsocial/queries'
 import { WalletAccount } from '@talisman-connect/wallets'
 import clsx from 'clsx'
 
@@ -13,6 +15,10 @@ export default function WalletProfile({
   className,
   ...props
 }: WalletProfileProps) {
+  const { data, isLoading, error, isError } = useGetProfile({
+    address: wallet.address
+  })
+
   return (
     <PopOver
       trigger={
@@ -44,16 +50,18 @@ export default function WalletProfile({
           <div className='w-10 h-10 shrink-0'>
             <ImageContainer
               aspectRatio='1:1'
-              src='https://app.subsocial.network/ipfs/ipfs/QmZ62eYxcMsQRUFzCJgLPseiEKBMdiwHZhsqZin2skQrRg'
+              src={getImageUrlFromIPFS(data?.content?.avatar)}
               className={clsx('rounded-full')}
             />
           </div>
           <p className='leading-snug text-sm font-bold'>
-            Teodorus Nathaniel Kurniawan
+            {data?.content?.name}
           </p>
         </div>
         <div className='flex flex-col mt-3'>
-          <p className='text-text-secondary text-xs'>Frontend Developer 🧑‍💻</p>
+          <p className='text-text-secondary text-xs'>
+            {data?.content?.summary}
+          </p>
         </div>
         <Button className='mt-4 text-sm' size='small'>
           View Profile

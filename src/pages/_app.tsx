@@ -1,19 +1,22 @@
 import Container from '#/components/Container'
 import Navbar from '#/containers/Navbar'
 import Sidebar from '#/containers/Sidebar'
+import { SubsocialApiContextProvider } from '#/contexts/SubsocialApiContext'
 import { WalletContextProvider } from '#/contexts/WalletContext'
+import queryClient from '#/services/client'
 import '@talisman-connect/components/talisman-connect-components.esm.css'
 import '@talisman-connect/ui/talisman-connect-ui.esm.css'
 import clsx from 'clsx'
 import type { AppProps } from 'next/app'
 import NextNProgress from 'nextjs-progressbar'
+import { QueryClientProvider } from 'react-query'
 import '../styles/globals.css'
 
 const NAVBAR_HEIGHT = 75
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <CommonContextProvidersWrapper>
+    <CommonProvidersWrapper>
       <NextNProgress />
       <Container>
         <Navbar height={NAVBAR_HEIGHT} />
@@ -30,10 +33,16 @@ export default function App({ Component, pageProps }: AppProps) {
           </main>
         </div>
       </Container>
-    </CommonContextProvidersWrapper>
+    </CommonProvidersWrapper>
   )
 }
 
-function CommonContextProvidersWrapper({ children }: { children: any }) {
-  return <WalletContextProvider>{children}</WalletContextProvider>
+function CommonProvidersWrapper({ children }: { children: any }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <WalletContextProvider>
+        <SubsocialApiContextProvider>{children}</SubsocialApiContextProvider>
+      </WalletContextProvider>
+    </QueryClientProvider>
+  )
 }

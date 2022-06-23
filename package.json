@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.6.5",
+    "@polkadot/keyring": "^9.6.1",
+    "@polkadot/wasm-crypto": "^6.1.5",
     "@popperjs/core": "^2.11.5",
     "@subsocial/api": "^0.6.11",
     "@subsocial/definitions": "^0.6.11",
@@ -29,6 +31,8 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
     "react-popper": "^2.3.0",
+    "react-query": "^3.39.1",
+    "url-join": "^5.0.0",
     "use-breakpoint": "^3.0.3",
     "use-hooks": "^2.0.0-rc.5"
   },
