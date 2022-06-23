@@ -12,18 +12,20 @@ const NAVBAR_HEIGHT = 75
 function App({ Component, pageProps }: AppProps) {
   return (
     <div>
-      <Navbar height={NAVBAR_HEIGHT} />
-      <Container className={clsx('flex items-stretch', 'w-full pt-4')}>
-        <Sidebar
-          className={clsx('sticky')}
-          style={{
-            top: NAVBAR_HEIGHT,
-            height: `calc(100vh - ${NAVBAR_HEIGHT + 48}px)`
-          }}
-        />
-        <main className='flex-1 pb-12 ml-12'>
-          <Component {...pageProps} />
-        </main>
+      <Container>
+        <Navbar height={NAVBAR_HEIGHT} />
+        <div className={clsx('flex items-stretch', 'w-full pt-4')}>
+          <Sidebar
+            className={clsx('sticky')}
+            style={{
+              top: NAVBAR_HEIGHT,
+              height: `calc(100vh - ${NAVBAR_HEIGHT + 48}px)`
+            }}
+          />
+          <main className='flex-1 pb-12 ml-12'>
+            <Component {...pageProps} />
+          </main>
+        </div>
       </Container>
     </div>
   )

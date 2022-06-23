@@ -12,7 +12,7 @@ export default function Navbar({ height, className, style, ...props }: Props) {
     <nav
       className={clsx(
         'flex items-center justify-between',
-        'px-8 py-4',
+        'py-4',
         'sticky top-0',
         'backdrop-blur-sm',
         className

@@ -9,7 +9,7 @@ export default function Container({
     <div
       {...props}
       className={clsx(
-        'container relative 2xl:max-w-screen-xl',
+        'xl:container relative 2xl:max-w-screen-xl',
         'mx-auto',
         'px-8',
         className
