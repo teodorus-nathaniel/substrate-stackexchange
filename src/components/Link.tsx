@@ -7,7 +7,7 @@ const variants = {
   primary: clsx(
     'text-blue-400',
     'hover:text-blue-300 hover:underline focus:text-blue-300 focus:underline',
-    'active:text-blue-500 visited:text-purple-500'
+    'active:text-blue-500 visited:text-purple-400'
   )
 }
 
