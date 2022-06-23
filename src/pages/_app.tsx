@@ -1,6 +1,7 @@
 import Container from '#/components/Container'
 import Navbar from '#/containers/Navbar'
 import Sidebar from '#/containers/Sidebar'
+import { WalletContextProvider } from '#/contexts/WalletContext'
 import '@talisman-connect/components/talisman-connect-components.esm.css'
 import '@talisman-connect/ui/talisman-connect-ui.esm.css'
 import clsx from 'clsx'
@@ -9,9 +10,9 @@ import '../styles/globals.css'
 
 const NAVBAR_HEIGHT = 75
 
-function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div>
+    <CommonContextProvidersWrapper>
       <Container>
         <Navbar height={NAVBAR_HEIGHT} />
         <div className={clsx('flex items-stretch', 'w-full pt-4')}>
@@ -27,8 +28,10 @@ function App({ Component, pageProps }: AppProps) {
           </main>
         </div>
       </Container>
-    </div>
+    </CommonContextProvidersWrapper>
   )
 }
 
-export default App
+function CommonContextProvidersWrapper({ children }: { children: any }) {
+  return <WalletContextProvider>{children}</WalletContextProvider>
+}

@@ -15,7 +15,8 @@ const variants = {
 const sizes = {
   large: clsx('px-12 py-2'),
   medium: clsx('px-6 py-2'),
-  small: clsx('px-3 py-1')
+  small: clsx('px-3 py-1'),
+  content: clsx()
 }
 
 interface Props extends Omit<HTMLProps<HTMLButtonElement>, 'size'> {
@@ -38,7 +39,7 @@ const Button = forwardRef<HTMLButtonElement, Props>(function Button(
 ) {
   const classNames = clsx(
     'flex justify-center items-center',
-    'rounded-md font-bold',
+    'rounded-md',
     'cursor-pointer disabled:cursor-not-allowed',
     'transition-colors ease-out',
     'enabled:active:translate-y-px',
