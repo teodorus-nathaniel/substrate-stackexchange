@@ -1,3 +1,9 @@
+import Post from '#/containers/Post'
+
 export default function NewQuestionsPage() {
-  return <div>new</div>
+  return (
+    <div>
+      <Post />
+    </div>
+  )
 }
