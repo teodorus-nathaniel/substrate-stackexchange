@@ -35,6 +35,7 @@ export default function ImageCircleInput({
             'relative group',
             imageContainerClassName
           )}
+          type='button'
           onClick={() => inputRef.current?.click()}
           variant='unstyled'
           size='content'

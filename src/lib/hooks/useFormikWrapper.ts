@@ -10,11 +10,12 @@ const useFormikWrapper = <Values extends FormikValues = FormikValues>(
   const formik = useFormik(data)
   return {
     ...formik,
-    getFieldData: (key: keyof Values) => {
+    getFieldData: (key: keyof Values, checkIsTouched = true) => {
       const { errors, touched, getFieldProps } = formik
       return {
         ...getFieldProps(key),
-        error: touched[key] ? (errors[key] as string) : undefined,
+        error:
+          checkIsTouched && touched[key] ? (errors[key] as string) : undefined,
       }
     },
   }
