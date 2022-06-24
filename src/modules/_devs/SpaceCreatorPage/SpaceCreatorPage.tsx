@@ -21,6 +21,7 @@ export default function SpaceCreatorPage() {
     ...createSpaceForm,
     onSubmit: (values) => {
       console.log('CREATING SPACE...')
+      setIsOpenModal(true)
       createSpace(values)
     },
   })
