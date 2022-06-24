@@ -21,7 +21,7 @@ export default function Leaf(props: RenderLeafProps) {
         fontWeight: props.leaf.bold ? 'bold' : 'normal',
         textDecoration: props.leaf.underline ? 'underline' : undefined,
         fontStyle: props.leaf.italic ? 'italic' : 'normal',
-        ...customStyle
+        ...customStyle,
       }}
     >
       {props.children}

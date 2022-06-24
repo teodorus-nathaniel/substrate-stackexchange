@@ -26,7 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
             className={clsx('sticky')}
             style={{
               top: NAVBAR_HEIGHT,
-              height: `calc(100vh - ${NAVBAR_HEIGHT + 48}px)`
+              height: `calc(100vh - ${NAVBAR_HEIGHT + 48}px)`,
             }}
           />
           <main className='flex-1 pb-12 ml-12'>

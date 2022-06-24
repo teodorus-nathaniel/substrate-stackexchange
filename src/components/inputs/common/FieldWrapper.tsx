@@ -30,7 +30,7 @@ export default function FieldWrapper({
   fullWidth = true,
   id,
   required,
-  children
+  children,
 }: FieldWrapperProps) {
   const generatedId = useId()
   const usedId = id || generatedId

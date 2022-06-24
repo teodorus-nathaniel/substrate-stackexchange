@@ -12,7 +12,7 @@ function matchTextProps(
 ) {
   const [match] = Editor.nodes(editor, {
     match: (n) => Text.isText(n) && checker(n),
-    universal: true
+    universal: true,
   })
   return match
 }
@@ -25,7 +25,7 @@ function toggleTextMark(
   const isActive = checkActive(editor)
   Transforms.setNodes(editor, editedProps(isActive), {
     match: (n) => Text.isText(n),
-    split: true
+    split: true,
   })
 }
 
@@ -41,24 +41,24 @@ export const CustomEditor = {
 
   toggleBoldMark: (editor: EditorType) => {
     toggleTextMark(editor, CustomEditor.isBoldMarkActive, (isActive) => ({
-      bold: !isActive
+      bold: !isActive,
     }))
   },
   toggleCodeMark: (editor: EditorType) => {
     toggleTextMark(editor, CustomEditor.isCodeMarkActive, (isActive) => ({
-      code: !isActive
+      code: !isActive,
     }))
   },
   toggleItalicMark: (editor: EditorType) => {
     toggleTextMark(editor, CustomEditor.isItalicMarkActive, (isActive) => ({
-      italic: !isActive
+      italic: !isActive,
     }))
   },
   toggleUnderlineMark: (editor: EditorType) => {
     toggleTextMark(editor, CustomEditor.isUnderlineMarkActive, (isActive) => ({
-      underline: !isActive
+      underline: !isActive,
     }))
-  }
+  },
 }
 
 export function transformOnKeyDown(

@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { HTMLProps } from 'react'
 import FieldWrapper, {
   getCleanedInputProps,
-  RequiredFieldWrapperProps
+  RequiredFieldWrapperProps,
 } from './common/FieldWrapper'
 
 export type TextFieldProps = HTMLProps<HTMLInputElement> &

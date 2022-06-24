@@ -16,10 +16,10 @@ export default function PopOver({ children, trigger }: PopOverProps) {
       {
         name: 'offset',
         options: {
-          offset: [0, 15]
-        }
-      }
-    ]
+          offset: [0, 15],
+        },
+      },
+    ],
   })
 
   return (

@@ -1,6 +1,6 @@
 import {
   SubsocialApiState,
-  useSubsocialApiContext
+  useSubsocialApiContext,
 } from '#/contexts/SubsocialApiContext'
 import { useQuery, UseQueryOptions } from 'react-query'
 
@@ -24,6 +24,6 @@ export default function useSubsocialQuery<T, V>(
   const subsocialApi = useSubsocialApiContext()
   return useQuery([params.key, params.data], queryWrapper(func, subsocialApi), {
     ...config,
-    enabled: !!(subsocialApi && (subsocialApi as any)._subsocial)
+    enabled: !!(subsocialApi && (subsocialApi as any)._subsocial),
   })
 }

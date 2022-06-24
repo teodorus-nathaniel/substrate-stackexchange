@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import Image, { ImageProps } from 'next/image'
 import AspectRatioContainer, {
-  AspectRatioContainerProps
+  AspectRatioContainerProps,
 } from './AspectRatioContainer'
 
 export interface ImageContainerProps extends ImageProps {

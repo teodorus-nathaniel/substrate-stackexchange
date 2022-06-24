@@ -5,9 +5,9 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
       retry: 0,
-      staleTime: Infinity
-    }
-  }
+      staleTime: Infinity,
+    },
+  },
 })
 
 export default queryClient

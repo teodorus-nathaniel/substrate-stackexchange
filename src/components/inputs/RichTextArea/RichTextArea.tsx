@@ -6,7 +6,7 @@ import { Editable, Slate, withReact } from 'slate-react'
 import { EditableProps } from 'slate-react/dist/components/editable'
 import FieldWrapper, {
   getCleanedInputProps,
-  RequiredFieldWrapperProps
+  RequiredFieldWrapperProps,
 } from '../common/FieldWrapper'
 import { renderElement, renderLeaf } from './elements'
 import { transformOnKeyDown } from './helpers/transformer'
@@ -16,8 +16,8 @@ export type RichTextAreaProps = EditableProps & RequiredFieldWrapperProps
 const initialValue: Descendant[] = [
   {
     type: 'paragraph',
-    children: [{ text: '' }]
-  }
+    children: [{ text: '' }],
+  },
 ]
 
 export default function RichTextArea(props: RichTextAreaProps) {

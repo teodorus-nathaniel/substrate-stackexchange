@@ -5,5 +5,5 @@ export const defaultContextValue = <T>(defaultValue: T): [T, () => void] => [
   defaultValue,
   () => {
     throw new Error('Context Provider not set')
-  }
+  },
 ]

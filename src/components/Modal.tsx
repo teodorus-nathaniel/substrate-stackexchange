@@ -8,7 +8,7 @@ const sizes = {
   xl: clsx('max-w-screen-xl'),
   lg: clsx('max-w-screen-lg'),
   md: clsx('max-w-screen-md'),
-  sm: clsx('max-w-screen-sm')
+  sm: clsx('max-w-screen-sm'),
 }
 
 export interface ModalProps {
@@ -30,7 +30,7 @@ export default function Modal({
   size = 'md',
   desc,
   children,
-  panelProps
+  panelProps,
 }: ModalProps) {
   return (
     <Dialog open={isOpen} onClose={handleClose} className={clsx('z-50')}>

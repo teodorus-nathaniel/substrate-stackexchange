@@ -19,7 +19,7 @@ const screens = Object.entries(config.theme.screens).reduce<{
     md: 0,
     lg: 0,
     xl: 0,
-    '2xl': 0
+    '2xl': 0,
   }
 )
 

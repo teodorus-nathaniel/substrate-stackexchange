@@ -19,7 +19,7 @@ export default function WalletProfile({
   ...props
 }: WalletProfileProps) {
   const { data, isLoading, isFetched } = useGetProfile({
-    address: wallet.address
+    address: wallet.address,
   })
   const content = data?.content
   const { loadingChecker, getContent } = generateLoadingChecker(

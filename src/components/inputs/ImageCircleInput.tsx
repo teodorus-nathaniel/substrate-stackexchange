@@ -5,7 +5,7 @@ import Button from '../Button'
 import ImageContainer from '../ImageContainer'
 import FieldWrapper, {
   getCleanedInputProps,
-  RequiredFieldWrapperProps
+  RequiredFieldWrapperProps,
 } from './common/FieldWrapper'
 
 type ParentProps = Omit<HTMLProps<HTMLInputElement>, 'onChange'> &

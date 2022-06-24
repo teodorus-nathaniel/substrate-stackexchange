@@ -15,13 +15,13 @@ const containerVariants: TransitionVariants = {
   open: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.05
-    }
-  }
+      staggerChildren: 0.05,
+    },
+  },
 }
 const contentVariants: TransitionVariants = {
   close: { opacity: 0, x: -25, transition: NORMAL_TRANSITION },
-  open: { opacity: 1, x: 0, transition: NORMAL_TRANSITION }
+  open: { opacity: 1, x: 0, transition: NORMAL_TRANSITION },
 }
 
 interface Props extends HTMLMotionProps<'aside'> {}
@@ -38,17 +38,17 @@ const links: (NestedLinks | LinkData)[] = [
     content: [
       { text: 'New', to: '/questions/new' },
       { text: 'Unanswered', to: '/questions/unanswered' },
-      { text: 'Your Questions', to: '/profile/questions' }
-    ]
+      { text: 'Your Questions', to: '/profile/questions' },
+    ],
   },
   {
     title: 'Users',
     content: [
       { text: 'All', to: '/users' },
       { text: 'Following', to: '/profile/following' },
-      { text: 'Followers', to: '/profile/followers' }
-    ]
-  }
+      { text: 'Followers', to: '/profile/followers' },
+    ],
+  },
 ]
 
 export default function Sidebar({ className, ...props }: Props) {
@@ -79,7 +79,7 @@ export default function Sidebar({ className, ...props }: Props) {
           width: isOpen ? WIDTH : 0,
           opacity: isOpen ? 1 : 0,
           paddingLeft: !isOpen ? 0 : undefined,
-          paddingRight: !isOpen ? 0 : undefined
+          paddingRight: !isOpen ? 0 : undefined,
         }}
         {...props}
       >

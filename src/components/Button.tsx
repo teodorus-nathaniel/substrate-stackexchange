@@ -13,14 +13,14 @@ const variants = {
     hoverRingClassName,
     'border border-red-500 text-red-500'
   ),
-  unstyled: clsx('hover:bg-gray-700', 'active:bg-gray-800')
+  unstyled: clsx('hover:bg-gray-700', 'active:bg-gray-800'),
 }
 
 const sizes = {
   large: clsx('px-12 py-2'),
   medium: clsx('px-6 py-2'),
   small: clsx('px-3 py-1'),
-  content: clsx()
+  content: clsx(),
 }
 
 export interface ButtonProps

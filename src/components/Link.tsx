@@ -8,7 +8,7 @@ const variants = {
     'text-blue-400',
     'hover:text-blue-300 hover:underline focus:text-blue-300 focus:underline',
     'active:text-blue-500 visited:text-purple-400'
-  )
+  ),
 }
 
 export interface LinkProps extends HTMLProps<HTMLAnchorElement> {

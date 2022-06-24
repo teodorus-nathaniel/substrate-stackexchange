@@ -7,7 +7,7 @@ export type SubsocialApiState = FlatSubsocialApi | null
 export const SubsocialApiContext = createContext<SubsocialApiState>(null)
 
 export const SubsocialApiContextProvider = ({
-  children
+  children,
 }: {
   children: any
 }) => {
@@ -18,8 +18,8 @@ export const SubsocialApiContextProvider = ({
       const api = await newFlatSubsocialApi({
         ...subsocialConfig,
         useServer: {
-          httpRequestMethod: 'get'
-        }
+          httpRequestMethod: 'get',
+        },
       })
       setSubsocialApi(api)
     }

@@ -5,7 +5,7 @@ import {
   BsHandThumbsDown,
   BsHandThumbsDownFill,
   BsHandThumbsUp,
-  BsHandThumbsUpFill
+  BsHandThumbsUpFill,
 } from 'react-icons/bs'
 
 interface Props extends HTMLProps<HTMLDivElement> {
