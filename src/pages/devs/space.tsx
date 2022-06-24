@@ -4,9 +4,7 @@ import RichTextArea from '#/components/inputs/RichTextArea'
 import TextField from '#/components/inputs/TextField'
 import clsx from 'clsx'
 
-type Props = {}
-
-export default function space({}: Props) {
+export default function SpaceCreatorPage() {
   return (
     <div className={clsx('flex flex-col', 'w-full max-w-screen-sm', 'mx-auto')}>
       <h1 className={clsx('text-2xl')}>Welcome Developer!</h1>
