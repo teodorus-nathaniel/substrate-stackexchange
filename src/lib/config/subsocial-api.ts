@@ -1,3 +1,5 @@
+import { getUseTestnet } from '../helpers/env'
+
 const testnetSubsocialConfig = {
   substrateNodeUrl: 'wss://testnet.subsocial.network',
   offchainUrl: 'https://staging.subsocial.network/offchain',
@@ -10,7 +12,7 @@ const mainnetSubsocialConfig = {
   ipfsNodeUrl: 'https://app.subsocial.network/ipfs'
 }
 
-const useTestnet = true
+const useTestnet = getUseTestnet()
 const subsocialConfig = useTestnet
   ? testnetSubsocialConfig
   : mainnetSubsocialConfig
