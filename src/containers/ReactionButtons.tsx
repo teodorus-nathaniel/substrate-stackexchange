@@ -31,7 +31,7 @@ export default function ReactionButtons({
       <Button
         variant='unstyled'
         size='small'
-        className={clsx('flex space-x-2 items-center')}
+        innerContainerClassName={clsx('flex space-x-2 items-center')}
       >
         {isUpVoted ? <BsHandThumbsUpFill /> : <BsHandThumbsUp />}
         <p>{upVoteCount}</p>
@@ -39,7 +39,7 @@ export default function ReactionButtons({
       <Button
         variant='unstyled'
         size='small'
-        className={clsx('flex space-x-2 items-center')}
+        innerContainerClassName={clsx('flex space-x-2 items-center')}
       >
         {isDownVoted ? <BsHandThumbsDownFill /> : <BsHandThumbsDown />}
         <p>{downVoteCount}</p>

@@ -28,6 +28,7 @@ export interface ButtonProps
   extends Omit<Omit<HTMLProps<HTMLButtonElement>, 'size'>, 'ref'> {
   children?: any
   className?: string
+  innerContainerClassName?: string
   size?: keyof typeof sizes
   variant?: keyof typeof variants
   loading?: boolean
@@ -38,6 +39,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
     children,
     className,
+    innerContainerClassName,
     variant = 'filled-brand',
     size = 'medium',
     type,
@@ -84,7 +86,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
       </AnimatePresence>
       <motion.div
         animate={{ x: loading ? '-150%' : '0', opacity: loading ? 0 : 1 }}
-        className={clsx('flex justify-center items-center', className)}
+        className={clsx(
+          'flex justify-center items-center',
+          'w-full h-full',
+          innerContainerClassName
+        )}
       >
         {children}
       </motion.div>

@@ -33,11 +33,8 @@ export default function WalletProfile({
         <Button
           {...props}
           variant='unstyled'
-          className={clsx(
-            'flex items-center space-x-2',
-            'rounded-full border border-bg-200',
-            className
-          )}
+          innerContainerClassName={clsx('flex items-center space-x-2')}
+          className={clsx('rounded-full border border-bg-200', className)}
           size='content'
         >
           <p className={clsx('pl-4')}>{wallet.name}</p>
