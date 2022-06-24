@@ -12,7 +12,7 @@ export default function SkeletonFallback({
   className,
   ...props
 }: SkeletonFallbackProps) {
-  return !isLoading && children ? (
+  return isLoading === false || (isLoading === undefined && children) ? (
     children
   ) : (
     <Skeleton

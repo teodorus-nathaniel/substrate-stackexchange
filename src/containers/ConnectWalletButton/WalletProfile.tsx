@@ -3,7 +3,9 @@ import ImageContainer from '#/components/ImageContainer'
 import PopOver from '#/components/PopOver'
 import SkeletonFallback from '#/components/SkeletonFallback'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
+import { generateLoadingChecker } from '#/lib/helpers/renderer'
 import { useGetProfile } from '#/services/subsocial/queries'
+import { truncateMiddle } from '@talisman-connect/ui'
 import { WalletAccount } from '@talisman-connect/wallets'
 import clsx from 'clsx'
 
@@ -16,10 +18,14 @@ export default function WalletProfile({
   className,
   ...props
 }: WalletProfileProps) {
-  const { data, isLoading } = useGetProfile({
+  const { data, isLoading, isFetched } = useGetProfile({
     address: wallet.address
   })
   const content = data?.content
+  const { loadingChecker, getContent } = generateLoadingChecker(
+    isLoading,
+    isFetched
+  )
 
   return (
     <PopOver
@@ -51,27 +57,35 @@ export default function WalletProfile({
         <div className='flex items-center space-x-3'>
           <div className='w-10 h-10 shrink-0'>
             <SkeletonFallback
-              isLoading={isLoading || !content?.avatar}
+              isLoading={loadingChecker(content?.avatar)}
               circle
               height='100%'
               className='block'
             >
               <ImageContainer
                 aspectRatio='1:1'
-                src={getImageUrlFromIPFS(content?.avatar)}
+                src={
+                  content?.avatar
+                    ? getImageUrlFromIPFS(content.avatar)
+                    : (wallet as any).avatar
+                }
                 className={clsx('rounded-full')}
               />
             </SkeletonFallback>
           </div>
           <p className={clsx('leading-snug text-sm font-bold', 'flex-1')}>
-            <SkeletonFallback count={2} width='100%' isLoading={isLoading}>
-              {content?.name}
+            <SkeletonFallback
+              count={2}
+              width='100%'
+              isLoading={loadingChecker(content?.name)}
+            >
+              {getContent(content?.name, truncateMiddle(wallet.address))}
             </SkeletonFallback>
           </p>
         </div>
         <div className='flex flex-col mt-3'>
           <p className='text-text-secondary text-xs'>
-            <SkeletonFallback isLoading={isLoading}>
+            <SkeletonFallback isLoading={loadingChecker(content?.summary)}>
               {content?.summary}
             </SkeletonFallback>
           </p>

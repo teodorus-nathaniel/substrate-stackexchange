@@ -10,7 +10,7 @@ const mainnetSubsocialConfig = {
   ipfsNodeUrl: 'https://app.subsocial.network/ipfs'
 }
 
-const useTestnet = false
+const useTestnet = true
 const subsocialConfig = useTestnet
   ? testnetSubsocialConfig
   : mainnetSubsocialConfig

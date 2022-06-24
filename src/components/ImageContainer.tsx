@@ -13,28 +13,30 @@ export default function ImageContainer({
   aspectRatio,
   containerClassName,
   src,
+  className,
   ...imageProps
 }: ImageContainerProps) {
   let content
   if (typeof src === 'string') {
     content = (
       <img
+        {...imageProps}
         className={clsx(
           'object-center object-cover',
-          aspectRatio && 'absolute top-0 left-0 w-full h-full'
+          aspectRatio && 'absolute top-0 left-0 w-full h-full',
+          className
         )}
         src={src}
-        {...imageProps}
         alt={imageProps.alt ?? ''}
       />
     )
   } else {
     content = (
       <Image
-        src={src}
-        className={clsx('object-center object-cover')}
-        layout={aspectRatio ? 'fill' : 'responsive'}
         {...imageProps}
+        src={src}
+        className={clsx('object-center object-cover', className)}
+        layout={aspectRatio ? 'fill' : 'responsive'}
         alt={imageProps.alt ?? ''}
       />
     )
