@@ -1,13 +1,3 @@
-import Post from '#/containers/Post'
+import NewQuestionsPage from '#/modules/_questions/NewQuestionsPage'
 
-export default function NewQuestionsPage() {
-  return (
-    <div>
-      <div className='flex flex-col space-y-8'>
-        <Post />
-        <Post />
-        <Post />
-      </div>
-    </div>
-  )
-}
+export default NewQuestionsPage
