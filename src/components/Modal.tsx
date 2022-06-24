@@ -1,8 +1,8 @@
 import { FAST_TRANSITION } from '#/lib/constants/transition'
-import { Dialog } from '@headlessui/react'
+import { Dialog, Transition } from '@headlessui/react'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
-import { forwardRef } from 'react'
+import { forwardRef, Fragment } from 'react'
 import { BsX } from 'react-icons/bs'
 import Button from './Button'
 import Card, { CardProps } from './Card'
@@ -44,63 +44,84 @@ const Modal = forwardRef(function Modal(
   ref
 ) {
   return (
-    <Dialog open={isOpen} onClose={handleClose} className={clsx('z-40')}>
-      <div
-        className={clsx(
-          'fixed inset-0',
-          'bg-black/30 backdrop-blur-sm',
-          'z-40'
-        )}
-        aria-hidden='true'
-      />
-      <div
-        className={clsx(
-          'fixed inset-0 top-0 p-4',
-          'flex items-center justify-center z-50'
-        )}
+    <Transition appear show={isOpen} as={Fragment}>
+      <Dialog
+        as='div'
+        onClose={handleClose}
+        className={clsx('relative', 'z-40')}
       >
-        <div
-          className={clsx(
-            'flex items-center justify-center',
-            'w-full min-h-full',
-            sizes[size]
-          )}
+        <Transition.Child
+          as={Fragment}
+          enter='ease-out duration-300'
+          enterFrom='opacity-0'
+          enterTo='opacity-100'
+          leave='ease-in duration-200'
+          leaveFrom='opacity-100'
+          leaveTo='opacity-0'
         >
-          <MotionDialogPanel
-            layout
-            className={clsx('mx-auto w-full', 'relative')}
-            transition={FAST_TRANSITION}
+          <div
+            className={clsx(
+              'fixed inset-0',
+              'bg-black/30 backdrop-blur-sm',
+              'z-40'
+            )}
+            aria-hidden='true'
+          />
+        </Transition.Child>
+
+        <div className={clsx('fixed inset-0 top-0 overflow-y-auto', 'z-50')}>
+          <div
+            className={clsx(
+              'flex items-center justify-center',
+              'min-h-full text-center p-8'
+            )}
           >
-            <Card
-              {...props}
-              ref={ref as any}
-              className={clsx(
-                'bg-bg-100 ring-1',
-                'flex flex-col',
-                'p-4 min-h-[4em]',
-                ringColor === 'default' && 'ring-brand/40',
-                ringColor === 'error' && 'ring-red-500',
-                className
-              )}
+            <Transition.Child
+              as={Fragment}
+              enter='ease-out duration-300'
+              enterFrom='opacity-0'
+              enterTo='opacity-100'
+              leave='ease-in duration-200'
+              leaveFrom='opacity-100'
+              leaveTo='opacity-0'
             >
-              {withCloseButton && (
-                <Button
-                  onClick={handleClose}
-                  size='content'
-                  className={clsx('!absolute right-4 top-4', 'p-1')}
-                  variant='unstyled'
+              <MotionDialogPanel
+                layout
+                className={clsx('w-full transition', 'relative', sizes[size])}
+                transition={FAST_TRANSITION}
+              >
+                <Card
+                  {...props}
+                  ref={ref as any}
+                  className={clsx(
+                    'bg-bg-100 ring-1',
+                    'flex flex-col',
+                    'p-4 min-h-[4em]',
+                    ringColor === 'default' && 'ring-brand/40',
+                    ringColor === 'error' && 'ring-red-500',
+                    className
+                  )}
                 >
-                  <BsX className={clsx('text-xl')} />
-                </Button>
-              )}
-              {title && <Dialog.Title>{title}</Dialog.Title>}
-              {desc && <Dialog.Description>{desc}</Dialog.Description>}
-              {children}
-            </Card>
-          </MotionDialogPanel>
+                  {withCloseButton && (
+                    <Button
+                      onClick={handleClose}
+                      size='content'
+                      className={clsx('!absolute right-4 top-4', 'p-1')}
+                      variant='unstyled'
+                    >
+                      <BsX className={clsx('text-xl')} />
+                    </Button>
+                  )}
+                  {title && <Dialog.Title>{title}</Dialog.Title>}
+                  {desc && <Dialog.Description>{desc}</Dialog.Description>}
+                  {children}
+                </Card>
+              </MotionDialogPanel>
+            </Transition.Child>
+          </div>
         </div>
-      </div>
-    </Dialog>
+      </Dialog>
+    </Transition>
   )
 })
 
