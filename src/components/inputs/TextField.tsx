@@ -5,9 +5,10 @@ import FieldWrapper, {
   RequiredFieldWrapperProps
 } from './common/FieldWrapper'
 
-export default function TextField(
-  props: HTMLProps<HTMLInputElement> & RequiredFieldWrapperProps
-) {
+export type TextFieldProps = HTMLProps<HTMLInputElement> &
+  RequiredFieldWrapperProps
+
+export default function TextField(props: TextFieldProps) {
   return (
     <FieldWrapper {...props}>
       {(id, commonClassNames) => (

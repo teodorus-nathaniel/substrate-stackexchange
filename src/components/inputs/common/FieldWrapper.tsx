@@ -27,7 +27,7 @@ export default function FieldWrapper({
   labelClassName,
   helperText,
   helperTextClassName,
-  fullWidth,
+  fullWidth = true,
   id,
   required,
   children
@@ -40,8 +40,9 @@ export default function FieldWrapper({
     'py-2 pl-4 pr-9',
     'rounded-md',
     'transition duration-150',
-    'enabled:hover:brightness-125',
-    'enabled:focus:brightness-125',
+    'hover:brightness-125',
+    'focus:brightness-125',
+    'disabled:cursor-not-allowed disabled:brightness-75',
     hoverRingClassName
   )
 

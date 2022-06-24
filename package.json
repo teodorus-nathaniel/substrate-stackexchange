@@ -33,6 +33,9 @@
     "react-loading-skeleton": "^3.1.0",
     "react-popper": "^2.3.0",
     "react-query": "^3.39.1",
+    "slate": "^0.81.1",
+    "slate-history": "^0.66.0",
+    "slate-react": "^0.81.0",
     "url-join": "^5.0.0",
     "use-breakpoint": "^3.0.3",
     "use-hooks": "^2.0.0-rc.5"

@@ -1,5 +1,6 @@
 import Card from '#/components/Card'
 import ImageCircleInput from '#/components/inputs/ImageCircleInput'
+import RichTextArea from '#/components/inputs/RichTextArea'
 import TextField from '#/components/inputs/TextField'
 import clsx from 'clsx'
 
@@ -14,7 +15,11 @@ export default function space({}: Props) {
         easily!
       </p>
       <Card
-        className={clsx('bg-bg-100', 'p-6 mt-8', 'flex flex-col items-center')}
+        className={clsx(
+          'bg-bg-100',
+          'px-6 pt-6 pb-12 mt-8',
+          'flex flex-col items-center'
+        )}
       >
         <p className='text-xl'>
           Let&apos;s create a <strong>space</strong>
@@ -28,7 +33,8 @@ export default function space({}: Props) {
           )}
         >
           <ImageCircleInput helperText='Image should be less than 2MB' />
-          <TextField required fullWidth label='Name' helperText='Required' />
+          <TextField required label='Name' />
+          <RichTextArea label='Description' />
         </div>
       </Card>
     </div>
