@@ -29,6 +29,7 @@ export default function FieldWrapper({
   helperTextClassName,
   fullWidth = true,
   id,
+  error,
   required,
   children,
 }: FieldWrapperProps) {
@@ -45,6 +46,11 @@ export default function FieldWrapper({
     'disabled:cursor-not-allowed disabled:brightness-75',
     hoverRingClassName
   )
+  const errorClassNames = clsx('ring-2 ring-red-500 ring-offset-2')
+  const inputClassNames = clsx(commonClassNames, error && errorClassNames)
+
+  const hasErrorMessage = error && typeof error === 'string'
+  console.log(hasErrorMessage, error)
 
   return (
     <div
@@ -61,10 +67,16 @@ export default function FieldWrapper({
           {required && <span className='text-red-500'> *</span>}
         </label>
       )}
-      {children(usedId, commonClassNames)}
-      {helperText && (
-        <p className={clsx('text-xs text-text-secondary', helperTextClassName)}>
-          {helperText}
+      {children(usedId, inputClassNames)}
+      {(helperText || hasErrorMessage) && (
+        <p
+          className={clsx(
+            'text-sm text-text-secondary',
+            hasErrorMessage && '!text-red-500',
+            helperTextClassName
+          )}
+        >
+          {error ?? helperText}
         </p>
       )}
     </div>
