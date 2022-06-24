@@ -22,6 +22,7 @@ export default function ImageCircleInput({
   const inputRef = useRef<HTMLInputElement>(null)
   const [imageUrl, setImageUrl] = useState('')
 
+  console.log(props.error)
   return (
     <FieldWrapper
       {...props}

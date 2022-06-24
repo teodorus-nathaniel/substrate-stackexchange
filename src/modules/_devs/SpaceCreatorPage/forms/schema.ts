@@ -1,3 +1,7 @@
+import {
+  COMMON_MAX_IMAGE_SIZE,
+  SUPPORTED_IMAGE_FORMAT,
+} from '#/lib/constants/file'
 import { mixed, object, string } from 'yup'
 
 export interface CreateSpaceFormType {
@@ -15,17 +19,13 @@ export const createSpaceForm = {
   validationSchema: object().shape({
     name: string().required('Your space needs a name!'),
     desc: string(),
-    avatar: object()
-      .shape({
-        attachment: mixed().test(
-          'fileSize',
-          'The file is too large',
-          (value) => {
-            if (!value?.length) return true
-            return value[0].size <= 2 * 1024 * 1024
-          }
-        ),
+    avatar: mixed()
+      .test('fileSize', 'File Size is too large', (value) => {
+        console.log(value, value.size <= COMMON_MAX_IMAGE_SIZE)
+        return value.size <= COMMON_MAX_IMAGE_SIZE
       })
-      .nullable(),
+      .test('fileType', 'Unsupported File Format', (value) =>
+        SUPPORTED_IMAGE_FORMAT.includes(value.type)
+      ),
   }),
 }

@@ -15,7 +15,7 @@ const useFormikWrapper = <Values extends FormikValues = FormikValues>(
       return {
         ...getFieldProps(key),
         error:
-          checkIsTouched && touched[key] ? (errors[key] as string) : undefined,
+          !checkIsTouched || touched[key] ? (errors[key] as string) : undefined,
       }
     },
   }

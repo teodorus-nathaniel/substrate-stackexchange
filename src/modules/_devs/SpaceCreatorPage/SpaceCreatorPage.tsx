@@ -17,14 +17,13 @@ const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
 export default function SpaceCreatorPage() {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const { mutate: createSpace, isLoading, data, error } = useCreateSpace()
-  const { getFieldData, handleSubmit, touched, setFieldValue, handleChange } =
-    useFormikWrapper({
-      ...createSpaceForm,
-      onSubmit: (values) => {
-        console.log('CREATING SPACE...')
-        createSpace(values)
-      },
-    })
+  const { getFieldData, handleSubmit, setFieldValue } = useFormikWrapper({
+    ...createSpaceForm,
+    onSubmit: (values) => {
+      console.log('CREATING SPACE...')
+      createSpace(values)
+    },
+  })
 
   return (
     <div className={clsx('flex flex-col', 'w-full max-w-screen-sm', 'mx-auto')}>
@@ -63,8 +62,7 @@ export default function SpaceCreatorPage() {
           <ImageCircleInput
             {...getFieldData('avatar', false)}
             value={undefined}
-            onChange={(e, file) => {
-              handleChange(e)
+            onChange={(_, file) => {
               setFieldValue('avatar', file)
             }}
             helperText='Image should be less than 2MB'
