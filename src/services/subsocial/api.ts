@@ -82,6 +82,8 @@ export function useSubsocialMutation<Param>(
     const substrateApi = await subsocialApi.subsocial.substrate.api
     const ipfsApi = subsocialApi.subsocial.ipfs
 
+    console.log('CALL', usedWallet.signer)
+
     const tx = await transactionGenerator(param, {
       subsocialApi,
       ipfsApi,

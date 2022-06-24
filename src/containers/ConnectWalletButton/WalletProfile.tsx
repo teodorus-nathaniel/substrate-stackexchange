@@ -2,6 +2,7 @@ import Button, { ButtonProps } from '#/components/Button'
 import ImageContainer from '#/components/ImageContainer'
 import PopOver from '#/components/PopOver'
 import SkeletonFallback from '#/components/SkeletonFallback'
+import { useWalletContext } from '#/contexts/WalletContext'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
 import { generateLoadingChecker } from '#/lib/helpers/renderer'
 import { useGetProfile } from '#/services/subsocial/queries'
@@ -18,6 +19,7 @@ export default function WalletProfile({
   className,
   ...props
 }: WalletProfileProps) {
+  const [, setWallet] = useWalletContext()
   const { data, isLoading, isFetched } = useGetProfile({
     address: wallet.address,
   })
@@ -26,6 +28,10 @@ export default function WalletProfile({
     isLoading,
     isFetched
   )
+
+  const signOut = () => {
+    setWallet(null)
+  }
 
   return (
     <PopOver
@@ -90,7 +96,12 @@ export default function WalletProfile({
         <Button className='mt-4 text-sm' size='small'>
           View Profile
         </Button>
-        <Button variant='outlined-red' className='mt-2 text-sm' size='small'>
+        <Button
+          variant='outlined-red'
+          className='mt-2 text-sm'
+          size='small'
+          onClick={signOut}
+        >
           Sign Out
         </Button>
       </div>

@@ -20,6 +20,7 @@ export const WalletContextProvider = ({ children }: { children: any }) => {
 
   useEffect(() => {
     if (wallet) localStorage.setItem(STORAGE_NAME, JSON.stringify(wallet))
+    else localStorage.removeItem(STORAGE_NAME)
   }, [wallet])
 
   return (
