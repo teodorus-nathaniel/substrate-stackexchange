@@ -1,8 +1,12 @@
 import Card from '#/components/Card'
 import ImageCircleInput from '#/components/inputs/ImageCircleInput'
-import RichTextArea from '#/components/inputs/RichTextArea'
 import TextField from '#/components/inputs/TextField'
 import clsx from 'clsx'
+import dynamic from 'next/dynamic'
+
+const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
+  ssr: false,
+})
 
 export default function SpaceCreatorPage() {
   return (
@@ -32,7 +36,7 @@ export default function SpaceCreatorPage() {
         >
           <ImageCircleInput helperText='Image should be less than 2MB' />
           <TextField required label='Name' />
-          <RichTextArea label='Description' />
+          <RichTextArea name='space-desc' label='Description' />
         </div>
       </Card>
     </div>

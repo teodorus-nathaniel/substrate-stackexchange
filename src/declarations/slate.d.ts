@@ -1,6 +1,8 @@
 import { BaseEditor } from 'slate'
+import { HistoryEditor } from 'slate-history'
 import { ReactEditor } from 'slate-react'
 
+type EditorType = BaseEditor & ReactEditor & HistoryEditor
 type ElementTypes = 'paragraph'
 type CustomElement = { type: ElementTypes; children: CustomText[] }
 type CustomText = {
@@ -16,5 +18,6 @@ declare module 'slate' {
     Editor: BaseEditor & ReactEditor
     Element: CustomElement
     Text: CustomText
+    EditorType: EditorType
   }
 }
