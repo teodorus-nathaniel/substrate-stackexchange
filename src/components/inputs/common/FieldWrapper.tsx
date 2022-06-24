@@ -50,7 +50,6 @@ export default function FieldWrapper({
   const inputClassNames = clsx(commonClassNames, error && errorClassNames)
 
   const hasErrorMessage = error && typeof error === 'string'
-  console.log(hasErrorMessage, error)
 
   return (
     <div
