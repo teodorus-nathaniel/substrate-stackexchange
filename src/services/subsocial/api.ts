@@ -63,9 +63,9 @@ export function useSubsocialMutation<Param>(
       substrateApi: SubstrateApi
     }
   ) => Promise<Transaction>,
-  config?: UseMutationOptions<Hash, unknown, Param, unknown>,
-  defaultConfig?: UseMutationOptions<Hash, unknown, Param, unknown>
-): UseMutationResult<Hash, unknown, Param, unknown> {
+  config?: UseMutationOptions<Hash, Error, Param, unknown>,
+  defaultConfig?: UseMutationOptions<Hash, Error, Param, unknown>
+): UseMutationResult<Hash, Error, Param, unknown> {
   const [wallet, setWallet] = useWalletContext()
   const subsocialApiContext = useSubsocialApiContext()
   const promiseRef = useRef<((value?: unknown) => void) | null>(null)

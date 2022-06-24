@@ -2,10 +2,12 @@ import Button from '#/components/Button'
 import Card from '#/components/Card'
 import ImageCircleInput from '#/components/inputs/ImageCircleInput'
 import TextField from '#/components/inputs/TextField'
+import TransactionModal from '#/containers/TransactionModal'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
 import { useCreateSpace } from '#/services/subsocial/mutations'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
+import { useState } from 'react'
 import { createSpaceForm } from './forms/schema'
 
 const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
@@ -13,19 +15,26 @@ const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
 })
 
 export default function SpaceCreatorPage() {
+  const [isOpenModal, setIsOpenModal] = useState(false)
   const { mutate: createSpace, isLoading, data, error } = useCreateSpace()
   const { getFieldData, handleSubmit } = useFormikWrapper({
     ...createSpaceForm,
     onSubmit: (values) => {
-      console.log('CREATING...')
+      console.log('CREATING SPACE...')
       createSpace(values)
     },
   })
 
-  console.log(data?.toString(), error, isLoading)
-
   return (
     <div className={clsx('flex flex-col', 'w-full max-w-screen-sm', 'mx-auto')}>
+      <TransactionModal
+        isLoading={isLoading}
+        errorMsg={error?.message ?? ''}
+        action='Creating Subsocial Space'
+        isOpen={isOpenModal}
+        handleClose={() => setIsOpenModal(false)}
+        hash={data?.toString()}
+      />
       <h1 className={clsx('text-2xl')}>Welcome Developer!</h1>
       <p className={clsx('pt-2')}>
         This page will help you create a <strong>space</strong> in subsocial

@@ -3,7 +3,7 @@ import { IpfsContent } from '@subsocial/types/substrate/classes'
 import { UseMutationOptions } from 'react-query'
 import { useSubsocialMutation } from './api'
 
-type SubsocialMutationConfig<T> = UseMutationOptions<Hash, unknown, T, unknown>
+type SubsocialMutationConfig<T> = UseMutationOptions<Hash, Error, T, unknown>
 
 export type CreateSpacePayload = {
   name: string
