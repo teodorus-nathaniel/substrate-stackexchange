@@ -64,7 +64,7 @@ export function useSubsocialMutation<Param>(
   config?: UseMutationOptions<Hash, unknown, Param, unknown>,
   defaultConfig?: UseMutationOptions<Hash, unknown, Param, unknown>
 ): UseMutationResult<Hash, unknown, Param, unknown> {
-  const walletContext = useWalletContext()
+  const [wallet] = useWalletContext()
   const subsocialApiContext = useSubsocialApiContext()
   const promiseRef = useRef<((value?: unknown) => void) | null>(null)
 
@@ -77,7 +77,7 @@ export function useSubsocialMutation<Param>(
   const createTxAndSend = async (
     subsocialApi: FlatSubsocialApi,
     param: Param,
-    wallet: WalletAccount
+    usedWallet: WalletAccount
   ) => {
     const substrateApi = await subsocialApi.subsocial.substrate.api
     const ipfsApi = subsocialApi.subsocial.ipfs
@@ -87,22 +87,21 @@ export function useSubsocialMutation<Param>(
       ipfsApi,
       substrateApi,
     })
-    return tx.signAndSend(wallet.address, {
-      signer: wallet.signer as any,
+    return tx.signAndSend(usedWallet.address, {
+      signer: usedWallet.signer as any,
     })
   }
 
   const workerFunc = async (param: Param) => {
-    const usedWallet = walletContext?.[0]
-    if (!usedWallet) throw new Error('You need to connect your wallet first!')
+    if (!wallet) throw new Error('You need to connect your wallet first!')
     if (subsocialApiContext) {
-      return createTxAndSend(subsocialApiContext, param, usedWallet)
+      return createTxAndSend(subsocialApiContext, param, wallet)
     }
     await new Promise((resolve) => {
       promiseRef.current = resolve
     })
     const api = subsocialApiContext as unknown as FlatSubsocialApi
-    return createTxAndSend(api, param, usedWallet)
+    return createTxAndSend(api, param, wallet)
   }
 
   return useMutation(workerFunc, {
