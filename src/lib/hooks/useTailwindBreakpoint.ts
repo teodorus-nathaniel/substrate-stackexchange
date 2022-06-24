@@ -1,5 +1,5 @@
 import { breakpoints } from '#/lib/constants/theme'
-import tailwindConfig from '#/tailwind.config'
+import tailwindConfig from '#root/tailwind.config'
 import resolveConfig from 'tailwindcss/resolveConfig'
 import { useBreakpoint } from 'use-breakpoint'
 
