@@ -1,7 +1,9 @@
+import Button from '#/components/Button'
 import Card from '#/components/Card'
 import ImageCircleInput from '#/components/inputs/ImageCircleInput'
 import TextField from '#/components/inputs/TextField'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
+import { useCreateSpace } from '#/services/subsocial/mutations'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { createSpaceForm } from './forms/schema'
@@ -11,12 +13,16 @@ const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
 })
 
 export default function SpaceCreatorPage() {
-  const { getFieldData } = useFormikWrapper({
+  const { mutate: createSpace, isLoading, data } = useCreateSpace()
+  const { getFieldData, handleSubmit } = useFormikWrapper({
     ...createSpaceForm,
-    onSubmit: () => {
-      alert('SUBMIT')
+    onSubmit: (values) => {
+      console.log('CREATING...')
+      createSpace(values)
     },
   })
+
+  console.log(data)
 
   return (
     <div className={clsx('flex flex-col', 'w-full max-w-screen-sm', 'mx-auto')}>
@@ -35,25 +41,29 @@ export default function SpaceCreatorPage() {
         <p className='text-xl'>
           Let&apos;s create a <strong>space</strong>
         </p>
-        <div
+        <form
           className={clsx(
             'flex flex-col items-center',
             'space-y-4',
             'w-full',
             'mt-6'
           )}
+          onSubmit={handleSubmit}
         >
           <ImageCircleInput
             {...getFieldData('avatar')}
             helperText='Image should be less than 2MB'
           />
-          <TextField {...getFieldData('name')} required label='Name' />
+          <TextField {...getFieldData('name')} label='Name' />
           <RichTextArea
             {...getFieldData('desc')}
             name='space-desc'
             label='Description'
           />
-        </div>
+          <Button loading={isLoading} type='submit'>
+            Create Space!
+          </Button>
+        </form>
       </Card>
     </div>
   )

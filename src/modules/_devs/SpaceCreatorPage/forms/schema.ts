@@ -1,27 +1,27 @@
-import Yup from 'yup'
+import { mixed, object, string } from 'yup'
 
 export interface CreateSpaceFormType {
   name: string
   desc?: string
-  avatar: File | null
+  avatar?: File
 }
 const createSpaceInitialValues: CreateSpaceFormType = {
   name: '',
   desc: '',
-  avatar: null,
+  avatar: undefined,
 }
 export const createSpaceForm = {
   initialValues: createSpaceInitialValues,
-  validationSchema: Yup.object().shape({
-    name: Yup.string().defined(),
-    desc: Yup.string(),
-    avatar: Yup.object()
+  validationSchema: object().shape({
+    name: string().required('Your space needs a name!'),
+    desc: string(),
+    avatar: object()
       .shape({
-        attachment: Yup.mixed().test(
+        attachment: mixed().test(
           'fileSize',
           'The file is too large',
           (value) => {
-            if (!value.length) return true
+            if (!value?.length) return true
             return value[0].size <= 2 * 1024 * 1024
           }
         ),
