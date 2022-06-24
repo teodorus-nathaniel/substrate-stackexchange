@@ -20,12 +20,13 @@ export const createSpaceForm = {
     name: string().required('Your space needs a name!'),
     desc: string(),
     avatar: mixed()
-      .test('fileSize', 'File Size is too large', (value) => {
-        console.log(value, value.size <= COMMON_MAX_IMAGE_SIZE)
-        return value.size <= COMMON_MAX_IMAGE_SIZE
-      })
+      .test(
+        'fileSize',
+        'File Size is too large',
+        (value) => value?.size <= COMMON_MAX_IMAGE_SIZE
+      )
       .test('fileType', 'Unsupported File Format', (value) =>
-        SUPPORTED_IMAGE_FORMAT.includes(value.type)
+        SUPPORTED_IMAGE_FORMAT.includes(value?.type)
       ),
   }),
 }
