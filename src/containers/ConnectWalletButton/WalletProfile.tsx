@@ -1,6 +1,7 @@
 import Button, { ButtonProps } from '#/components/Button'
 import ImageContainer from '#/components/ImageContainer'
 import PopOver from '#/components/PopOver'
+import SkeletonFallback from '#/components/SkeletonFallback'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
 import { useGetProfile } from '#/services/subsocial/queries'
 import { WalletAccount } from '@talisman-connect/wallets'
@@ -15,9 +16,10 @@ export default function WalletProfile({
   className,
   ...props
 }: WalletProfileProps) {
-  const { data, isLoading, error, isError } = useGetProfile({
+  const { data, isLoading } = useGetProfile({
     address: wallet.address
   })
+  const content = data?.content
 
   return (
     <PopOver
@@ -48,19 +50,30 @@ export default function WalletProfile({
       >
         <div className='flex items-center space-x-3'>
           <div className='w-10 h-10 shrink-0'>
-            <ImageContainer
-              aspectRatio='1:1'
-              src={getImageUrlFromIPFS(data?.content?.avatar)}
-              className={clsx('rounded-full')}
-            />
+            <SkeletonFallback
+              isLoading={isLoading || !content?.avatar}
+              circle
+              height='100%'
+              className='block'
+            >
+              <ImageContainer
+                aspectRatio='1:1'
+                src={getImageUrlFromIPFS(content?.avatar)}
+                className={clsx('rounded-full')}
+              />
+            </SkeletonFallback>
           </div>
-          <p className='leading-snug text-sm font-bold'>
-            {data?.content?.name}
+          <p className={clsx('leading-snug text-sm font-bold', 'flex-1')}>
+            <SkeletonFallback count={2} width='100%' isLoading={isLoading}>
+              {content?.name}
+            </SkeletonFallback>
           </p>
         </div>
         <div className='flex flex-col mt-3'>
           <p className='text-text-secondary text-xs'>
-            {data?.content?.summary}
+            <SkeletonFallback isLoading={isLoading}>
+              {content?.summary}
+            </SkeletonFallback>
           </p>
         </div>
         <Button className='mt-4 text-sm' size='small'>

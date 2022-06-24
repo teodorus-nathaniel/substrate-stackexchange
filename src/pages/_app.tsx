@@ -9,6 +9,7 @@ import '@talisman-connect/ui/talisman-connect-ui.esm.css'
 import clsx from 'clsx'
 import type { AppProps } from 'next/app'
 import NextNProgress from 'nextjs-progressbar'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { QueryClientProvider } from 'react-query'
 import '../styles/globals.css'
 
