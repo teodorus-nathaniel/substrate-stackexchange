@@ -13,7 +13,7 @@ const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
 })
 
 export default function SpaceCreatorPage() {
-  const { mutate: createSpace, isLoading, data } = useCreateSpace()
+  const { mutate: createSpace, isLoading, data, error } = useCreateSpace()
   const { getFieldData, handleSubmit } = useFormikWrapper({
     ...createSpaceForm,
     onSubmit: (values) => {
@@ -22,7 +22,7 @@ export default function SpaceCreatorPage() {
     },
   })
 
-  console.log(data)
+  console.log(data?.toString(), error, isLoading)
 
   return (
     <div className={clsx('flex flex-col', 'w-full max-w-screen-sm', 'mx-auto')}>

@@ -1,8 +1,10 @@
 import { useSubsocialApiContext } from '#/contexts/SubsocialApiContext'
 import { useWalletContext } from '#/contexts/WalletContext'
+import { activateWalletFromSavedAccount } from '#/lib/helpers/wallet'
 import { Hash } from '@polkadot/types/interfaces'
 import { SubsocialIpfsApi } from '@subsocial/api'
 import { FlatSubsocialApi } from '@subsocial/api/flat-subsocial'
+import { isEmptyObj } from '@subsocial/utils'
 import { WalletAccount } from '@talisman-connect/wallets'
 import { useEffect, useRef } from 'react'
 import {
@@ -64,7 +66,7 @@ export function useSubsocialMutation<Param>(
   config?: UseMutationOptions<Hash, unknown, Param, unknown>,
   defaultConfig?: UseMutationOptions<Hash, unknown, Param, unknown>
 ): UseMutationResult<Hash, unknown, Param, unknown> {
-  const [wallet] = useWalletContext()
+  const [wallet, setWallet] = useWalletContext()
   const subsocialApiContext = useSubsocialApiContext()
   const promiseRef = useRef<((value?: unknown) => void) | null>(null)
 
@@ -77,19 +79,27 @@ export function useSubsocialMutation<Param>(
   const createTxAndSend = async (
     subsocialApi: FlatSubsocialApi,
     param: Param,
-    usedWallet: WalletAccount
+    currentWallet: WalletAccount
   ) => {
     const substrateApi = await subsocialApi.subsocial.substrate.api
     const ipfsApi = subsocialApi.subsocial.ipfs
 
-    console.log('CALL', usedWallet.signer)
+    let usedWallet = currentWallet
+    if (isEmptyObj(currentWallet.signer)) {
+      const newWallet = await activateWalletFromSavedAccount(currentWallet)
+      setWallet(newWallet)
+      if (!newWallet) {
+        throw new Error("Can't connect to your wallet")
+      }
+      usedWallet = newWallet
+    }
 
     const tx = await transactionGenerator(param, {
       subsocialApi,
       ipfsApi,
       substrateApi,
     })
-    return tx.signAndSend(usedWallet.address, {
+    return tx.signAndSend(currentWallet.address, {
       signer: usedWallet.signer as any,
     })
   }

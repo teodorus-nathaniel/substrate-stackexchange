@@ -1,5 +1,5 @@
 import { WalletAccount } from '@talisman-connect/wallets'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { defaultContextValue, StateContext } from './common'
 
 type WalletState = WalletAccount | null | undefined
@@ -11,6 +11,8 @@ const STORAGE_NAME = 'selected-wallet'
 
 export const WalletContextProvider = ({ children }: { children: any }) => {
   const walletState = useState<WalletState>()
+  const firstRender = useRef(true)
+
   const [wallet, setWallet] = walletState
   useEffect(() => {
     const selectedWallet = localStorage.getItem(STORAGE_NAME)
@@ -20,7 +22,13 @@ export const WalletContextProvider = ({ children }: { children: any }) => {
 
   useEffect(() => {
     if (wallet) localStorage.setItem(STORAGE_NAME, JSON.stringify(wallet))
-    else localStorage.removeItem(STORAGE_NAME)
+    else {
+      if (firstRender.current) {
+        firstRender.current = false
+        return
+      }
+      localStorage.removeItem(STORAGE_NAME)
+    }
   }, [wallet])
 
   return (

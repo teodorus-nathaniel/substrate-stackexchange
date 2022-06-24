@@ -6,7 +6,10 @@ export async function activateWalletFromSavedAccount(
 ) {
   const wallet = getWalletBySource(walletAccount.source)
   await wallet?.enable(APP_NAME)
-  wallet?.subscribeAccounts((accounts) => {
-    console.log(accounts)
+  return new Promise<WalletAccount | null>((resolve) => {
+    wallet?.subscribeAccounts((accounts) => {
+      if (!accounts) return
+      resolve(accounts[0] ?? null)
+    })
   })
 }
