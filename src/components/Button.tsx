@@ -51,7 +51,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
 ) {
   const classNames = clsx(
     'flex justify-center items-center',
-    'relative rounded-md',
+    'rounded-md',
     'cursor-pointer disabled:cursor-not-allowed',
     'transition-colors ease-out',
     'enabled:active:translate-y-px',
@@ -70,30 +70,32 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
       ref={ref}
       className={classNames}
     >
-      <AnimatePresence key={loading ? 'loading' : 'children'}>
-        {loading && (
-          <motion.div
-            animate={{ x: '-50%', y: '-50%', opacity: 1 }}
-            initial={{ x: '100%', y: '-50%', opacity: 1 }}
-            exit={{ x: '100%', y: '-50%', opacity: 1 }}
-            className={clsx(
-              'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'
-            )}
-          >
-            <Loading className={clsx('text-2xl')} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <motion.div
-        animate={{ x: loading ? '-150%' : '0', opacity: loading ? 0 : 1 }}
-        className={clsx(
-          'flex justify-center items-center',
-          'w-full h-full',
-          innerContainerClassName
-        )}
-      >
-        {children}
-      </motion.div>
+      <div className='w-full h-full relative'>
+        <AnimatePresence key={loading ? 'loading' : 'children'}>
+          {loading && (
+            <motion.div
+              animate={{ x: '-50%', y: '-50%', opacity: 1 }}
+              initial={{ x: '100%', y: '-50%', opacity: 1 }}
+              exit={{ x: '100%', y: '-50%', opacity: 1 }}
+              className={clsx(
+                'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'
+              )}
+            >
+              <Loading className={clsx('text-2xl')} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <motion.div
+          animate={{ x: loading ? '-150%' : '0', opacity: loading ? 0 : 1 }}
+          className={clsx(
+            'flex justify-center items-center',
+            'w-full h-full',
+            innerContainerClassName
+          )}
+        >
+          {children}
+        </motion.div>
+      </div>
     </button>
   )
 })

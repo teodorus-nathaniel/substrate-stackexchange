@@ -1,7 +1,5 @@
 import { HTMLProps } from 'react'
 
-type Props = {}
-
 export default function Loading(
   props: Omit<HTMLProps<SVGSVGElement>, 'crossOrigin'>
 ) {
@@ -23,7 +21,7 @@ export default function Loading(
         cx='50'
         cy='50'
         r='32'
-        strokeWidth='8'
+        strokeWidth='5'
         stroke='currentColor'
         strokeDasharray='50.26548245743669 50.26548245743669'
         fill='none'
@@ -33,7 +31,7 @@ export default function Loading(
           attributeName='transform'
           type='rotate'
           repeatCount='indefinite'
-          dur='1s'
+          dur='2s'
           keyTimes='0;1'
           values='0 50 50;360 50 50'
         ></animateTransform>

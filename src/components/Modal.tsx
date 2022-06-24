@@ -1,5 +1,8 @@
+import { FAST_TRANSITION } from '#/lib/constants/transition'
 import { Dialog } from '@headlessui/react'
 import clsx from 'clsx'
+import { motion } from 'framer-motion'
+import { forwardRef } from 'react'
 import { BsX } from 'react-icons/bs'
 import Button from './Button'
 import Card, { CardProps } from './Card'
@@ -7,11 +10,12 @@ import Card, { CardProps } from './Card'
 const sizes = {
   xl: clsx('max-w-screen-xl'),
   lg: clsx('max-w-screen-lg'),
-  md: clsx('max-w-screen-md'),
-  sm: clsx('max-w-screen-sm'),
+  md: clsx('max-w-2xl'),
+  sm: clsx('max-w-md'),
+  xs: clsx('max-w-sm'),
 }
 
-export interface ModalProps {
+export interface ModalProps extends Omit<CardProps, 'size'> {
   isOpen: boolean
   handleClose: () => void
   size?: keyof typeof sizes
@@ -19,29 +23,40 @@ export interface ModalProps {
   title?: string
   desc?: string
   children?: any
-  panelProps?: CardProps
+  ringColor?: 'default' | 'error'
 }
 
-export default function Modal({
-  handleClose,
-  isOpen,
-  withCloseButton = true,
-  title,
-  size = 'md',
-  desc,
-  children,
-  panelProps,
-}: ModalProps) {
+const MotionDialogPanel = motion<any>(Dialog.Panel)
+
+const Modal = forwardRef(function Modal(
+  {
+    handleClose,
+    isOpen,
+    withCloseButton = true,
+    title,
+    size = 'md',
+    desc,
+    children,
+    ringColor = 'default',
+    className,
+    ...props
+  }: ModalProps,
+  ref
+) {
   return (
-    <Dialog open={isOpen} onClose={handleClose} className={clsx('z-50')}>
+    <Dialog open={isOpen} onClose={handleClose} className={clsx('z-40')}>
       <div
-        className={clsx('fixed inset-0', 'bg-black/30 backdrop-blur-sm')}
+        className={clsx(
+          'fixed inset-0',
+          'bg-black/30 backdrop-blur-sm',
+          'z-40'
+        )}
         aria-hidden='true'
       />
       <div
         className={clsx(
-          'fixed inset-0 p-4',
-          'flex items-center justify-center'
+          'fixed inset-0 top-0 p-4',
+          'flex items-center justify-center z-50'
         )}
       >
         <div
@@ -51,20 +66,27 @@ export default function Modal({
             sizes[size]
           )}
         >
-          <Dialog.Panel className={clsx('mx-auto w-full', 'relative')}>
+          <MotionDialogPanel
+            layout
+            className={clsx('mx-auto w-full', 'relative')}
+            transition={FAST_TRANSITION}
+          >
             <Card
-              {...panelProps}
+              {...props}
+              ref={ref as any}
               className={clsx(
-                'bg-bg-200',
+                'bg-bg-100 ring-1',
                 'flex flex-col',
                 'p-4 min-h-[4em]',
-                panelProps?.className
+                ringColor === 'default' && 'ring-brand/40',
+                ringColor === 'error' && 'ring-red-500',
+                className
               )}
             >
               {withCloseButton && (
                 <Button
                   size='content'
-                  className={clsx('absolute right-4 top-4', 'p-1')}
+                  className={clsx('!absolute right-4 top-4', 'p-1')}
                   variant='unstyled'
                 >
                   <BsX className={clsx('text-xl')} />
@@ -74,9 +96,11 @@ export default function Modal({
               {desc && <Dialog.Description>{desc}</Dialog.Description>}
               {children}
             </Card>
-          </Dialog.Panel>
+          </MotionDialogPanel>
         </div>
       </div>
     </Dialog>
   )
-}
+})
+
+export default Modal
