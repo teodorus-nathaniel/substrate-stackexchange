@@ -40,6 +40,16 @@ export default function TabLayout({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const unselectedLinkInteractionStyle = (idx: number) =>
+    clsx(
+      'after:h-0.5 after:w-full after:absolute',
+      'after:bg-text-disabled after:-bottom-0.5 after:inset-x-0',
+      'after:transition after:duration-150',
+      idx < selectedTab ? 'after:origin-right' : 'after:origin-left',
+      'after:scale-x-0',
+      'hover:after:scale-x-100 focus:after:scale-x-100'
+    )
+
   return (
     <ul
       className={clsx(
@@ -52,14 +62,16 @@ export default function TabLayout({
       {tabs.map(({ text, hash }, idx) => (
         <li
           key={idx}
-          className={clsx('relative')}
+          className={clsx('relative group')}
           onClick={() => setSelectedTab(idx)}
         >
           <Link
             className={clsx(
               'pb-2.5 px-4',
-              'block',
-              selectedTab === idx && 'text-brand'
+              'block relative',
+              selectedTab === idx
+                ? 'text-brand'
+                : unselectedLinkInteractionStyle(idx)
             )}
             href={`#${encodeTab(hash ?? text)}`}
           >
@@ -70,9 +82,10 @@ export default function TabLayout({
               className={clsx(
                 'w-full h-0.5',
                 'rounded-full',
-                'absolute',
-                'left-0 -bottom-0.5',
-                'bg-brand'
+                'absolute left-0 -bottom-0.5',
+                'transition-[height] duration-150',
+                'bg-brand',
+                'group-hover:h-1 group-focus:h-1'
               )}
               layoutId='underline'
             />
