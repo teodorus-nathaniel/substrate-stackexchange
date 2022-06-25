@@ -22,8 +22,11 @@ export default function App({ Component, pageProps }: AppProps) {
     <CommonProvidersWrapper>
       <NextNProgress />
       <ToastContainer position='top-left' theme='dark' />
-      <Container>
-        <Navbar height={NAVBAR_HEIGHT} />
+      <Navbar height={NAVBAR_HEIGHT} />
+      <Container
+        style={{ marginTop: NAVBAR_HEIGHT }}
+        className={clsx('relative')}
+      >
         <div className={clsx('flex items-stretch', 'w-full pt-4')}>
           <Sidebar
             className={clsx('sticky')}
