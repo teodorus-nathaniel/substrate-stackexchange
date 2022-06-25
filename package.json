@@ -34,6 +34,7 @@
     "react-loading-skeleton": "^3.1.0",
     "react-popper": "^2.3.0",
     "react-query": "^3.39.1",
+    "react-toastify": "^9.0.5",
     "slate": "^0.81.1",
     "slate-history": "^0.66.0",
     "slate-react": "^0.81.0",

@@ -11,6 +11,8 @@ import type { AppProps } from 'next/app'
 import NextNProgress from 'nextjs-progressbar'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { QueryClientProvider } from 'react-query'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import '../styles/globals.css'
 
 const NAVBAR_HEIGHT = 75
@@ -19,6 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <CommonProvidersWrapper>
       <NextNProgress />
+      <ToastContainer position='top-left' theme='dark' />
       <Container>
         <Navbar height={NAVBAR_HEIGHT} />
         <div className={clsx('flex items-stretch', 'w-full pt-4')}>
@@ -29,7 +32,7 @@ export default function App({ Component, pageProps }: AppProps) {
               height: `calc(100vh - ${NAVBAR_HEIGHT + 48}px)`,
             }}
           />
-          <main className='flex-1 pb-12 ml-12'>
+          <main className={clsx('flex flex-col flex-1', 'ml-12')}>
             <Component {...pageProps} />
           </main>
         </div>

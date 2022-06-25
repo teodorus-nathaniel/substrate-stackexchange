@@ -3,6 +3,8 @@
   --bg-0: 18 18 18;
   --bg-100: 32 32 32;
   --bg-200: 53 53 53;
+  --toastify-color-dark: rgb(var(--bg-200));
+  --toastify-color-progress-dark: rgb(var(--color-brand));
 }
 
 @tailwind base;

@@ -33,6 +33,7 @@ export interface ButtonProps
   variant?: keyof typeof variants
   loading?: boolean
   disabled?: boolean
+  rounded?: boolean
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
@@ -45,13 +46,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
     type,
     loading,
     disabled,
+    rounded,
     ...buttonProps
   },
   ref
 ) {
   const classNames = clsx(
     'flex justify-center items-center',
-    'rounded-md',
+    rounded ? 'rounded-full' : 'rounded-md',
     'cursor-pointer disabled:cursor-not-allowed',
     'transition-colors ease-out',
     'enabled:active:translate-y-px',
