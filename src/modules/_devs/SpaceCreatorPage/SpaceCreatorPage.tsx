@@ -71,10 +71,10 @@ export default function SpaceCreatorPage() {
           <TextField {...getFieldData('name')} label='Name' />
           <RichTextArea
             {...getFieldData('desc')}
-            name='space-desc'
+            storagePrefix='create-space'
             label='Description'
           />
-          <Button loading={isLoading} type='submit'>
+          <Button className={clsx('!mt-8')} loading={isLoading} type='submit'>
             Create Space!
           </Button>
         </form>
