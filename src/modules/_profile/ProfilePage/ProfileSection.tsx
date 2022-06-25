@@ -22,8 +22,10 @@ export default function ProfileSection() {
     address,
   })
   const content = data?.content
-  const { IntegratedSkeleton, loadingChecker, getContent } =
-    useIntegratedSkeleton(isLoading, isFetched)
+  const { IntegratedSkeleton, loadingChecker } = useIntegratedSkeleton(
+    isLoading,
+    isFetched
+  )
 
   return (
     <div className={clsx('flex flex-col')}>
