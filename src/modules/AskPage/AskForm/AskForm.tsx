@@ -22,7 +22,6 @@ export default function AskForm() {
       postQuestion(values)
     },
   })
-  console.log(errors)
 
   return (
     <form onSubmit={handleSubmit} className={clsx('flex flex-col')}>
