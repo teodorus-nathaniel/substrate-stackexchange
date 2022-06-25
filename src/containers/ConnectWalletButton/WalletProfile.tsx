@@ -4,9 +4,9 @@ import Link from '#/components/Link'
 import PopOver from '#/components/PopOver'
 import ProfileImage from '#/components/ProfileImage'
 import SkeletonFallback from '#/components/SkeletonFallback'
-import { useWalletContext } from '#/contexts/WalletContext'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
 import { generateLoadingChecker } from '#/lib/helpers/renderer'
+import useLogout from '#/lib/hooks/useLogout'
 import { useGetProfile } from '#/services/subsocial/queries'
 import { truncateMiddle } from '@talisman-connect/ui'
 import { WalletAccount } from '@talisman-connect/wallets'
@@ -21,7 +21,7 @@ export default function WalletProfile({
   className,
   ...props
 }: WalletProfileProps) {
-  const [, setWallet] = useWalletContext()
+  const logout = useLogout()
   const { data, isLoading, isFetched } = useGetProfile({
     address: wallet.address,
   })
@@ -30,10 +30,6 @@ export default function WalletProfile({
     isLoading,
     isFetched
   )
-
-  const signOut = () => {
-    setWallet(null)
-  }
 
   return (
     <PopOver
@@ -96,7 +92,7 @@ export default function WalletProfile({
           variant='outlined-red'
           className='mt-2 text-sm'
           size='small'
-          onClick={signOut}
+          onClick={logout}
         >
           Sign Out
         </Button>

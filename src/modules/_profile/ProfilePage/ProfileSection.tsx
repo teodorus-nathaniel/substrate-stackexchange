@@ -3,11 +3,13 @@ import Button from '#/components/Button'
 import ProfileImage from '#/components/ProfileImage'
 import FollowingFollowerCount from '#/containers/FollowingFollowerCount'
 import { useWalletContext } from '#/contexts/WalletContext'
+import useLogout from '#/lib/hooks/useLogout'
 import clsx from 'clsx'
 import { BsBoxArrowInRight, BsPencil } from 'react-icons/bs'
 
 export default function ProfileSection() {
   const [wallet] = useWalletContext()
+  const logout = useLogout()
 
   return (
     <div className={clsx('flex flex-col')}>
@@ -28,6 +30,7 @@ export default function ProfileSection() {
               className={clsx('text-red-500')}
               size='icon-medium'
               rounded
+              onClick={logout}
             >
               <BsBoxArrowInRight />
             </Button>
