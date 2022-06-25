@@ -15,6 +15,7 @@ import { transformOnKeyDown } from './helpers/transformer'
 type ParentProps = EditableProps & RequiredFieldWrapperProps
 export interface RichTextAreaProps extends ParentProps {
   name: string
+  startOneLine?: boolean
 }
 
 const defaultInitialValue: Descendant[] = [
@@ -24,7 +25,10 @@ const defaultInitialValue: Descendant[] = [
   },
 ]
 
-export default function RichTextArea(props: RichTextAreaProps) {
+export default function RichTextArea({
+  startOneLine,
+  ...props
+}: RichTextAreaProps) {
   const editorRef = useRef<EditorType | null>(null)
   if (!editorRef.current)
     editorRef.current = withHistory(withReact(createEditor()))
@@ -58,7 +62,11 @@ export default function RichTextArea(props: RichTextAreaProps) {
         >
           <Editable
             {...getCleanedInputProps(props)}
-            className={clsx('min-h-[8em]', classNames, props.className)}
+            className={clsx(
+              !startOneLine && 'min-h-[8em]',
+              classNames,
+              props.className
+            )}
             id={id}
             renderLeaf={renderLeaf}
             renderElement={renderElement}
