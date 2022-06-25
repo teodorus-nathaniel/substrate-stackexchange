@@ -15,12 +15,20 @@ const variants = {
     'border border-red-500 text-red-500'
   ),
   unstyled: clsx('hover:bg-gray-700', 'active:bg-gray-800'),
+  'unstyled-border': clsx(
+    'hover:bg-gray-700',
+    'active:bg-gray-800',
+    'border border-current'
+  ),
 }
 
 const sizes = {
   large: clsx('px-12 py-2'),
   medium: clsx('px-6 py-2'),
   small: clsx('px-3 py-1'),
+  'icon-large': clsx('p-3'),
+  'icon-medium': clsx('p-2'),
+  'icon-small': clsx('p-1'),
   content: clsx(),
 }
 

@@ -105,8 +105,8 @@ const Modal = forwardRef(function Modal(
                   {withCloseButton && (
                     <Button
                       onClick={handleClose}
-                      size='content'
-                      className={clsx('!absolute right-4 top-4', 'p-1')}
+                      size='icon-small'
+                      className={clsx('!absolute right-4 top-4')}
                       variant='unstyled'
                     >
                       <BsX className={clsx('text-xl')} />

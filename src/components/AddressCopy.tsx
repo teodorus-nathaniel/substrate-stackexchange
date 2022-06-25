@@ -28,10 +28,10 @@ export default function AddressCopy({
       >
         <p>{truncate ? truncateMiddle(children) : children}</p>
         <Button
-          className={clsx('p-1', 'text-text-secondary', 'ml-1.5')}
+          className={clsx('text-text-secondary', 'ml-1.5')}
           rounded
           variant='unstyled'
-          size='content'
+          size='icon-small'
         >
           <BsFiles className={clsx('w-3.5 h-3.5')} />
         </Button>

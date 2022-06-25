@@ -7,7 +7,7 @@ export default function ProfilePage() {
       <div>Questions Section</div>
       <div
         className={clsx(
-          'max-w-xs w-full',
+          'max-w-xs flex-shrink w-full',
           'px-6',
           'border-l-4 border-bg-100',
           'ml-auto'
