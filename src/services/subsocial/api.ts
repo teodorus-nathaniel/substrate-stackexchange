@@ -43,7 +43,9 @@ export function useSubsocialQuery<T, V>(
     queryWrapper(func, subsocialApi!),
     {
       ...config,
-      enabled: !!(subsocialApi && (subsocialApi as any)._subsocial),
+      enabled:
+        !!(subsocialApi && (subsocialApi as any)._subsocial) &&
+        (config?.enabled ?? true),
     }
   )
 }

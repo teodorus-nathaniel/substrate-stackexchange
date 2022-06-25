@@ -3,12 +3,11 @@ import Button, { ButtonProps } from '#/components/Button'
 import Link from '#/components/Link'
 import PopOver from '#/components/PopOver'
 import ProfileImage from '#/components/ProfileImage'
-import SkeletonFallback from '#/components/SkeletonFallback'
+import { generateIntegratedSkeleton } from '#/components/SkeletonFallback'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
 import { generateLoadingChecker } from '#/lib/helpers/renderer'
 import useLogout from '#/lib/hooks/useLogout'
-import { useGetProfile } from '#/services/subsocial/queries'
-import { truncateMiddle } from '@talisman-connect/ui'
+import { useGetCurrentUser } from '#/services/subsocial/queries'
 import { WalletAccount } from '@talisman-connect/wallets'
 import clsx from 'clsx'
 
@@ -22,14 +21,10 @@ export default function WalletProfile({
   ...props
 }: WalletProfileProps) {
   const logout = useLogout()
-  const { data, isLoading, isFetched } = useGetProfile({
-    address: wallet.address,
-  })
+  const { data, isLoading, isFetched } = useGetCurrentUser()
   const content = data?.content
-  const { loadingChecker, getContent } = generateLoadingChecker(
-    isLoading,
-    isFetched
-  )
+  const { loadingChecker } = generateLoadingChecker(isLoading, isFetched)
+  const IntegratedSkeleton = generateIntegratedSkeleton(isLoading, isFetched)
 
   return (
     <PopOver
@@ -61,26 +56,31 @@ export default function WalletProfile({
               }
             />
           </div>
-          <p className={clsx('leading-snug text-sm font-bold', 'flex-1')}>
-            <SkeletonFallback
+          <div className={clsx('text-sm', 'flex-1')}>
+            <IntegratedSkeleton
               count={2}
               width='100%'
-              isLoading={loadingChecker(content?.name)}
+              content={content?.name}
+              defaultContent={
+                <AddressCopy className={clsx('font-bold')}>
+                  {wallet.address}
+                </AddressCopy>
+              }
             >
-              <AddressCopy truncate={false}>
-                {getContent(
-                  content?.name,
-                  truncateMiddle(wallet.address) ?? ''
-                )}
-              </AddressCopy>
-            </SkeletonFallback>
-          </p>
+              {(name) => (
+                <div className={clsx('flex flex-col')}>
+                  <p className={clsx('leading-snug')}>{name}</p>
+                  <AddressCopy className={clsx('text-xs text-text-secondary')}>
+                    {wallet.address}
+                  </AddressCopy>
+                </div>
+              )}
+            </IntegratedSkeleton>
+          </div>
         </div>
         <div className='flex flex-col mt-3'>
           <p className='text-text-secondary text-xs'>
-            <SkeletonFallback isLoading={loadingChecker(content?.summary)}>
-              {content?.summary}
-            </SkeletonFallback>
+            <IntegratedSkeleton content={content?.summary} />
           </p>
         </div>
         <Link href='/profile'>

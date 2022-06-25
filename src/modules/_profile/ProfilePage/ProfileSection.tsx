@@ -1,15 +1,28 @@
 import AddressCopy from '#/components/AddressCopy'
 import Button from '#/components/Button'
 import ProfileImage from '#/components/ProfileImage'
+import SkeletonFallback, {
+  generateIntegratedSkeleton,
+} from '#/components/SkeletonFallback'
 import FollowingFollowerCount from '#/containers/FollowingFollowerCount'
 import { useWalletContext } from '#/contexts/WalletContext'
 import useLogout from '#/lib/hooks/useLogout'
+import { useGetProfile } from '#/services/subsocial/queries'
 import clsx from 'clsx'
+import { useRouter } from 'next/router'
 import { BsBoxArrowInRight, BsPencil } from 'react-icons/bs'
 
 export default function ProfileSection() {
   const [wallet] = useWalletContext()
   const logout = useLogout()
+
+  const { query } = useRouter()
+  const id = query.id as string | undefined
+  const { data, isLoading, isFetched } = useGetProfile({
+    address: id ?? wallet?.address ?? '',
+  })
+  const content = data?.content
+  const IntegratedSkeleton = generateIntegratedSkeleton(isLoading, isFetched)
 
   return (
     <div className={clsx('flex flex-col')}>
@@ -37,17 +50,26 @@ export default function ProfileSection() {
           </div>
         </div>
       </div>
-      <p className={clsx('font-bold text-lg', 'mt-2')}>
-        Teodorus Nathaniel Kurniawan
-      </p>
-      <AddressCopy className={clsx('mt-1.5', 'text-text-secondary', 'text-xs')}>
-        {wallet?.address ?? ''}
-      </AddressCopy>
-      <FollowingFollowerCount className={clsx('mt-6')} />
-      <div className={clsx('text-text-secondary text-sm', 'mt-6')}>
-        Subsocial is an open protocol for decentralized social networks and
-        marketplaces. It&apos;s built with Substrate and IPFS. Learn more
+      <div className={clsx('font-bold text-lg', 'mt-2')}>
+        <IntegratedSkeleton
+          content={content?.name}
+          defaultContent={<AddressCopy>{data?.id ?? ''}</AddressCopy>}
+        >
+          {(name) => <p>{name}</p>}
+        </IntegratedSkeleton>
       </div>
+      {content?.name && (
+        <AddressCopy className={clsx('mb-4', 'text-text-secondary', 'text-xs')}>
+          {wallet?.address ?? ''}
+        </AddressCopy>
+      )}
+      <FollowingFollowerCount className={clsx('mt-2')} />
+      <SkeletonFallback>
+        <div className={clsx('text-text-secondary text-sm', 'mt-6')}>
+          Subsocial is an open protocol for decentralized social networks and
+          marketplaces. It&apos;s built with Substrate and IPFS. Learn more
+        </div>
+      </SkeletonFallback>
     </div>
   )
 }
