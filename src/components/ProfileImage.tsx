@@ -1,6 +1,8 @@
+import DefaultPic from '#/assets/default-profile-pic.png'
 import clsx from 'clsx'
 import { ImageProps } from 'next/image'
 import { HTMLProps } from 'react'
+import AspectRatioContainer from './AspectRatioContainer'
 import ImageContainer from './ImageContainer'
 import SkeletonFallback from './SkeletonFallback'
 
@@ -11,8 +13,7 @@ export interface ProfileImageProps
   isLoading?: boolean
 }
 
-const DEFAULT_PROFILE_PIC =
-  'https://app.subsocial.network/ipfs/ipfs/QmRXpLwHBpxRzqN4fVURtQfhB6kBqjXqey1CYEWRbCyfxJ'
+const DEFAULT_PROFILE_PIC = DefaultPic
 
 export default function ProfileImage({
   className,
@@ -23,19 +24,21 @@ export default function ProfileImage({
 }: ProfileImageProps) {
   return (
     <div className={clsx(className)} {...props}>
-      <SkeletonFallback
-        isLoading={isLoading}
-        circle
-        height='100%'
-        className='block'
-      >
-        <ImageContainer
-          src={src ?? DEFAULT_PROFILE_PIC}
-          className={clsx('rounded-full')}
-          aspectRatio='1:1'
-          alt={alt ?? 'Profile'}
-        />
-      </SkeletonFallback>
+      <AspectRatioContainer className={clsx(className)} aspectRatio='1:1'>
+        <SkeletonFallback
+          isLoading={isLoading}
+          circle
+          height='100%'
+          className='block'
+        >
+          <ImageContainer
+            src={src ?? DEFAULT_PROFILE_PIC}
+            className={clsx('rounded-full')}
+            aspectRatio='1:1'
+            alt={alt ?? 'Profile'}
+          />
+        </SkeletonFallback>
+      </AspectRatioContainer>
     </div>
   )
 }

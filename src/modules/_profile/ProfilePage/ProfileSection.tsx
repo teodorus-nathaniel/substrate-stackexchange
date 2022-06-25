@@ -4,6 +4,7 @@ import ProfileImage from '#/components/ProfileImage'
 import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
 import FollowingFollowerCount from '#/containers/FollowingFollowerCount'
 import { useWalletContext } from '#/contexts/WalletContext'
+import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
 import useLogout from '#/lib/hooks/useLogout'
 import { useGetProfile } from '#/services/subsocial/queries'
 import clsx from 'clsx'
@@ -21,17 +22,16 @@ export default function ProfileSection() {
     address,
   })
   const content = data?.content
-  const { IntegratedSkeleton, loadingChecker } = useIntegratedSkeleton(
-    isLoading,
-    isFetched
-  )
+  const { IntegratedSkeleton, loadingChecker, getContent } =
+    useIntegratedSkeleton(isLoading, isFetched)
 
   return (
     <div className={clsx('flex flex-col')}>
       <div className={clsx('flex justify-between')}>
         <ProfileImage
-          className='w-28'
+          className='w-28 h-28'
           isLoading={loadingChecker(content?.avatar)}
+          src={content?.avatar && getImageUrlFromIPFS(content.avatar)}
         />
         <div className={clsx('mt-3')}>
           <div className={clsx('flex items-center', 'space-x-3')}>
