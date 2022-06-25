@@ -9,7 +9,7 @@ const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
 })
 
 export default function AskForm() {
-  const { getFieldData, handleSubmit } = useFormikWrapper({
+  const { values, getFieldData, handleSubmit, resetForm } = useFormikWrapper({
     ...askQuestionForm,
     onSubmit: (values) => {
       console.log('CREATING QUESTION...')
@@ -17,6 +17,7 @@ export default function AskForm() {
       // createSpace(values)
     },
   })
+  console.log(values)
 
   return (
     <form onSubmit={handleSubmit} className={clsx('flex flex-col')}>
@@ -41,7 +42,16 @@ export default function AskForm() {
         storagePrefix='ask'
         {...getFieldData('body')}
       />
-      <Button>Post your question</Button>
+      <div className={clsx('mt-8 space-x-4', 'flex items-center')}>
+        <Button type='submit'>Post your question</Button>
+        <Button
+          onClick={() => resetForm()}
+          type='button'
+          variant='outlined-red'
+        >
+          Discard draft
+        </Button>
+      </div>
     </form>
   )
 }
