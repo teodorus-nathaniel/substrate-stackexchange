@@ -70,7 +70,12 @@ export default function ProfileSection() {
           {data?.id ?? ''}
         </AddressCopy>
       )}
-      <FollowingFollowerCount className={clsx('mt-2')} />
+      <FollowingFollowerCount
+        isLoading={loadingChecker(data?.struct)}
+        followingCount={data?.struct.followingAccountsCount}
+        followerCount={data?.struct.followersCount}
+        className={clsx('mt-2')}
+      />
       <IntegratedSkeleton className={clsx('mt-6')} content={content?.summary}>
         {(summary) => (
           <div className={clsx('text-text-secondary text-sm', 'mt-6')}>
