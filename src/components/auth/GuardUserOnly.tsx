@@ -10,6 +10,8 @@ export default function GuardUserOnly({
   const [wallet] = useWalletContext()
   const router = useRouter()
 
+  console.log(wallet)
+
   useEffect(() => {
     if (wallet === null) {
       router.push(guardRedirect)

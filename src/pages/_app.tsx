@@ -21,30 +21,30 @@ import '../styles/globals.css'
 export default function App({ Component, pageProps }: AppProps) {
   const { guard = { type: 'none' } } = pageProps as CommonStaticProps
   return (
-    <GuardWrapper {...guard}>
-      <CommonProvidersWrapper>
-        <NextNProgress />
-        <ToastContainer position='top-left' theme='dark' />
-        <Navbar height={NAVBAR_HEIGHT} />
-        <Container
-          style={{ marginTop: NAVBAR_HEIGHT }}
-          className={clsx('relative')}
-        >
-          <div className={clsx('flex items-stretch', 'w-full pt-4')}>
-            <Sidebar
-              className={clsx('sticky')}
-              style={{
-                top: NAVBAR_HEIGHT,
-                height: `calc(100vh - ${NAVBAR_HEIGHT + 48}px)`,
-              }}
-            />
-            <main className={clsx('flex flex-col flex-1', 'ml-12')}>
+    <CommonProvidersWrapper>
+      <NextNProgress />
+      <ToastContainer position='top-left' theme='dark' />
+      <Navbar height={NAVBAR_HEIGHT} />
+      <Container
+        style={{ marginTop: NAVBAR_HEIGHT }}
+        className={clsx('relative')}
+      >
+        <div className={clsx('flex items-stretch', 'w-full pt-4')}>
+          <Sidebar
+            className={clsx('sticky')}
+            style={{
+              top: NAVBAR_HEIGHT,
+              height: `calc(100vh - ${NAVBAR_HEIGHT + 48}px)`,
+            }}
+          />
+          <main className={clsx('flex flex-col flex-1', 'ml-12')}>
+            <GuardWrapper {...guard}>
               <Component {...pageProps} />
-            </main>
-          </div>
-        </Container>
-      </CommonProvidersWrapper>
-    </GuardWrapper>
+            </GuardWrapper>
+          </main>
+        </div>
+      </Container>
+    </CommonProvidersWrapper>
   )
 }
 

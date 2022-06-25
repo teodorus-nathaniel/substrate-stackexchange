@@ -4,7 +4,7 @@ import { defaultContextValue, StateContext } from './common'
 
 type WalletState = WalletAccount | null | undefined
 export const WalletContext = createContext<StateContext<WalletState>>(
-  defaultContextValue(null)
+  defaultContextValue(undefined)
 )
 
 const STORAGE_NAME = 'selected-wallet'
