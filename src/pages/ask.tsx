@@ -1,3 +1,3 @@
-export default function AskPage() {
-  return <div>ask</div>
-}
+import AskPage from '#/modules/AskPage'
+
+export default AskPage
