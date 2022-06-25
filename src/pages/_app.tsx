@@ -3,6 +3,7 @@ import Navbar from '#/containers/Navbar'
 import Sidebar from '#/containers/Sidebar'
 import { SubsocialApiContextProvider } from '#/contexts/SubsocialApiContext'
 import { WalletContextProvider } from '#/contexts/WalletContext'
+import { NAVBAR_HEIGHT } from '#/lib/constants/style'
 import queryClient from '#/services/client'
 import '@talisman-connect/components/talisman-connect-components.esm.css'
 import '@talisman-connect/ui/talisman-connect-ui.esm.css'
@@ -14,8 +15,6 @@ import { QueryClientProvider } from 'react-query'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import '../styles/globals.css'
-
-const NAVBAR_HEIGHT = 75
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
