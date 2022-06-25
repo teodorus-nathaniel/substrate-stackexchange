@@ -71,13 +71,12 @@ export default function WalletProfile({
               width='100%'
               isLoading={loadingChecker(content?.name)}
             >
-              <AddressCopy
-                address={getContent(
+              <AddressCopy truncate={false}>
+                {getContent(
                   content?.name,
                   truncateMiddle(wallet.address) ?? ''
                 )}
-                truncate={false}
-              />
+              </AddressCopy>
             </SkeletonFallback>
           </p>
         </div>

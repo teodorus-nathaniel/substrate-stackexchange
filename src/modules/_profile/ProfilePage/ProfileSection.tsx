@@ -1,7 +1,7 @@
+import AddressCopy from '#/components/AddressCopy'
 import Link from '#/components/Link'
 import ProfileImage from '#/components/ProfileImage'
 import { useWalletContext } from '#/contexts/WalletContext'
-import { truncateMiddle } from '@talisman-connect/ui'
 import clsx from 'clsx'
 
 export default function ProfileSection() {
@@ -13,12 +13,22 @@ export default function ProfileSection() {
       <p className={clsx('font-bold text-lg', 'mt-2')}>
         Teodorus Nathaniel Kurniawan
       </p>
-      <p className={clsx('mt-1.5', 'text-text-secondary', 'text-xs')}>
-        {truncateMiddle(wallet?.address)}
-      </p>
-      <div className={clsx('mt-4 flex items-center')}>
-        <Link variant='primary' className={clsx('text-sm')}>
-          <strong>813</strong> Followers
+      <AddressCopy className={clsx('mt-1.5', 'text-text-secondary', 'text-xs')}>
+        {wallet?.address ?? ''}
+      </AddressCopy>
+      <div className={clsx('mt-4 flex items-center', 'flex space-x-2')}>
+        <Link
+          variant='primary'
+          className={clsx('text-sm', 'text-text-primary')}
+        >
+          813 <span className={clsx('text-text-secondary')}>Followers</span>
+        </Link>
+        <span className='text-lg font-bold'> &middot; </span>
+        <Link
+          variant='primary'
+          className={clsx('text-sm', 'text-text-primary')}
+        >
+          813 <span className={clsx('text-text-secondary')}>Following</span>
         </Link>
       </div>
     </div>

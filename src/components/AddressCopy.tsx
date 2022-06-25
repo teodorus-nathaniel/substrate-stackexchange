@@ -6,34 +6,36 @@ import { toast } from 'react-toastify'
 import Button from './Button'
 
 export interface AddressCopyProps extends HTMLProps<HTMLDivElement> {
-  address: string
+  children: string
   truncate?: boolean
 }
 
 export default function AddressCopy({
-  address,
+  children,
   truncate = true,
+  className,
   ...props
 }: AddressCopyProps) {
   const copyToClipboard = () => {
-    window.navigator.clipboard.writeText(address)
+    window.navigator.clipboard.writeText(children)
     toast('Address copied to clipboard!')
   }
   return (
-    <div
-      onClick={copyToClipboard}
-      className={clsx('flex items-center', 'cursor-pointer')}
-      {...props}
-    >
-      <p>{truncate ? truncateMiddle(address) : address}</p>
-      <Button
-        className={clsx('rounded-full', 'p-1', 'text-text-secondary', 'ml-1.5')}
-        style={{ fontSize: '75%' }}
-        variant='unstyled'
-        size='content'
+    <div className={clsx('flex', className)} {...props}>
+      <div
+        onClick={copyToClipboard}
+        className={clsx('flex items-center', 'cursor-pointer')}
       >
-        <BsFiles className={clsx('w-4 h-4')} />
-      </Button>
+        <p>{truncate ? truncateMiddle(children) : children}</p>
+        <Button
+          className={clsx('p-1', 'text-text-secondary', 'ml-1.5')}
+          rounded
+          variant='unstyled'
+          size='content'
+        >
+          <BsFiles className={clsx('w-3.5 h-3.5')} />
+        </Button>
+      </div>
     </div>
   )
 }
