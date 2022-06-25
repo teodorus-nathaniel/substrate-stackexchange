@@ -1,3 +1,4 @@
+import RichTextArea from '#/components/inputs/RichTextArea'
 import TabLayout, { TabData } from '#/components/TabLayout'
 import TwoColumnsPageLayout from '#/containers/layouts/TwoColumnsPageLayout'
 import clsx from 'clsx'
@@ -21,6 +22,7 @@ export default function ProfilePage() {
             setSelectedTab={setSelectedTab}
             selectedTab={selectedTab}
           />
+          <RichTextArea name='test' />
           <div className={clsx('text-4xl')}>
             <p>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente

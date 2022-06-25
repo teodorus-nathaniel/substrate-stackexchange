@@ -1,23 +1,32 @@
 import { SCREEN_HEIGHT_WITHOUT_NAVBAR } from '#/lib/constants/style'
 import clsx from 'clsx'
 
+const sizes = {
+  small: clsx('max-w-xs'),
+}
+
 export interface TwoColumnsPageLayoutProps {
   leftSection: JSX.Element
   rightSection: JSX.Element
+  rightSectionSize?: keyof typeof sizes
 }
 
 export default function TwoColumnsPageLayout({
   leftSection,
   rightSection,
+  rightSectionSize = 'small',
 }: TwoColumnsPageLayoutProps) {
   return (
     <div className={clsx('flex items-stretch flex-1')}>
-      <div className={clsx('flex flex-col', 'w-full')}>{leftSection}</div>
+      <div className={clsx('flex flex-col', 'w-full', 'pr-6')}>
+        {leftSection}
+      </div>
       <div
         className={clsx(
-          'max-w-xs flex-shrink w-full',
+          'flex-shrink w-full',
           'px-6 ml-auto',
-          'border-l-4 border-bg-100'
+          'border-l-4 border-bg-100',
+          sizes[rightSectionSize]
         )}
       >
         <div
