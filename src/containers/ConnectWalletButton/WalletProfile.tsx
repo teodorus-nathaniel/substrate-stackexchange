@@ -85,7 +85,7 @@ export default function WalletProfile({
         </div>
         <Link href='/profile'>
           <Button className='mt-4 w-full text-sm' size='small'>
-            View / Edit Profile
+            My Profile
           </Button>
         </Link>
         <Button
