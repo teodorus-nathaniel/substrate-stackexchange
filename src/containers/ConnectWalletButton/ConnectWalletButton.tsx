@@ -2,6 +2,7 @@ import Button from '#/components/Button'
 import { useWalletContext } from '#/contexts/WalletContext'
 import { APP_NAME } from '#/lib/constants/app'
 import { WalletSelect } from '@talisman-connect/components'
+import clsx from 'clsx'
 import { HTMLProps } from 'react'
 import WalletProfile from './WalletProfile'
 
@@ -27,7 +28,9 @@ export default function ConnectWalletButton(props: ConnectWalletButtonProps) {
               setWallet(accounts[0])
             })
           }}
-          triggerComponent={<Button>Connect to wallet</Button>}
+          triggerComponent={
+            <Button className={clsx('text-sm')}>Connect to wallet</Button>
+          }
         />
       )}
     </div>
