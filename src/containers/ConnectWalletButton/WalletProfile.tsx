@@ -3,9 +3,8 @@ import Button, { ButtonProps } from '#/components/Button'
 import Link from '#/components/Link'
 import PopOver from '#/components/PopOver'
 import ProfileImage from '#/components/ProfileImage'
-import { generateIntegratedSkeleton } from '#/components/SkeletonFallback'
+import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
-import { generateLoadingChecker } from '#/lib/helpers/renderer'
 import useLogout from '#/lib/hooks/useLogout'
 import { useGetCurrentUser } from '#/services/subsocial/queries'
 import { WalletAccount } from '@talisman-connect/wallets'
@@ -23,8 +22,10 @@ export default function WalletProfile({
   const logout = useLogout()
   const { data, isLoading, isFetched } = useGetCurrentUser()
   const content = data?.content
-  const { loadingChecker } = generateLoadingChecker(isLoading, isFetched)
-  const IntegratedSkeleton = generateIntegratedSkeleton(isLoading, isFetched)
+  const { IntegratedSkeleton, loadingChecker } = useIntegratedSkeleton(
+    isLoading,
+    isFetched
+  )
 
   return (
     <PopOver

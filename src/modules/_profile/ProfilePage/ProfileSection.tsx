@@ -1,9 +1,7 @@
 import AddressCopy from '#/components/AddressCopy'
 import Button from '#/components/Button'
 import ProfileImage from '#/components/ProfileImage'
-import SkeletonFallback, {
-  generateIntegratedSkeleton,
-} from '#/components/SkeletonFallback'
+import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
 import FollowingFollowerCount from '#/containers/FollowingFollowerCount'
 import { useWalletContext } from '#/contexts/WalletContext'
 import useLogout from '#/lib/hooks/useLogout'
@@ -18,16 +16,23 @@ export default function ProfileSection() {
 
   const { query } = useRouter()
   const id = query.id as string | undefined
+  const address = id ?? wallet?.address ?? ''
   const { data, isLoading, isFetched } = useGetProfile({
-    address: id ?? wallet?.address ?? '',
+    address,
   })
   const content = data?.content
-  const IntegratedSkeleton = generateIntegratedSkeleton(isLoading, isFetched)
+  const { IntegratedSkeleton, loadingChecker } = useIntegratedSkeleton(
+    isLoading,
+    isFetched
+  )
 
   return (
     <div className={clsx('flex flex-col')}>
       <div className={clsx('flex justify-between')}>
-        <ProfileImage className='w-28' />
+        <ProfileImage
+          className='w-28'
+          isLoading={loadingChecker(content?.avatar)}
+        />
         <div className={clsx('mt-3')}>
           <div className={clsx('flex items-center', 'space-x-3')}>
             <Button
@@ -60,16 +65,17 @@ export default function ProfileSection() {
       </div>
       {content?.name && (
         <AddressCopy className={clsx('mb-4', 'text-text-secondary', 'text-xs')}>
-          {wallet?.address ?? ''}
+          {data?.id ?? ''}
         </AddressCopy>
       )}
       <FollowingFollowerCount className={clsx('mt-2')} />
-      <SkeletonFallback>
-        <div className={clsx('text-text-secondary text-sm', 'mt-6')}>
-          Subsocial is an open protocol for decentralized social networks and
-          marketplaces. It&apos;s built with Substrate and IPFS. Learn more
-        </div>
-      </SkeletonFallback>
+      <IntegratedSkeleton className={clsx('mt-6')} content={content?.summary}>
+        {(summary) => (
+          <div className={clsx('text-text-secondary text-sm', 'mt-6')}>
+            {summary}
+          </div>
+        )}
+      </IntegratedSkeleton>
     </div>
   )
 }

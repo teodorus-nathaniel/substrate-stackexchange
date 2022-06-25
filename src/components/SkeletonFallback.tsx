@@ -1,5 +1,6 @@
 import { generateLoadingChecker } from '#/lib/helpers/renderer'
 import clsx from 'clsx'
+import { useMemo } from 'react'
 import Skeleton, { SkeletonProps } from 'react-loading-skeleton'
 
 export interface SkeletonFallbackProps extends SkeletonProps {
@@ -32,30 +33,35 @@ export interface IntegratedSkeletonProps<T>
   children?: (content: T) => JSX.Element
 }
 
-export function generateIntegratedSkeleton(
+export function useIntegratedSkeleton(
   ...data: Parameters<typeof generateLoadingChecker>
 ) {
-  const { loadingChecker } = generateLoadingChecker(...data)
-
-  return function IntegratedSkeleton<T>({
-    content,
-    defaultContent,
-    children,
-    ...props
-  }: IntegratedSkeletonProps<T>) {
-    const shouldRenderDefaultContent = loadingChecker(content) || !content
-    return (
-      <SkeletonFallback {...props} isLoading={loadingChecker(content)}>
-        {(() => {
-          if (shouldRenderDefaultContent) {
-            return defaultContent
-          } else if (children) {
-            return children(content)
-          } else {
-            return content
-          }
-        })()}
-      </SkeletonFallback>
-    )
-  }
+  return useMemo(() => {
+    const { loadingChecker, getContent } = generateLoadingChecker(...data)
+    return {
+      IntegratedSkeleton: function IntegratedSkeleton<T>({
+        content,
+        defaultContent,
+        children,
+        ...props
+      }: IntegratedSkeletonProps<T>) {
+        const shouldRenderDefaultContent = loadingChecker(content) || !content
+        return (
+          <SkeletonFallback {...props} isLoading={loadingChecker(content)}>
+            {(() => {
+              if (shouldRenderDefaultContent) {
+                return defaultContent
+              } else if (children) {
+                return children(content)
+              } else {
+                return content
+              }
+            })()}
+          </SkeletonFallback>
+        )
+      },
+      loadingChecker,
+      getContent,
+    }
+  }, [data])
 }
