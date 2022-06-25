@@ -1,58 +1,24 @@
+import TabLayout, { TabData } from '#/components/TabLayout'
 import clsx from 'clsx'
+import { useState } from 'react'
 import ProfileSection from './ProfileSection'
 
+const tabs: TabData[] = [
+  { text: 'Questions (100)', hash: 'questions' },
+  { text: 'Answers (50)', hash: 'answers' },
+]
+
 export default function ProfilePage() {
+  const [selectedTab, setSelectedTab] = useState(0)
   return (
     <div className={clsx('flex items-stretch flex-1')}>
-      <div>
-        <p className='text-2xl'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, deserunt
-          maxime voluptate quidem, placeat veritatis consectetur nihil
-          repellendus illo repellat, unde officia mollitia magni! Laudantium
-          fugit optio dolorum debitis iusto!
-        </p>
-        <p className='text-2xl'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, deserunt
-          maxime voluptate quidem, placeat veritatis consectetur nihil
-          repellendus illo repellat, unde officia mollitia magni! Laudantium
-          fugit optio dolorum debitis iusto!
-        </p>
-        <p className='text-2xl'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, deserunt
-          maxime voluptate quidem, placeat veritatis consectetur nihil
-          repellendus illo repellat, unde officia mollitia magni! Laudantium
-          fugit optio dolorum debitis iusto!
-        </p>
-        <p className='text-2xl'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, deserunt
-          maxime voluptate quidem, placeat veritatis consectetur nihil
-          repellendus illo repellat, unde officia mollitia magni! Laudantium
-          fugit optio dolorum debitis iusto!
-        </p>
-        <p className='text-2xl'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, deserunt
-          maxime voluptate quidem, placeat veritatis consectetur nihil
-          repellendus illo repellat, unde officia mollitia magni! Laudantium
-          fugit optio dolorum debitis iusto!
-        </p>
-        <p className='text-2xl'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, deserunt
-          maxime voluptate quidem, placeat veritatis consectetur nihil
-          repellendus illo repellat, unde officia mollitia magni! Laudantium
-          fugit optio dolorum debitis iusto!
-        </p>
-        <p className='text-2xl'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, deserunt
-          maxime voluptate quidem, placeat veritatis consectetur nihil
-          repellendus illo repellat, unde officia mollitia magni! Laudantium
-          fugit optio dolorum debitis iusto!
-        </p>
-        <p className='text-2xl'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, deserunt
-          maxime voluptate quidem, placeat veritatis consectetur nihil
-          repellendus illo repellat, unde officia mollitia magni! Laudantium
-          fugit optio dolorum debitis iusto!
-        </p>
+      <div className={clsx('flex flex-col', 'w-full')}>
+        <TabLayout
+          className={clsx('w-full text-sm')}
+          tabs={tabs}
+          setSelectedTab={setSelectedTab}
+          selectedTab={selectedTab}
+        />
       </div>
       <div
         className={clsx(
