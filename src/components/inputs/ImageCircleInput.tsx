@@ -31,10 +31,11 @@ export default function ImageCircleInput({
         <Button
           className={clsx(
             'bg-bg-200',
-            'rounded-full w-32 h-32',
+            'w-32 h-32',
             'relative group',
             imageContainerClassName
           )}
+          rounded
           type='button'
           onClick={() => inputRef.current?.click()}
           variant='unstyled'
