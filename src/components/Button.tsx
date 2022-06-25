@@ -14,6 +14,7 @@ const variants = {
     hoverRingClassName,
     'border border-red-500 text-red-500'
   ),
+  'outlined-brand': clsx(hoverRingClassName, 'border border-brand text-brand'),
   unstyled: clsx('hover:bg-gray-700', 'active:bg-gray-800'),
   'unstyled-border': clsx(
     'hover:bg-gray-700',

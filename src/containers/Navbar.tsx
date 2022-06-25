@@ -1,3 +1,4 @@
+import Button from '#/components/Button'
 import Container from '#/components/Container'
 import Brand from '#/containers/Brand'
 import ConnectWalletButton from '#/containers/ConnectWalletButton'
@@ -49,7 +50,15 @@ export default function Navbar({ height, className, style, ...props }: Props) {
               animate={{ opacity: 1, y: 0 }}
             >
               <Brand className='text-lg' />
-              <ConnectWalletButton />
+              <div className={clsx('flex items-center space-x-6')}>
+                <Button
+                  variant='outlined-brand'
+                  className={clsx('text-sm font-bold')}
+                >
+                  Ask a question
+                </Button>
+                <ConnectWalletButton />
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
