@@ -16,3 +16,11 @@ export function getUseTestnet() {
   )
   return useTestnet === 'true'
 }
+
+export function getSpaceId() {
+  return checkEnv(
+    process.env['NEXT_PUBLIC_SPACE_ID'],
+    'NEXT_PUBLIC_SPACE_ID',
+    true
+  )
+}

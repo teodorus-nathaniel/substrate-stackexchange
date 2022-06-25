@@ -1,7 +1,10 @@
 import Button from '#/components/Button'
+import TransactionModal from '#/containers/TransactionModal'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
+import { useCreatePost } from '#/services/subsocial/mutations'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
+import { useState } from 'react'
 import { askQuestionForm } from './form/schema'
 
 const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
@@ -9,18 +12,27 @@ const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
 })
 
 export default function AskForm() {
-  const { values, getFieldData, handleSubmit, resetForm } = useFormikWrapper({
+  const [isOpenModal, setIsOpenModal] = useState(false)
+  const { mutate: postQuestion, isLoading, error } = useCreatePost()
+  const { getFieldData, handleSubmit, resetForm, errors } = useFormikWrapper({
     ...askQuestionForm,
     onSubmit: (values) => {
       console.log('CREATING QUESTION...')
-      // setIsOpenModal(true)
-      // createSpace(values)
+      setIsOpenModal(true)
+      postQuestion(values)
     },
   })
-  console.log(values)
+  console.log(errors)
 
   return (
     <form onSubmit={handleSubmit} className={clsx('flex flex-col')}>
+      <TransactionModal
+        action='Posting your question'
+        isLoading={isLoading}
+        errorMsg={error?.message}
+        handleClose={() => setIsOpenModal(false)}
+        isOpen={isOpenModal}
+      />
       <h1 className={clsx('text-3xl')}>Ask a Public Question</h1>
       <RichTextArea
         label='Title'

@@ -11,9 +11,9 @@ const askQuestionInitialValues: AskQuestionFormType = {
 export const askQuestionForm = {
   initialValues: askQuestionInitialValues,
   validationSchema: object().shape({
-    name: string().required('Your space needs a name!'),
-    desc: string().test({
-      name: 'question-desc-validator',
+    title: string().required('You need to provide the title of your question!'),
+    body: string().test({
+      name: 'question-body-validator',
       test: function (value) {
         return (value?.length ?? 0) < 30
           ? this.createError({

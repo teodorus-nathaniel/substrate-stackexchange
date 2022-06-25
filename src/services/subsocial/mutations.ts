@@ -1,3 +1,4 @@
+import { getSpaceId } from '#/lib/helpers/env'
 import { Hash } from '@polkadot/types/interfaces'
 import { IpfsContent } from '@subsocial/types/substrate/classes'
 import { UseMutationOptions } from 'react-query'
@@ -29,6 +30,27 @@ export function useCreateSpace(
       name,
       IpfsContent(spaceCid),
       null
+    )
+  }, config)
+}
+
+export type CreateQuestionPayload = {
+  title: string
+  body: string
+}
+export function useCreatePost(
+  config?: SubsocialMutationConfig<CreateQuestionPayload>
+) {
+  return useSubsocialMutation(async (data, { ipfsApi, substrateApi }) => {
+    const { title, body } = data
+    const postCid = await ipfsApi.savePost({
+      title,
+      body,
+    } as any)
+    return substrateApi.tx.posts.createPost(
+      getSpaceId(),
+      { RegularPost: null },
+      IpfsContent(postCid)
     )
   }, config)
 }
