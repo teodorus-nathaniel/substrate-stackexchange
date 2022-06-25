@@ -15,6 +15,7 @@ import { transformOnKeyDown } from './helpers/transformer'
 type ParentProps = EditableProps & RequiredFieldWrapperProps
 export interface RichTextAreaProps extends ParentProps {
   name: string
+  storagePrefix?: string
   startOneLine?: boolean
 }
 
@@ -27,6 +28,7 @@ const defaultInitialValue: Descendant[] = [
 
 export default function RichTextArea({
   startOneLine,
+  storagePrefix: _storagePrefix,
   ...props
 }: RichTextAreaProps) {
   const editorRef = useRef<EditorType | null>(null)
@@ -34,7 +36,8 @@ export default function RichTextArea({
     editorRef.current = withHistory(withReact(createEditor()))
   const editor = editorRef.current
 
-  const storageKey = `textarea-${props.name}`
+  const storagePrefix = _storagePrefix ? `-${_storagePrefix}` : ''
+  const storageKey = `textarea${storagePrefix}-${props.name}`
   const initialValue = useMemo(() => {
     let value = defaultInitialValue
     if (typeof window !== 'undefined') {
