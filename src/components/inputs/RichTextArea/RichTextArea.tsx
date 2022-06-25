@@ -1,6 +1,6 @@
 import { EditorType } from '#/declarations/slate'
 import clsx from 'clsx'
-import { useMemo, useRef } from 'react'
+import { ChangeEventHandler, useMemo, useRef } from 'react'
 import { createEditor, Descendant } from 'slate'
 import { withHistory } from 'slate-history'
 import { Editable, Slate, withReact } from 'slate-react'
@@ -10,6 +10,7 @@ import FieldWrapper, {
   RequiredFieldWrapperProps,
 } from '../common/FieldWrapper'
 import { renderElement, renderLeaf } from './elements'
+import { deserializeDraft, serializeDraft } from './helpers/serializer'
 import { transformOnKeyDown } from './helpers/transformer'
 
 type ParentProps = EditableProps & RequiredFieldWrapperProps
@@ -26,9 +27,24 @@ const defaultInitialValue: Descendant[] = [
   },
 ]
 
+const onChangeWrapper = (
+  onChange: ChangeEventHandler<HTMLDivElement> | undefined,
+  content: string,
+  name: string
+) => {
+  onChange &&
+    onChange({
+      target: {
+        name: name,
+        value: content,
+      },
+    } as any)
+}
+
 export default function RichTextArea({
   startOneLine,
   storagePrefix: _storagePrefix,
+  onChange,
   ...props
 }: RichTextAreaProps) {
   const editorRef = useRef<EditorType | null>(null)
@@ -42,9 +58,13 @@ export default function RichTextArea({
     let value = defaultInitialValue
     if (typeof window !== 'undefined') {
       const savedDraft = window.localStorage.getItem(storageKey)
-      if (savedDraft) value = JSON.parse(savedDraft)
+      if (savedDraft) {
+        onChangeWrapper(onChange, savedDraft, props.name)
+        value = deserializeDraft(savedDraft)
+      }
     }
     return value
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storageKey])
 
   return (
@@ -58,8 +78,10 @@ export default function RichTextArea({
               (op) => 'set_selection' !== op.type
             )
             if (isAstChange) {
-              const content = JSON.stringify(value)
+              const content = serializeDraft(value)
               localStorage.setItem(storageKey, content)
+              // TODO: because this is still json stringify, the length will be more than the actual content
+              onChangeWrapper(onChange, content, props.name)
             }
           }}
         >
