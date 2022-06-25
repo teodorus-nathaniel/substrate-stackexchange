@@ -8,7 +8,6 @@ const variants = {
   'filled-brand': clsx(
     hoverRingClassName,
     'bg-brand text-white',
-    'border border-brand',
     'enabled:active:brightness-90 enabled:active:bg-brand'
   ),
   'outlined-red': clsx(
