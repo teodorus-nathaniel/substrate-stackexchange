@@ -8,7 +8,7 @@ import { useCreateSpace } from '#/services/subsocial/mutations'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { useState } from 'react'
-import { createSpaceForm } from './forms/schema'
+import { createSpaceForm } from './form/schema'
 
 const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
   ssr: false,
