@@ -1,5 +1,6 @@
 import Button from '#/components/Button'
 import Container from '#/components/Container'
+import Link from '#/components/Link'
 import Brand from '#/containers/Brand'
 import ConnectWalletButton from '#/containers/ConnectWalletButton'
 import { NORMAL_TRANSITION } from '#/lib/constants/transition'
@@ -51,12 +52,14 @@ export default function Navbar({ height, className, style, ...props }: Props) {
             >
               <Brand className='text-lg' />
               <div className={clsx('flex items-center space-x-6')}>
-                <Button
-                  variant='outlined-brand'
-                  className={clsx('text-sm font-bold')}
-                >
-                  Ask a question
-                </Button>
+                <Link href='/ask'>
+                  <Button
+                    variant='outlined-brand'
+                    className={clsx('text-sm font-bold')}
+                  >
+                    Ask a question
+                  </Button>
+                </Link>
                 <ConnectWalletButton />
               </div>
             </motion.div>
