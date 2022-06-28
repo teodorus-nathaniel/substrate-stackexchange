@@ -1,6 +1,8 @@
 import Chip from '#/components/Chip'
 import RichTextArea from '#/components/inputs/RichTextArea'
 import Link from '#/components/Link'
+import SkeletonFallback from '#/components/SkeletonFallback'
+import { getRelativeDateFromNow } from '#/lib/helpers/date'
 import { PostData } from '@subsocial/types/dto'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
@@ -8,7 +10,7 @@ import ReactionButtons from './ReactionButtons'
 import UserProfileLink from './UserProfileLink'
 
 export interface PostProps extends HTMLProps<HTMLDivElement> {
-  post: PostData
+  post?: PostData
   isLoading?: boolean
 }
 
@@ -29,17 +31,15 @@ export default function PostOverview({
       )}
       {...props}
     >
-      <div className='flex'>
-        <Link
-          variant='primary'
-          href='https://google.com'
-          className={clsx('text-xl')}
-        >
-          <RichTextArea
-            asReadOnlyContent={{ content: post.content?.title }}
-            name='title'
-          />
-        </Link>
+      <div className={clsx(isLoading ? 'block' : 'flex', 'text-xl')}>
+        <SkeletonFallback isLoading={isLoading}>
+          <Link variant='primary' href='https://google.com'>
+            <RichTextArea
+              asReadOnlyContent={{ content: post?.content?.title }}
+              name='title'
+            />
+          </Link>
+        </SkeletonFallback>
       </div>
       <div className={clsx('flex flex-wrap space-x-2 pt-2')}>
         <Link href='https://google.com'>
@@ -50,14 +50,16 @@ export default function PostOverview({
         </Link>
       </div>
       <p className={clsx('text-sm', 'pt-2', 'text-text-secondary')}>
-        <RichTextArea
-          asReadOnlyContent={{
-            content: `${post.content?.body?.substring(0, BODY_MAX_LEN)}${
-              (post.content?.body?.length ?? 0) > BODY_MAX_LEN ? '...' : ''
-            }`,
-          }}
-          name='title'
-        />
+        <SkeletonFallback isLoading={isLoading}>
+          <RichTextArea
+            asReadOnlyContent={{
+              content: `${post?.content?.body?.substring(0, BODY_MAX_LEN)}${
+                (post?.content?.body?.length ?? 0) > BODY_MAX_LEN ? '...' : ''
+              }`,
+            }}
+            name='title'
+          />
+        </SkeletonFallback>
       </p>
       <div className={clsx('flex justify-between', 'pt-4')}>
         <ReactionButtons
@@ -68,7 +70,9 @@ export default function PostOverview({
         />
         <div className={clsx('text-sm', 'flex items-center', 'space-x-1')}>
           <UserProfileLink className={clsx('font-sm')} />
-          <p className='text-text-secondary'>asked 5 hours ago</p>
+          <p className='text-text-secondary'>
+            asked {getRelativeDateFromNow(post?.struct.createdAtTime)}
+          </p>
         </div>
       </div>
     </div>
