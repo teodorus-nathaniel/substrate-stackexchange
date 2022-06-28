@@ -22,6 +22,9 @@ export default function PostOverview({
   post,
   ...props
 }: PostProps) {
+  // const { data: reactions } = useGetUserReactionByPostId({ postId: post?.id })
+  // console.log(queryClient.getQueryCache())
+
   return (
     <div
       className={clsx(
@@ -63,16 +66,23 @@ export default function PostOverview({
       </p>
       <div className={clsx('flex justify-between', 'pt-4')}>
         <ReactionButtons
-          downVoteCount={20}
+          isLoading={isLoading}
+          downVoteCount={post?.struct.downvotesCount}
+          upVoteCount={post?.struct.upvotesCount}
           isDownVoted
           isUpVoted={false}
-          upVoteCount={123}
         />
         <div className={clsx('text-sm', 'flex items-center', 'space-x-1')}>
-          <UserProfileLink className={clsx('font-sm')} />
-          <p className='text-text-secondary'>
-            asked {getRelativeDateFromNow(post?.struct.createdAtTime)}
-          </p>
+          <UserProfileLink
+            profileId={post?.struct.createdByAccount}
+            isLoading={isLoading}
+            className={clsx('font-sm')}
+          />
+          <SkeletonFallback isLoading={isLoading} width={50}>
+            <p className='text-text-secondary'>
+              asked {getRelativeDateFromNow(post?.struct.createdAtTime)}
+            </p>
+          </SkeletonFallback>
         </div>
       </div>
     </div>

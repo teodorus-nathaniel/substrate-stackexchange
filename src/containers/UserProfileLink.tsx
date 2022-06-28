@@ -1,10 +1,33 @@
+import AspectRatioContainer from '#/components/AspectRatioContainer'
 import ImageContainer from '#/components/ImageContainer'
 import Link, { LinkProps } from '#/components/Link'
+import SkeletonFallback from '#/components/SkeletonFallback'
+import { DEFAULT_PROFILE_PIC } from '#/lib/constants/file'
+import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
+import { useGetProfile } from '#/services/subsocial/queries'
+import { ProfileData } from '@subsocial/types/dto'
+import { truncateMiddle } from '@talisman-connect/ui'
 import clsx from 'clsx'
 
-interface Props extends LinkProps {}
+export interface UserProfileLinkProps extends LinkProps {
+  isLoading?: boolean
+  profile?: ProfileData
+  profileId?: string
+}
 
-export default function UserProfileLink({ className, ...props }: Props) {
+export default function UserProfileLink({
+  className,
+  profileId,
+  isLoading,
+  profile,
+  ...props
+}: UserProfileLinkProps) {
+  const { data: localProfile, isLoading: localIsLoading } = useGetProfile({
+    address: profileId,
+  })
+  const usedProfile = profile || localProfile
+  const usedIsLoading = isLoading || localIsLoading
+
   return (
     <Link
       variant='primary'
@@ -12,13 +35,31 @@ export default function UserProfileLink({ className, ...props }: Props) {
       {...props}
     >
       <div className={clsx('w-5 h-5', 'mr-2', 'relative top-px')}>
-        <ImageContainer
-          aspectRatio='1:1'
-          src='https://app.subsocial.network/ipfs/ipfs/QmZ62eYxcMsQRUFzCJgLPseiEKBMdiwHZhsqZin2skQrRg'
-          alt='profile'
-        />
+        <AspectRatioContainer aspectRatio='1:1'>
+          <SkeletonFallback
+            isLoading={usedIsLoading}
+            circle
+            height='100%'
+            className='block'
+          >
+            <ImageContainer
+              aspectRatio='1:1'
+              className='rounded-full'
+              src={
+                usedProfile?.content?.avatar
+                  ? getImageUrlFromIPFS(usedProfile.content.avatar)
+                  : DEFAULT_PROFILE_PIC
+              }
+              alt='profile'
+            />
+          </SkeletonFallback>
+        </AspectRatioContainer>
       </div>
-      <p className='font-bold'>Justin Frevent</p>
+      <SkeletonFallback isLoading={usedIsLoading} width={75}>
+        <p className='font-bold'>
+          {usedProfile?.content?.name ?? truncateMiddle(usedProfile?.id)}
+        </p>
+      </SkeletonFallback>
     </Link>
   )
 }

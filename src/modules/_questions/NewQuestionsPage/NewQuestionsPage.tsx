@@ -3,8 +3,6 @@ import { useGetAllQuestions } from '#/services/subsocial/queries'
 
 export default function NewQuestionsPage() {
   const { data: posts, isLoading } = useGetAllQuestions()
-  console.log(posts)
-  // let isLoading = true
 
   return (
     <div>

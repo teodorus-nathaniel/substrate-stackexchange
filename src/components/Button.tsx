@@ -21,6 +21,7 @@ const variants = {
     'active:bg-gray-800',
     'border border-current'
   ),
+  nothing: clsx(),
 }
 
 const sizes = {

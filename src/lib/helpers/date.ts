@@ -9,5 +9,5 @@ export function getRelativeDateFromNow(
   defaultValue?: string
 ) {
   if (!date) return defaultValue ?? '-'
-  return dayjs().from(date)
+  return dayjs(date).fromNow()
 }

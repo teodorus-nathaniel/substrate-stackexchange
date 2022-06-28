@@ -1,4 +1,4 @@
-import DefaultPic from '#/assets/default-profile-pic.png'
+import { DEFAULT_PROFILE_PIC } from '#/lib/constants/file'
 import clsx from 'clsx'
 import { ImageProps } from 'next/image'
 import { HTMLProps } from 'react'
@@ -12,8 +12,6 @@ export interface ProfileImageProps
   alt?: string
   isLoading?: boolean
 }
-
-const DEFAULT_PROFILE_PIC = DefaultPic
 
 export default function ProfileImage({
   className,
