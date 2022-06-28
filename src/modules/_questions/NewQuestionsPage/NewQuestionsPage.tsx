@@ -13,7 +13,9 @@ export default function NewQuestionsPage() {
           ? Array.from({ length: 3 }).map((_, idx) => (
               <PostOverview isLoading key={idx} />
             ))
-          : posts?.map((post) => <PostOverview key={post.id} post={post} />)}
+          : posts?.map((post) => (
+              <PostOverview isLoading={false} key={post.id} post={post} />
+            ))}
       </div>
     </div>
   )

@@ -41,15 +41,17 @@ export default function PostOverview({
           </Link>
         </SkeletonFallback>
       </div>
-      {post?.content?.tags && (
-        <div className={clsx('flex flex-wrap space-x-2 pt-1 pb-2')}>
-          {post.content.tags.map((tag) => (
-            <Link key={tag} href={`/tags/${tag}`}>
-              <Chip>{tag}</Chip>
-            </Link>
-          ))}
-        </div>
-      )}
+      <SkeletonFallback isLoading={isLoading}>
+        {post?.content?.tags && (
+          <div className={clsx('flex flex-wrap space-x-2 pt-1 pb-2')}>
+            {post.content.tags.map((tag) => (
+              <Link key={tag} href={`/tags/${tag}`}>
+                <Chip>{tag}</Chip>
+              </Link>
+            ))}
+          </div>
+        )}
+      </SkeletonFallback>
       <p className={clsx('text-sm', 'pt-2', 'text-text-secondary')}>
         <SkeletonFallback isLoading={isLoading}>
           <RichTextArea
