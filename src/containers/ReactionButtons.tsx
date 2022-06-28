@@ -1,6 +1,7 @@
 import Button from '#/components/Button'
 import SkeletonFallback from '#/components/SkeletonFallback'
 import { useUpsertReaction } from '#/services/subsocial/mutations'
+import { useGetUserReactionByPostId } from '#/services/subsocial/queries'
 import { ReactionType } from '@subsocial/types/dto'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
@@ -12,27 +13,25 @@ import {
 } from 'react-icons/bs'
 
 interface Props extends HTMLProps<HTMLDivElement> {
-  upVoteCount?: number
-  downVoteCount?: number
-  isUpVoted: boolean
-  isDownVoted: boolean
-  isLoading?: boolean
   postId?: string
   reactionId?: string
+  upVoteCount?: number
+  downVoteCount?: number
 }
 
 export default function ReactionButtons({
   postId,
-  downVoteCount,
-  isDownVoted,
-  isUpVoted,
-  upVoteCount,
-  className,
-  isLoading,
   reactionId,
+  className,
+  downVoteCount,
+  upVoteCount,
   ...props
 }: Props) {
+  const { data: reaction, isLoading } = useGetUserReactionByPostId({ postId })
   const { mutate: upsertReaction } = useUpsertReaction()
+
+  const isDownVoted = reaction?.kind === 'Downvote'
+  const isUpVoted = reaction?.kind === 'Upvote'
 
   const onClickReaction = (kind: ReactionType) => () => {
     const shouldDeleteReaction =
