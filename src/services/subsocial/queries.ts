@@ -3,9 +3,13 @@ import { getSpaceId } from '#/lib/helpers/env'
 import { AnyReactionId } from '@subsocial/types'
 import queryClient from '../client'
 import { useSubsocialQuery } from './api'
+import {
+  GetProfileParam,
+  GetReactionByPostIdAndAccountParam,
+  Reaction,
+} from './types'
 
 export const getProfileKey = 'getProfile'
-export type GetProfileParam = { address: string }
 export function useGetProfile(data: Partial<GetProfileParam>) {
   return useSubsocialQuery(
     { key: getProfileKey, data },
@@ -27,10 +31,6 @@ export function useGetCurrentUser() {
 }
 
 export const getReactionByPostIdAndAccountKey = 'getReactionByPostIdAndAccount'
-export type GetReactionByPostIdAndAccountParam = {
-  address: string
-  postId: string
-}
 export function useGetReactionByPostIdAndAccount(
   data: GetReactionByPostIdAndAccountParam
 ) {
@@ -38,11 +38,12 @@ export function useGetReactionByPostIdAndAccount(
     { key: getReactionByPostIdAndAccountKey, data },
     async (api, params) => {
       const substrateApi = api.subsocial.substrate
-      const reactionIds = await substrateApi.getPostReactionIdsByAccount(
+      const [reactionId] = await substrateApi.getPostReactionIdsByAccount(
         params.address,
         [params.postId as any]
       )
-      return substrateApi.findReactions(reactionIds)
+      const reaction = await substrateApi.findReaction(reactionId)
+      return reaction?.toJSON() as any as Reaction
     }
   )
 }
@@ -50,18 +51,24 @@ export function useGetUserReactionByPostId(
   data: Partial<Omit<GetReactionByPostIdAndAccountParam, 'address'>>
 ) {
   const [wallet] = useWalletContext()
+  const address = wallet?.address ?? ''
+  const postId = data.postId ?? ''
+  const usedData: GetReactionByPostIdAndAccountParam = {
+    address,
+    postId,
+  }
   return useSubsocialQuery(
-    { key: getReactionByPostIdAndAccountKey, data },
+    { key: getReactionByPostIdAndAccountKey, data: usedData },
     async (api, params) => {
       const substrateApi = api.subsocial.substrate
-      console.log('KEPANGGIL')
-      const reactionIds = await substrateApi.getPostReactionIdsByAccount(
+      const [reactionId] = await substrateApi.getPostReactionIdsByAccount(
         wallet!.address,
         [params.postId as any]
       )
-      return substrateApi.findReactions(reactionIds)
+      const reaction = await substrateApi.findReaction(reactionId)
+      return reaction?.toJSON() as any as Reaction
     },
-    { enabled: !!wallet?.address && !!data.postId }
+    { enabled: !!address && !!postId }
   )
 }
 
@@ -76,29 +83,24 @@ export function useGetAllQuestions() {
       const postIds = await substrate.postIdsBySpaceId(getSpaceId() as any)
 
       async function getReactionsFromUser() {
-        console.log({ wallet }, !wallet)
         if (!wallet) return
-        console.log('HALO')
         const substrateApi = await substrate.api
         const tuples = postIds.map((postId) => [wallet?.address, postId])
         const reactionIds =
           await substrateApi.query.reactions.postReactionIdByAccount.multi(
             tuples
           )
-        // console.log({ reactionIds })
         const reactions = await substrate.findReactions(
           reactionIds as unknown as AnyReactionId[]
         )
-        // console.log({ reactions })
         const promises = reactions.map((reaction, idx) => {
           const param: GetReactionByPostIdAndAccountParam = {
             address: wallet.address,
-            postId: postIds[idx] as any,
+            postId: postIds[idx].toString() as any,
           }
-          // console.log(reaction, param)
           return queryClient.setQueryData(
             [getReactionByPostIdAndAccountKey, param],
-            reaction
+            reaction.toJSON()
           )
         })
         return Promise.all(promises)

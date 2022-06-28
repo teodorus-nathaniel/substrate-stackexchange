@@ -3,14 +3,14 @@ import { Hash } from '@polkadot/types/interfaces'
 import { IpfsContent } from '@subsocial/types/substrate/classes'
 import { UseMutationOptions } from 'react-query'
 import { useSubsocialMutation } from './api'
+import {
+  CreateQuestionPayload,
+  CreateSpacePayload,
+  UpsertReactionPayload,
+} from './types'
 
 type SubsocialMutationConfig<T> = UseMutationOptions<Hash, Error, T, unknown>
 
-export type CreateSpacePayload = {
-  name: string
-  desc?: string
-  avatar?: File
-}
 export function useCreateSpace(
   config?: SubsocialMutationConfig<CreateSpacePayload>
 ) {
@@ -34,10 +34,6 @@ export function useCreateSpace(
   }, config)
 }
 
-export type CreateQuestionPayload = {
-  title: string
-  body: string
-}
 export function useCreatePost(
   config?: SubsocialMutationConfig<CreateQuestionPayload>
 ) {
@@ -52,5 +48,25 @@ export function useCreatePost(
       { RegularPost: null },
       IpfsContent(postCid)
     )
+  }, config)
+}
+
+export function useUpsertReaction(
+  config?: SubsocialMutationConfig<UpsertReactionPayload>
+) {
+  return useSubsocialMutation(async (data, { substrateApi }) => {
+    const { kind, postId, reactionId } = data
+    if (reactionId) {
+      if (kind === '') {
+        return substrateApi.tx.reactions.deletePostReaction(postId, reactionId)
+      }
+      return substrateApi.tx.reactions.updatePostReaction(
+        postId,
+        reactionId,
+        kind
+      )
+    } else {
+      return substrateApi.tx.reactions.createPostReaction(postId, kind)
+    }
   }, config)
 }

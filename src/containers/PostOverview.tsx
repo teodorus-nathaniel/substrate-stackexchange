@@ -3,6 +3,7 @@ import RichTextArea from '#/components/inputs/RichTextArea'
 import Link from '#/components/Link'
 import SkeletonFallback from '#/components/SkeletonFallback'
 import { getRelativeDateFromNow } from '#/lib/helpers/date'
+import { useGetUserReactionByPostId } from '#/services/subsocial/queries'
 import { PostData } from '@subsocial/types/dto'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
@@ -22,8 +23,7 @@ export default function PostOverview({
   post,
   ...props
 }: PostProps) {
-  // const { data: reactions } = useGetUserReactionByPostId({ postId: post?.id })
-  // console.log(queryClient.getQueryCache())
+  const { data: reaction } = useGetUserReactionByPostId({ postId: post?.id })
 
   return (
     <div
@@ -66,11 +66,12 @@ export default function PostOverview({
       </p>
       <div className={clsx('flex justify-between', 'pt-4')}>
         <ReactionButtons
+          postId={post?.id}
           isLoading={isLoading}
           downVoteCount={post?.struct.downvotesCount}
           upVoteCount={post?.struct.upvotesCount}
-          isDownVoted
-          isUpVoted={false}
+          isDownVoted={reaction?.kind === 'Downvote'}
+          isUpVoted={reaction?.kind === 'Upvote'}
         />
         <div className={clsx('text-sm', 'flex items-center', 'space-x-1')}>
           <UserProfileLink
