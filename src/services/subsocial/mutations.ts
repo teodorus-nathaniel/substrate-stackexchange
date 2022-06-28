@@ -38,10 +38,11 @@ export function useCreatePost(
   config?: SubsocialMutationConfig<CreateQuestionPayload>
 ) {
   return useSubsocialMutation(async (data, { ipfsApi, substrateApi }) => {
-    const { title, body } = data
+    const { title, body, tags } = data
     const postCid = await ipfsApi.savePost({
       title,
       body,
+      tags,
     } as any)
     return substrateApi.tx.posts.createPost(
       getSpaceId(),

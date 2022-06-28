@@ -1,6 +1,7 @@
 import { EditorType } from '#/declarations/slate'
+import { onChangeWrapper } from '#/lib/helpers/form'
 import clsx from 'clsx'
-import { ChangeEventHandler, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { createEditor, Descendant } from 'slate'
 import { withHistory } from 'slate-history'
 import { Editable, Slate, withReact } from 'slate-react'
@@ -29,20 +30,6 @@ const defaultInitialValue: Descendant[] = [
     children: [{ text: '' }],
   },
 ]
-
-const onChangeWrapper = (
-  onChange: ChangeEventHandler<HTMLDivElement> | undefined,
-  content: string,
-  name: string
-) => {
-  onChange &&
-    onChange({
-      target: {
-        name: name,
-        value: content,
-      },
-    } as any)
-}
 
 export default function RichTextArea({
   startOneLine,

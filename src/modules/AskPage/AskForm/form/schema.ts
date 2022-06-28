@@ -1,12 +1,15 @@
-import { object, string } from 'yup'
+import { OptionType } from '#/components/inputs/Select/Select'
+import { array, object, string } from 'yup'
 
 export interface AskQuestionFormType {
   title: string
   body: string
+  tags: OptionType[]
 }
 const askQuestionInitialValues: AskQuestionFormType = {
   title: '',
   body: '',
+  tags: [],
 }
 export const askQuestionForm = {
   initialValues: askQuestionInitialValues,
@@ -25,5 +28,6 @@ export const askQuestionForm = {
           : true
       },
     }),
+    tags: array().min(1, 'You have to choose at least a single tag'),
   }),
 }

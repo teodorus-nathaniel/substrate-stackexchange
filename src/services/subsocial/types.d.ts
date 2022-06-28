@@ -28,6 +28,7 @@ export type UpsertReactionPayload = {
 export type CreateQuestionPayload = {
   title: string
   body: string
+  tags: string[]
 }
 export type CreateSpacePayload = {
   name: string

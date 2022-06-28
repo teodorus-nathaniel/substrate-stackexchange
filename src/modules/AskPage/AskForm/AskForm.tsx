@@ -1,4 +1,5 @@
 import Button from '#/components/Button'
+import Select from '#/components/inputs/Select'
 import TransactionModal from '#/containers/TransactionModal'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
 import { useCreatePost } from '#/services/subsocial/mutations'
@@ -14,12 +15,22 @@ const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
 export default function AskForm() {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const { mutate: postQuestion, isLoading, error } = useCreatePost()
-  const { getFieldData, handleSubmit, resetForm, errors } = useFormikWrapper({
+  const {
+    getFieldData,
+    handleSubmit,
+    resetForm,
+    // TODO: handle errors
+    errors: _errors,
+  } = useFormikWrapper({
     ...askQuestionForm,
     onSubmit: (values) => {
       console.log('CREATING QUESTION...')
       setIsOpenModal(true)
-      postQuestion(values)
+      const usedValues = {
+        ...values,
+        tags: values.tags.map(({ value }) => value.toLowerCase()),
+      }
+      postQuestion(usedValues)
     },
   })
 
@@ -52,6 +63,16 @@ export default function AskForm() {
         helperTextClassName={clsx('text-xs')}
         storagePrefix='ask'
         {...getFieldData('body')}
+      />
+      <Select
+        creatable
+        containerClassName={clsx('mt-8 text-sm')}
+        labelClassName={clsx('font-bold')}
+        isMulti
+        label='Tags'
+        helperText='Choose at least one tag'
+        helperTextClassName={clsx('text-xs')}
+        {...getFieldData('tags')}
       />
       <div className={clsx('mt-8 space-x-4', 'flex items-center')}>
         <Button type='submit'>Post your question</Button>
