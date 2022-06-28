@@ -1,13 +1,25 @@
 import Chip from '#/components/Chip'
+import RichTextArea from '#/components/inputs/RichTextArea'
 import Link from '#/components/Link'
+import { PostData } from '@subsocial/types/dto'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
 import ReactionButtons from './ReactionButtons'
 import UserProfileLink from './UserProfileLink'
 
-interface Props extends HTMLProps<HTMLDivElement> {}
+export interface PostProps extends HTMLProps<HTMLDivElement> {
+  post: PostData
+  isLoading?: boolean
+}
 
-export default function Post({ className, ...props }: Props) {
+const BODY_MAX_LEN = 200
+
+export default function PostOverview({
+  className,
+  isLoading,
+  post,
+  ...props
+}: PostProps) {
   return (
     <div
       className={clsx(
@@ -23,7 +35,10 @@ export default function Post({ className, ...props }: Props) {
           href='https://google.com'
           className={clsx('text-xl')}
         >
-          Function to see whether transaction is finalized
+          <RichTextArea
+            asReadOnlyContent={{ content: post.content?.title }}
+            name='title'
+          />
         </Link>
       </div>
       <div className={clsx('flex flex-wrap space-x-2 pt-2')}>
@@ -35,11 +50,14 @@ export default function Post({ className, ...props }: Props) {
         </Link>
       </div>
       <p className={clsx('text-sm', 'pt-2', 'text-text-secondary')}>
-        {`Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-        distinctio iste sunt laudantium corrupti aut nobis tempora numquam
-        voluptatum expedita consequatur consectetur hic dolore officiis
-        reprehenderit. Nisi quae laudantium quasi! lorem`.substring(0, 200)}
-        ...
+        <RichTextArea
+          asReadOnlyContent={{
+            content: `${post.content?.body?.substring(0, BODY_MAX_LEN)}${
+              (post.content?.body?.length ?? 0) > BODY_MAX_LEN ? '...' : ''
+            }`,
+          }}
+          name='title'
+        />
       </p>
       <div className={clsx('flex justify-between', 'pt-4')}>
         <ReactionButtons

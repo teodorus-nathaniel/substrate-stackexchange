@@ -18,6 +18,9 @@ export interface RichTextAreaProps extends ParentProps {
   name: string
   storagePrefix?: string
   startOneLine?: boolean
+  asReadOnlyContent?: {
+    content?: string
+  }
 }
 
 const defaultInitialValue: Descendant[] = [
@@ -45,6 +48,7 @@ export default function RichTextArea({
   startOneLine,
   storagePrefix: _storagePrefix,
   onChange,
+  asReadOnlyContent,
   ...props
 }: RichTextAreaProps) {
   const editorRef = useRef<EditorType | null>(null)
@@ -67,12 +71,20 @@ export default function RichTextArea({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storageKey])
 
+  const parsedDefaultValue = useMemo(() => {
+    if (!asReadOnlyContent?.content) return undefined
+    return JSON.parse(asReadOnlyContent?.content)
+  }, [asReadOnlyContent?.content])
+
+  const cleanedProps = getCleanedInputProps(props)
+
   return (
     <FieldWrapper {...props}>
       {(id, classNames) => (
         <Slate
           editor={editor}
-          value={initialValue}
+          value={asReadOnlyContent ? parsedDefaultValue : initialValue}
+          key={asReadOnlyContent ? parsedDefaultValue : undefined}
           onChange={(value) => {
             const isAstChange = editor.operations.some(
               (op) => 'set_selection' !== op.type
@@ -86,10 +98,11 @@ export default function RichTextArea({
           }}
         >
           <Editable
-            {...getCleanedInputProps(props)}
+            {...cleanedProps}
+            readOnly={cleanedProps.disabled || !!asReadOnlyContent}
             className={clsx(
-              !startOneLine && 'min-h-[8em]',
-              classNames,
+              !startOneLine && !asReadOnlyContent && 'min-h-[8em]',
+              !asReadOnlyContent && classNames,
               props.className
             )}
             id={id}

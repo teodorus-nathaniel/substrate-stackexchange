@@ -1,6 +1,5 @@
 import { useWalletContext } from '#/contexts/WalletContext'
 import { getSpaceId } from '#/lib/helpers/env'
-import { PostId } from '@subsocial/types/dto'
 import { useSubsocialQuery } from './api'
 
 export const getProfileKey = 'getProfile'
@@ -29,10 +28,8 @@ export function useGetAllQuestions() {
   return useSubsocialQuery(
     { key: getAllQuestionsKey, data: null },
     async (api) => {
-      const substrateApi = await api.subsocial.substrate.api
-      const postIds: PostId[] = await (substrateApi as any)?.postIdsBySpaceId(
-        getSpaceId()
-      )
+      const substrateApi = api.subsocial.substrate
+      const postIds = await substrateApi.postIdsBySpaceId(getSpaceId() as any)
       return api.findPublicPosts(postIds)
     }
   )
