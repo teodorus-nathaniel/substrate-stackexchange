@@ -1,21 +1,19 @@
 import { useWalletContext } from '#/contexts/WalletContext'
-import { getSpaceId } from '#/lib/helpers/env'
 import { AnyReactionId } from '@subsocial/types'
 import queryClient from '../client'
-import { useSubsocialQuery } from './api'
 import {
-  GetProfileParam,
-  GetReactionByPostIdAndAccountParam,
-  Reaction,
-} from './types'
+  getAllQuestions,
+  getProfile,
+  getReactionByPostIdAndAccount,
+} from './api'
+import { useSubsocialQuery } from './base'
+import { GetProfileParam, GetReactionByPostIdAndAccountParam } from './types'
 
 export const getProfileKey = 'getProfile'
 export function useGetProfile(data: Partial<GetProfileParam>) {
   return useSubsocialQuery(
-    { key: getProfileKey, data },
-    async (api, params) => {
-      return api.findProfile(params.address ?? '')
-    },
+    { key: getProfileKey, data: { address: data.address ?? '' } },
+    getProfile,
     { enabled: !!data?.address }
   )
 }
@@ -23,9 +21,7 @@ export function useGetCurrentUser() {
   const [wallet] = useWalletContext()
   return useSubsocialQuery(
     { key: getProfileKey, data: { address: wallet?.address ?? '' } },
-    async (api, params) => {
-      return api.findProfile(params?.address)
-    },
+    getProfile,
     { enabled: !!wallet?.address }
   )
 }
@@ -36,15 +32,7 @@ export function useGetReactionByPostIdAndAccount(
 ) {
   return useSubsocialQuery(
     { key: getReactionByPostIdAndAccountKey, data },
-    async (api, params) => {
-      const substrateApi = api.subsocial.substrate
-      const [reactionId] = await substrateApi.getPostReactionIdsByAccount(
-        params.address,
-        [params.postId as any]
-      )
-      const reaction = await substrateApi.findReaction(reactionId)
-      return reaction?.toJSON() as any as Reaction
-    }
+    getReactionByPostIdAndAccount
   )
 }
 export function useGetUserReactionByPostId(
@@ -59,15 +47,7 @@ export function useGetUserReactionByPostId(
   }
   return useSubsocialQuery(
     { key: getReactionByPostIdAndAccountKey, data: usedData },
-    async (api, params) => {
-      const substrateApi = api.subsocial.substrate
-      const [reactionId] = await substrateApi.getPostReactionIdsByAccount(
-        wallet!.address,
-        [params.postId as any]
-      )
-      const reaction = await substrateApi.findReaction(reactionId)
-      return reaction?.toJSON() as any as Reaction
-    },
+    getReactionByPostIdAndAccount,
     { enabled: !!address && !!postId }
   )
 }
@@ -79,13 +59,13 @@ export function useGetAllQuestions() {
   return useSubsocialQuery(
     { key: getAllQuestionsKey, data: null },
     async (api) => {
-      const substrate = api.subsocial.substrate
-      const postIds = await substrate.postIdsBySpaceId(getSpaceId() as any)
+      const questions = await getAllQuestions(api)
 
       async function getReactionsFromUser() {
         if (!wallet) return
+        const substrate = api.subsocial.substrate
         const substrateApi = await substrate.api
-        const tuples = postIds.map((postId) => [wallet?.address, postId])
+        const tuples = questions.map(({ id }) => [wallet?.address, id])
         const reactionIds =
           await substrateApi.query.reactions.postReactionIdByAccount.multi(
             tuples
@@ -96,7 +76,7 @@ export function useGetAllQuestions() {
         const promises = reactions.map((reaction, idx) => {
           const param: GetReactionByPostIdAndAccountParam = {
             address: wallet.address,
-            postId: postIds[idx].toString() as any,
+            postId: questions[idx].id.toString() as any,
           }
           return queryClient.setQueryData(
             [getReactionByPostIdAndAccountKey, param],
@@ -107,7 +87,7 @@ export function useGetAllQuestions() {
       }
       await getReactionsFromUser()
 
-      return api.findPublicPosts(postIds)
+      return questions
     }
   )
 }

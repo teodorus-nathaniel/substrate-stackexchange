@@ -2,7 +2,7 @@ import { getSpaceId } from '#/lib/helpers/env'
 import { Hash } from '@polkadot/types/interfaces'
 import { IpfsContent } from '@subsocial/types/substrate/classes'
 import { UseMutationOptions } from 'react-query'
-import { useSubsocialMutation } from './api'
+import { useSubsocialMutation } from './base'
 import {
   CreateQuestionPayload,
   CreateSpacePayload,
