@@ -21,17 +21,17 @@ export type SubstrateApi = Awaited<
 export type Transaction = ReturnType<SubstrateApi['tx']['']['']>
 
 function queryWrapper<T, V>(
-  func: (data: V, api: FlatSubsocialApi) => T,
+  func: (api: FlatSubsocialApi, data: V) => T,
   subsocialApi: FlatSubsocialApi
 ) {
   return ({ queryKey }: any) => {
-    return func(queryKey[1], subsocialApi)
+    return func(subsocialApi, queryKey[1])
   }
 }
 
 export function useSubsocialQuery<T, V>(
   params: { key: string; data: V | null },
-  func: (data: V, api: FlatSubsocialApi) => Promise<T>,
+  func: (api: FlatSubsocialApi, data: V) => Promise<T>,
   config?: Omit<
     UseQueryOptions<T, unknown, T, (string | V | null)[]>,
     'queryFn' | 'queryKey'
