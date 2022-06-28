@@ -23,7 +23,7 @@ export type GetReactionByPostIdAndAccountParam = {
 export type UpsertReactionPayload = {
   postId: string
   kind: ReactionType | ''
-  reactionId?: string
+  reactionId?: number
 }
 export type CreateQuestionPayload = {
   title: string

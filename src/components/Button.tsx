@@ -43,6 +43,7 @@ export interface ButtonProps
   variant?: keyof typeof variants
   loading?: boolean
   disabled?: boolean
+  disabledCursor?: 'not-allowed' | 'loading'
   rounded?: boolean
 }
 
@@ -56,6 +57,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
     type,
     loading,
     disabled,
+    disabledCursor = 'not-allowed',
     rounded,
     ...buttonProps
   },
@@ -64,7 +66,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   const classNames = clsx(
     'flex justify-center items-center',
     rounded ? 'rounded-full' : 'rounded-md',
-    'cursor-pointer disabled:cursor-not-allowed',
+    'cursor-pointer',
+    disabledCursor === 'not-allowed' && 'disabled:cursor-not-allowed',
+    disabledCursor === 'loading' && 'disabled:cursor-wait',
     'transition-colors ease-out',
     'enabled:active:translate-y-px',
     'disabled:opacity-75',

@@ -63,6 +63,7 @@ export default function PostOverview({
       </p>
       <div className={clsx('flex justify-between', 'pt-4')}>
         <ReactionButtons
+          isLoading={isLoading}
           postId={post?.id}
           downVoteCount={post?.struct.downvotesCount}
           upVoteCount={post?.struct.upvotesCount}

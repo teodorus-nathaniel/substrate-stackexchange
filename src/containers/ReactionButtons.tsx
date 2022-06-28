@@ -13,25 +13,27 @@ import {
 } from 'react-icons/bs'
 
 interface Props extends HTMLProps<HTMLDivElement> {
+  isLoading?: boolean
   postId?: string
-  reactionId?: string
   upVoteCount?: number
   downVoteCount?: number
 }
 
 export default function ReactionButtons({
+  isLoading,
   postId,
-  reactionId,
   className,
   downVoteCount,
   upVoteCount,
   ...props
 }: Props) {
-  const { data: reaction, isLoading } = useGetUserReactionByPostId({ postId })
+  const { data: reaction, isLoading: localIsLoading } =
+    useGetUserReactionByPostId({ postId })
   const { mutate: upsertReaction } = useUpsertReaction()
 
   const isDownVoted = reaction?.kind === 'Downvote'
   const isUpVoted = reaction?.kind === 'Upvote'
+  const combinedIsLoading = isLoading || localIsLoading
 
   const onClickReaction = (kind: ReactionType) => () => {
     const shouldDeleteReaction =
@@ -41,7 +43,7 @@ export default function ReactionButtons({
     upsertReaction({
       kind: shouldDeleteReaction ? '' : kind,
       postId,
-      reactionId: reactionId,
+      reactionId: reaction?.id,
     })
   }
 
@@ -54,7 +56,8 @@ export default function ReactionButtons({
         variant='nothing'
         size='content'
         innerContainerClassName={clsx('flex space-x-2 items-center')}
-        disabled={isLoading}
+        disabled={combinedIsLoading}
+        disabledCursor='loading'
         onClick={onClickReaction('Upvote')}
       >
         <SkeletonFallback width={50} isLoading={isLoading}>
@@ -66,7 +69,8 @@ export default function ReactionButtons({
         variant='nothing'
         size='content'
         innerContainerClassName={clsx('flex space-x-2 items-center')}
-        disabled={isLoading}
+        disabled={combinedIsLoading}
+        disabledCursor='loading'
         onClick={onClickReaction('Downvote')}
       >
         <SkeletonFallback width={50} isLoading={isLoading}>
