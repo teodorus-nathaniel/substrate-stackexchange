@@ -31,9 +31,9 @@ export default function PostOverview({
       )}
       {...props}
     >
-      <div className={clsx(isLoading ? 'block' : 'flex', 'text-xl')}>
+      <div className={clsx(isLoading ? 'block' : 'flex', 'text-xl pb-1')}>
         <SkeletonFallback isLoading={isLoading}>
-          <Link variant='primary' href='https://google.com'>
+          <Link variant='primary' href={`/questions/${post?.id}`}>
             <RichTextArea
               asReadOnlyContent={{ content: post?.content?.title }}
               name='title'
@@ -41,21 +41,20 @@ export default function PostOverview({
           </Link>
         </SkeletonFallback>
       </div>
-      <div className={clsx('flex flex-wrap space-x-2 pt-2')}>
-        <Link href='https://google.com'>
-          <Chip>storage</Chip>
-        </Link>
-        <Link href='https://google.com'>
-          <Chip>macro</Chip>
-        </Link>
-      </div>
+      {post?.content?.tags && (
+        <div className={clsx('flex flex-wrap space-x-2 pt-1 pb-2')}>
+          {post.content.tags.map((tag) => (
+            <Link key={tag} href={`/tags/${tag}`}>
+              <Chip>{tag}</Chip>
+            </Link>
+          ))}
+        </div>
+      )}
       <p className={clsx('text-sm', 'pt-2', 'text-text-secondary')}>
         <SkeletonFallback isLoading={isLoading}>
           <RichTextArea
             asReadOnlyContent={{
-              content: `${post?.content?.body?.substring(0, BODY_MAX_LEN)}${
-                (post?.content?.body?.length ?? 0) > BODY_MAX_LEN ? '...' : ''
-              }`,
+              content: post?.content?.body,
             }}
             name='title'
           />
