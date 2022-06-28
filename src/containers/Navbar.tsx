@@ -50,7 +50,9 @@ export default function Navbar({ height, className, style, ...props }: Props) {
               exit={{ opacity: 0, y: -25 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <Brand className='text-lg' />
+              <Link href='/'>
+                <Brand className='text-lg' />
+              </Link>
               <div className={clsx('flex items-center space-x-6')}>
                 <Link href='/ask'>
                   <Button
