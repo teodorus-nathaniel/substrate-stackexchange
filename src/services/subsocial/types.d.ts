@@ -22,6 +22,12 @@ export type GetBatchReactionsByPostIdsAndAccountParam = {
   address: string
   postIds: string[]
 }
+export type GetReplyIdsByPostIdParam = {
+  postId: string
+}
+export type GetBatchReplyIdsByPostIdsParam = {
+  postIds: string[]
+}
 
 // Mutation Params
 export type UpsertReactionPayload = {

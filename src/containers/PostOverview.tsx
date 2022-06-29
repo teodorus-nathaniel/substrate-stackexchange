@@ -3,6 +3,7 @@ import RichTextArea from '#/components/inputs/RichTextArea'
 import Link from '#/components/Link'
 import SkeletonFallback from '#/components/SkeletonFallback'
 import { getRelativeDateFromNow } from '#/lib/helpers/date'
+import { useGetReplyIdsByPostId } from '#/services/subsocial/queries'
 import { PostData } from '@subsocial/types/dto'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
@@ -20,6 +21,10 @@ export default function PostOverview({
   post,
   ...props
 }: PostProps) {
+  const { data: replyIds, isLoading: isLoadingReply } = useGetReplyIdsByPostId({
+    postId: post?.id,
+  })
+
   return (
     <div
       className={clsx(
@@ -70,8 +75,10 @@ export default function PostOverview({
           </SkeletonFallback>
         </p>
         <div className={clsx('flex justify-between', 'pt-4')}>
-          <SkeletonFallback isLoading={isLoading} width={75}>
-            <p className={clsx('text-xs font-bold text-brand')}>3 Answers</p>
+          <SkeletonFallback isLoading={isLoadingReply || isLoading} width={75}>
+            <p className={clsx('text-xs font-bold text-brand')}>
+              {replyIds?.length} Answers
+            </p>
           </SkeletonFallback>
           <div className={clsx('text-sm', 'flex items-center', 'space-x-1')}>
             <UserProfileLink

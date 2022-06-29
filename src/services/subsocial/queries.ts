@@ -5,9 +5,14 @@ import {
   getBatchReactionsByPostIdsAndAccount,
   getProfile,
   getReactionByPostIdAndAccount,
+  getReplyIdsByPostId,
 } from './api'
 import { useSubsocialQuery } from './base'
-import { GetProfileParam, GetReactionByPostIdAndAccountParam } from './types'
+import {
+  GetProfileParam,
+  GetReactionByPostIdAndAccountParam,
+  GetReplyIdsByPostIdParam,
+} from './types'
 
 export const getProfileKey = 'getProfile'
 export function useGetProfile(data: Partial<GetProfileParam>) {
@@ -52,6 +57,17 @@ export function useGetUserReactionByPostId(
   )
 }
 
+export const getReplyIdsByPostIdKey = 'getReplyIdsByPostId'
+export function useGetReplyIdsByPostId(
+  data: Partial<GetReplyIdsByPostIdParam>
+) {
+  return useSubsocialQuery(
+    { key: getReplyIdsByPostIdKey, data: { postId: data.postId! } },
+    getReplyIdsByPostId,
+    { enabled: !!data.postId }
+  )
+}
+
 export const getAllQuestionsKey = 'getAllQuestions'
 export function useGetAllQuestions() {
   const [wallet] = useWalletContext()
@@ -81,6 +97,24 @@ export function useGetAllQuestions() {
         return Promise.all(promises)
       }
       await getReactionsFromUser()
+
+      // TODO: This is disabled until there is better way to batch get reply. Currently its better to just fetch it when needed
+      // async function getReplyIds() {
+      //   const questionReplyIds = await getBatchReplyIdsByPostIds(api, {
+      //     postIds: questions.map(({ id }) => id),
+      //   })
+      //   const promises = questionReplyIds.map((replyIds, idx) => {
+      //     const param: GetReplyIdsByPostIdParam = {
+      //       postId: questions[idx].id.toString() as any,
+      //     }
+      //     return queryClient.setQueryData(
+      //       [getReplyIdsByPostIdKey, param],
+      //       replyIds
+      //     )
+      //   })
+      //   return Promise.all(promises)
+      // }
+      // await getReplyIds()
 
       return questions
     }
