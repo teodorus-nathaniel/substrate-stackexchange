@@ -11,3 +11,12 @@ export function getRelativeDateFromNow(
   if (!date) return defaultValue ?? '-'
   return dayjs(date).fromNow()
 }
+
+export function formatDate(
+  date?: Date | string | number,
+  format = 'MMM DD, YYYY [at] h:mm',
+  defaultValue?: string
+) {
+  if (!date) return defaultValue ?? '-'
+  return dayjs(date).format(format)
+}

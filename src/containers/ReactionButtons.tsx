@@ -46,9 +46,11 @@ export default function ReactionButtons({
     })
   }
 
+  const buttonClassNames = clsx('flex space-x-2 items-center', 'text-xl')
+
   return (
     <div
-      className={clsx('flex flex-col items-center', 'space-y-3', className)}
+      className={clsx('flex flex-col items-center', 'space-y-2', className)}
       {...props}
     >
       {!noButtons && (
@@ -56,8 +58,8 @@ export default function ReactionButtons({
           <Button
             variant='unstyled'
             rounded
-            size='icon-small'
-            innerContainerClassName={clsx('flex space-x-2 items-center')}
+            size='icon-medium'
+            innerContainerClassName={buttonClassNames}
             disabled={combinedIsLoading}
             disabledCursor='loading'
             onClick={onClickReaction('Upvote')}
@@ -71,7 +73,7 @@ export default function ReactionButtons({
       <div
         className={clsx(
           'rounded-md',
-          'bg-brand',
+          noButtons && 'bg-brand',
           'flex items-center justify-center',
           'w-[2.5rem] py-1 relative'
         )}
@@ -89,9 +91,9 @@ export default function ReactionButtons({
           <Button
             variant='unstyled'
             rounded
-            size='icon-small'
+            size='icon-medium'
             className={clsx('rotate-180')}
-            innerContainerClassName={clsx('flex space-x-2 items-center')}
+            innerContainerClassName={buttonClassNames}
             disabled={combinedIsLoading}
             disabledCursor='loading'
             onClick={onClickReaction('Downvote')}

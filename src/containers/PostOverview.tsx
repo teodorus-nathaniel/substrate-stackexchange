@@ -1,4 +1,3 @@
-import Chip from '#/components/Chip'
 import RichTextArea from '#/components/inputs/RichTextArea'
 import Link from '#/components/Link'
 import SkeletonFallback from '#/components/SkeletonFallback'
@@ -8,6 +7,7 @@ import { PostData } from '@subsocial/types/dto'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
 import ReactionButtons from './ReactionButtons'
+import TagList from './TagList'
 import UserProfileLink from './UserProfileLink'
 
 export interface PostProps extends HTMLProps<HTMLDivElement> {
@@ -55,13 +55,7 @@ export default function PostOverview({
         </div>
         <SkeletonFallback isLoading={isLoading}>
           {post?.content?.tags && (
-            <div className={clsx('flex flex-wrap space-x-2 pt-1 pb-2')}>
-              {post.content.tags.map((tag) => (
-                <Link key={tag} href={`/tags/${tag}`}>
-                  <Chip>{tag}</Chip>
-                </Link>
-              ))}
-            </div>
+            <TagList className={clsx('pt-1 pb-2')} tags={post.content.tags} />
           )}
         </SkeletonFallback>
         <p className={clsx('text-sm', 'pt-2', 'text-text-secondary')}>

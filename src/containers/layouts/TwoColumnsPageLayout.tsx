@@ -3,6 +3,7 @@ import clsx from 'clsx'
 
 const sizes = {
   small: clsx('max-w-xs'),
+  xs: clsx('max-w-[15rem]'),
 }
 
 export interface TwoColumnsPageLayoutProps {
