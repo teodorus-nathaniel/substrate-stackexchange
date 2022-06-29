@@ -5,26 +5,25 @@ import { useGetUserReactionByPostId } from '#/services/subsocial/queries'
 import { ReactionType } from '@subsocial/types/dto'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
-import {
-  BsHandThumbsDown,
-  BsHandThumbsDownFill,
-  BsHandThumbsUp,
-  BsHandThumbsUpFill,
-} from 'react-icons/bs'
+import { BsTriangle, BsTriangleFill } from 'react-icons/bs'
 
 interface Props extends HTMLProps<HTMLDivElement> {
   isLoading?: boolean
   postId?: string
   upVoteCount?: number
   downVoteCount?: number
+  noButtons?: boolean
+  noDownVote?: boolean
 }
 
 export default function ReactionButtons({
   isLoading,
   postId,
   className,
-  downVoteCount,
-  upVoteCount,
+  noButtons,
+  noDownVote,
+  downVoteCount = 0,
+  upVoteCount = 0,
   ...props
 }: Props) {
   const { data: reaction, isLoading: localIsLoading } =
@@ -49,35 +48,60 @@ export default function ReactionButtons({
 
   return (
     <div
-      className={clsx('flex items-center', 'space-x-6', className)}
+      className={clsx('flex flex-col items-center', 'space-y-3', className)}
       {...props}
     >
-      <Button
-        variant='nothing'
-        size='content'
-        innerContainerClassName={clsx('flex space-x-2 items-center')}
-        disabled={combinedIsLoading}
-        disabledCursor='loading'
-        onClick={onClickReaction('Upvote')}
+      {!noButtons && (
+        <div>
+          <Button
+            variant='unstyled'
+            rounded
+            size='icon-small'
+            innerContainerClassName={clsx('flex space-x-2 items-center')}
+            disabled={combinedIsLoading}
+            disabledCursor='loading'
+            onClick={onClickReaction('Upvote')}
+          >
+            <SkeletonFallback width={50} isLoading={isLoading}>
+              {isUpVoted ? <BsTriangleFill /> : <BsTriangle />}
+            </SkeletonFallback>
+          </Button>
+        </div>
+      )}
+      <div
+        className={clsx(
+          'rounded-md',
+          'bg-brand',
+          'flex items-center justify-center',
+          'w-[2.5rem] py-1 relative'
+        )}
       >
-        <SkeletonFallback width={50} isLoading={isLoading}>
-          {isUpVoted ? <BsHandThumbsUpFill /> : <BsHandThumbsUp />}
-          <p>{upVoteCount}</p>
+        <SkeletonFallback
+          color='brand'
+          className={clsx('absolute', 'inset-0', 'w-full h-full')}
+          isLoading={isLoading}
+        >
+          <p>{upVoteCount - downVoteCount}</p>
         </SkeletonFallback>
-      </Button>
-      <Button
-        variant='nothing'
-        size='content'
-        innerContainerClassName={clsx('flex space-x-2 items-center')}
-        disabled={combinedIsLoading}
-        disabledCursor='loading'
-        onClick={onClickReaction('Downvote')}
-      >
-        <SkeletonFallback width={50} isLoading={isLoading}>
-          {isDownVoted ? <BsHandThumbsDownFill /> : <BsHandThumbsDown />}
-          <p>{downVoteCount}</p>
-        </SkeletonFallback>
-      </Button>
+      </div>
+      {!noButtons && !noDownVote && (
+        <div>
+          <Button
+            variant='unstyled'
+            rounded
+            size='icon-small'
+            className={clsx('rotate-180')}
+            innerContainerClassName={clsx('flex space-x-2 items-center')}
+            disabled={combinedIsLoading}
+            disabledCursor='loading'
+            onClick={onClickReaction('Downvote')}
+          >
+            <SkeletonFallback width={50} isLoading={isLoading}>
+              {isDownVoted ? <BsTriangleFill /> : <BsTriangle />}
+            </SkeletonFallback>
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

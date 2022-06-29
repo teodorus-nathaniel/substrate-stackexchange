@@ -1,8 +1,8 @@
 import { useWalletContext } from '#/contexts/WalletContext'
-import { AnyReactionId } from '@subsocial/types'
 import queryClient from '../client'
 import {
   getAllQuestions,
+  getBatchReactionsByPostIdsAndAccount,
   getProfile,
   getReactionByPostIdAndAccount,
 } from './api'
@@ -63,16 +63,10 @@ export function useGetAllQuestions() {
 
       async function getReactionsFromUser() {
         if (!wallet) return
-        const substrate = api.subsocial.substrate
-        const substrateApi = await substrate.api
-        const tuples = questions.map(({ id }) => [wallet?.address, id])
-        const reactionIds =
-          await substrateApi.query.reactions.postReactionIdByAccount.multi(
-            tuples
-          )
-        const reactions = await substrate.findReactions(
-          reactionIds as unknown as AnyReactionId[]
-        )
+        const reactions = await getBatchReactionsByPostIdsAndAccount(api, {
+          address: wallet.address,
+          postIds: questions.map(({ id }) => id),
+        })
         const promises = reactions.map((reaction, idx) => {
           const param: GetReactionByPostIdAndAccountParam = {
             address: wallet.address,
@@ -80,9 +74,10 @@ export function useGetAllQuestions() {
           }
           return queryClient.setQueryData(
             [getReactionByPostIdAndAccountKey, param],
-            reaction.toJSON()
+            reaction
           )
         })
+
         return Promise.all(promises)
       }
       await getReactionsFromUser()

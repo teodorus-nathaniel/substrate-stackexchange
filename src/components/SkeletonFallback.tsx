@@ -3,26 +3,34 @@ import clsx from 'clsx'
 import { useMemo } from 'react'
 import Skeleton, { SkeletonProps } from 'react-loading-skeleton'
 
+const colors = {
+  default: {
+    baseColor: '#505050',
+    highlightColor: '#606060',
+  },
+  brand: {
+    baseColor: '#1fad71',
+    highlightColor: '#26d98e',
+  },
+}
+
 export interface SkeletonFallbackProps extends SkeletonProps {
   isLoading?: boolean
   children: any
+  color?: keyof typeof colors
 }
 
 export default function SkeletonFallback({
   isLoading,
   children,
   className,
+  color = 'default',
   ...props
 }: SkeletonFallbackProps) {
   return isLoading === false || (isLoading === undefined && children) ? (
     children
   ) : (
-    <Skeleton
-      baseColor='#505050'
-      highlightColor='#606060'
-      className={clsx(className)}
-      {...props}
-    />
+    <Skeleton {...colors[color]} className={clsx(className)} {...props} />
   )
 }
 
