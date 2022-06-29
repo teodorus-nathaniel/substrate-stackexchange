@@ -24,12 +24,12 @@ export interface RichTextAreaProps extends ParentProps {
   }
 }
 
-const defaultInitialValue: Descendant[] = [
-  {
-    type: 'paragraph',
-    children: [{ text: '' }],
-  },
-]
+const getNodeFromString = (text: string): Descendant => ({
+  type: 'paragraph',
+  children: [{ text }],
+})
+
+const defaultInitialValue: Descendant[] = [getNodeFromString('')]
 
 export default function RichTextArea({
   startOneLine,
@@ -60,7 +60,11 @@ export default function RichTextArea({
 
   const parsedDefaultValue = useMemo(() => {
     if (!asReadOnlyContent?.content) return undefined
-    return JSON.parse(asReadOnlyContent?.content)
+    try {
+      return JSON.parse(asReadOnlyContent?.content)
+    } catch (e) {
+      return [getNodeFromString(asReadOnlyContent?.content)]
+    }
   }, [asReadOnlyContent?.content])
 
   const cleanedProps = getCleanedInputProps(props)
