@@ -25,6 +25,8 @@ export default function PostOverview({
     postId: post?.id,
   })
 
+  const answerCount = replyIds?.length ?? 0
+
   return (
     <div
       className={clsx(
@@ -70,8 +72,15 @@ export default function PostOverview({
         </p>
         <div className={clsx('flex justify-between', 'pt-4')}>
           <SkeletonFallback isLoading={isLoadingReply || isLoading} width={75}>
-            <p className={clsx('text-xs font-bold text-brand')}>
-              {replyIds?.length} Answers
+            <p
+              className={clsx(
+                'text-xs font-bold',
+                answerCount > 0 ? 'text-text-secondary' : 'text-brand'
+              )}
+            >
+              {answerCount > 0
+                ? `${replyIds?.length} Answer(s)`
+                : 'No answers yet!'}
             </p>
           </SkeletonFallback>
           <div className={clsx('text-sm', 'flex items-center', 'space-x-1')}>
