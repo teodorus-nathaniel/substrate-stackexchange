@@ -60,7 +60,7 @@ export default function ProfileSection() {
       <div className={clsx('font-bold text-lg', 'mt-2')}>
         <IntegratedSkeleton
           content={content?.name}
-          defaultContent={<AddressCopy>{data?.id ?? ''}</AddressCopy>}
+          defaultContent={<AddressCopy>{wallet?.address ?? ''}</AddressCopy>}
         >
           {(name) => <p>{name}</p>}
         </IntegratedSkeleton>

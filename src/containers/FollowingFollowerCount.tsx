@@ -30,7 +30,7 @@ export default function FollowingFollowerCount({
           inline
           isLoading={isLoading}
         >
-          {followerCount}
+          {followerCount ?? 0}
         </SkeletonFallback>{' '}
         Followers
       </Link>
@@ -44,7 +44,7 @@ export default function FollowingFollowerCount({
           inline
           isLoading={isLoading}
         >
-          {followingCount}
+          {followingCount ?? 0}
         </SkeletonFallback>{' '}
         Following
       </Link>

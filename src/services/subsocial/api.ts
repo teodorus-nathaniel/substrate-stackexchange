@@ -49,7 +49,6 @@ export async function getReplyIdsByPostId(
   api: FlatSubsocialApi,
   params: GetReplyIdsByPostIdParam
 ) {
-  console.log('MASUK')
   const substrateApi = api.subsocial.substrate
   return substrateApi.getReplyIdsByPostId(idToBn(params.postId))
 }
