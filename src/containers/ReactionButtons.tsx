@@ -64,7 +64,7 @@ export default function ReactionButtons({
             disabledCursor='loading'
             onClick={onClickReaction('Upvote')}
           >
-            <SkeletonFallback width={50} isLoading={isLoading}>
+            <SkeletonFallback width={25} isLoading={isLoading}>
               {isUpVoted ? <BsTriangleFill /> : <BsTriangle />}
             </SkeletonFallback>
           </Button>
@@ -98,7 +98,7 @@ export default function ReactionButtons({
             disabledCursor='loading'
             onClick={onClickReaction('Downvote')}
           >
-            <SkeletonFallback width={50} isLoading={isLoading}>
+            <SkeletonFallback width={25} isLoading={isLoading}>
               {isDownVoted ? <BsTriangleFill /> : <BsTriangle />}
             </SkeletonFallback>
           </Button>

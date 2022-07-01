@@ -4,12 +4,14 @@ import {
   getAllQuestions,
   getBatchReactionsByPostIdsAndAccount,
   getProfile,
+  getQuestion,
   getReactionByPostIdAndAccount,
   getReplyIdsByPostId,
 } from './api'
 import { useSubsocialQuery } from './base'
 import {
   GetProfileParam,
+  GetQuestionParam,
   GetReactionByPostIdAndAccountParam,
   GetReplyIdsByPostIdParam,
 } from './types'
@@ -66,6 +68,11 @@ export function useGetReplyIdsByPostId(
     getReplyIdsByPostId,
     { enabled: !!data.postId }
   )
+}
+
+export const getQuestionKey = 'getQuestion'
+export function useGetQuestion(data: GetQuestionParam) {
+  return useSubsocialQuery({ data, key: getQuestionKey }, getQuestion)
 }
 
 export const getAllQuestionsKey = 'getAllQuestions'

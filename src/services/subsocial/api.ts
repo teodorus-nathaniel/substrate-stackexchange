@@ -6,6 +6,7 @@ import {
   GetBatchReactionsByPostIdsAndAccountParam,
   GetBatchReplyIdsByPostIdsParam,
   GetProfileParam,
+  GetQuestionParam,
   GetReactionByPostIdAndAccountParam,
   GetReplyIdsByPostIdParam,
   Reaction,
@@ -62,6 +63,15 @@ export async function getBatchReplyIdsByPostIds(
     substrateApi.getReplyIdsByPostId(idToBn(id))
   )
   return Promise.all(promises)
+}
+
+export async function getQuestion(
+  api: FlatSubsocialApi,
+  params: GetQuestionParam
+) {
+  const post = await api.findPost({ id: params.postId as any })
+  console.log(post)
+  return post
 }
 
 export async function getAllQuestions(api: FlatSubsocialApi) {

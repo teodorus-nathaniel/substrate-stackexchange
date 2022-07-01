@@ -1,4 +1,4 @@
-export function generateLoadingChecker(isLoading: boolean, isFetched: boolean) {
+export function generateLoadingChecker(isLoading: boolean, isFetched = true) {
   const loadingChecker = (content: any) =>
     !!(isLoading || (!content && !isFetched))
   return {

@@ -1,5 +1,8 @@
+import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
 import PostDetail from '#/containers/PostDetail'
+import { useGetQuestion } from '#/services/subsocial/queries'
 import clsx from 'clsx'
+import { useRouter } from 'next/router'
 
 const dummyPost: any = {
   content: {
@@ -26,9 +29,23 @@ What is the roadmap to learn and use PPO ?`,
 }
 
 export default function QuestionDetailSection() {
+  const { query } = useRouter()
+  const id = (query['id'] ?? '') as string
+  const {
+    data: question,
+    isLoading,
+    isFetched,
+  } = useGetQuestion({ postId: id })
+  const { loadingChecker } = useIntegratedSkeleton(isLoading, isFetched)
+
   return (
     <div className={clsx('pb-32')}>
-      <PostDetail post={dummyPost} withBorderBottom />
+      <PostDetail
+        post={question}
+        withBorderBottom
+        isLoading={loadingChecker(question)}
+        // isLoading
+      />
       <div className={clsx('flex flex-col', 'space-y-8')}>
         <p className={clsx('text-xl font-bold', 'mt-4')}>4 Answers</p>
         <PostDetail post={dummyAns} withBorderBottom />

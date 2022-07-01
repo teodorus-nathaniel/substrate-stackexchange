@@ -1,4 +1,5 @@
 import RichTextArea from '#/components/inputs/RichTextArea'
+import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
 import { PostData } from '@subsocial/types/dto'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
@@ -9,6 +10,7 @@ import CreatorOverview from './CreatorOverview'
 
 export interface PostDetailProps extends HTMLProps<HTMLDivElement> {
   post?: PostData
+  isLoading?: boolean
   withBorderBottom?: boolean
 }
 
@@ -18,8 +20,11 @@ export default function PostDetail({
   post,
   className,
   withBorderBottom,
+  isLoading,
   ...props
 }: PostDetailProps) {
+  const { IntegratedSkeleton } = useIntegratedSkeleton(isLoading ?? false)
+
   return (
     <div
       className={clsx(
@@ -29,29 +34,39 @@ export default function PostDetail({
       )}
       {...props}
     >
-      <div className={clsx('flex')}>
+      <div className={clsx('flex', 'w-full')}>
         <div
           className={clsx('flex flex-col items-start', 'flex-shrink-0')}
           style={{ width: REACTION_WIDTH }}
         >
-          <ReactionButtons />
+          <ReactionButtons isLoading={isLoading} />
         </div>
-        <div className={clsx('flex flex-col')}>
-          {post?.content?.title && (
-            <RichTextArea
-              asReadOnlyContent={{ content: post?.content?.title }}
-              name='title'
-              containerClassName={clsx('text-xl', 'mb-6')}
-            />
-          )}
-          <RichTextArea
-            asReadOnlyContent={{ content: post?.content?.body }}
-            name='body'
-          />
+        <div className={clsx('flex flex-col', 'flex-1')}>
+          <div className={clsx('text-xl')}>
+            <IntegratedSkeleton
+              isLoading={isLoading}
+              content={post?.content?.title}
+            >
+              {(title) => (
+                <RichTextArea
+                  containerClassName={clsx('mb-6')}
+                  asReadOnlyContent={{ content: title }}
+                  name='title'
+                />
+              )}
+            </IntegratedSkeleton>
+          </div>
+          <IntegratedSkeleton height={50} content={post?.content?.body}>
+            {(body) => (
+              <RichTextArea asReadOnlyContent={{ content: body }} name='body' />
+            )}
+          </IntegratedSkeleton>
           <div className={clsx('flex justify-between items-end', 'mt-4')}>
-            <TagList tags={post?.content?.tags ?? []} />
+            <TagList tags={post?.content?.tags ?? []} isLoading={isLoading} />
             <CreatorOverview
-              creator={{ id: '', content: { name: 'cooper jones' } } as any}
+              isLoading={isLoading}
+              createDate={post?.struct?.createdAtTime}
+              creatorId={post?.struct?.ownerId}
             />
           </div>
         </div>

@@ -38,7 +38,7 @@ export interface IntegratedSkeletonProps<T>
   extends Omit<SkeletonFallbackProps, 'children'> {
   content: T | null | undefined
   defaultContent?: any
-  children?: (content: T) => JSX.Element
+  children?: (content: T) => JSX.Element | string | number
 }
 
 export function useIntegratedSkeleton(

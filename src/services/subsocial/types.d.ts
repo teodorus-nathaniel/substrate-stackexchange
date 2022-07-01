@@ -28,6 +28,9 @@ export type GetReplyIdsByPostIdParam = {
 export type GetBatchReplyIdsByPostIdsParam = {
   postIds: string[]
 }
+export type GetQuestionParam = {
+  postId: string
+}
 
 // Mutation Params
 export type UpsertReactionPayload = {
