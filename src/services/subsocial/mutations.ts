@@ -27,7 +27,7 @@ export function useCreateSpace(
     } as any)
     const tx = substrateApi.tx.spaces.createSpace(
       null,
-      name,
+      null,
       IpfsContent(spaceCid),
       null
     )

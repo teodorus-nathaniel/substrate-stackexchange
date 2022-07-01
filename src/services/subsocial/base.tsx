@@ -115,7 +115,7 @@ export function useSubsocialMutation<Param>(
             toast.info(`${summary}...`)
           } else if (result.status.isInBlock) {
             if (
-              !result.isError ||
+              result.isError ||
               result.dispatchError ||
               result.internalError
             ) {
