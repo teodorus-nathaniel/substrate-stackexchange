@@ -9,7 +9,10 @@ export async function activateWalletFromSavedAccount(
   return new Promise<WalletAccount | null>((resolve) => {
     wallet?.subscribeAccounts((accounts) => {
       if (!accounts) return
-      resolve(accounts[0] ?? null)
+      const currentAcc = accounts.find(
+        (account) => account.address === walletAccount.address
+      )
+      resolve(currentAcc ?? null)
     })
   })
 }
