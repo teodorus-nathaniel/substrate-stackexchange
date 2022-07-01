@@ -1,34 +1,28 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Subsocial StackExchange
 
-## Getting Started
+Made for Polkadot NA Hackaton 2022.  
+This project is served at [https://substrate-stackexchange.vercel.app/](https://substrate-stackexchange.vercel.app/)
 
-First, run the development server:
+## Summary
 
-```bash
-npm run dev
-# or
-yarn dev
+This project is a forum for developers Q&A regarding substrate development.
+The difference between this and current Substrate StackExchange is the fact that this one uses Subsocial SDK, making it decentralized and all the posts and interactions are saved in blockchain and IPFS.
+
+## How to Run
+
+1. Setup Env Variables.
+2. Run script below.
+
+```zsh
+$ npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Env Variables
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. ANALYZE = true/false
+   Acts as bundle visualizer to detect large sizes in build.
+2. NEXT_PUBLIC_USE_TESTNET = true/false
+   To toggle between mainnet and testnet RPCs
+3. NEXT_PUBLIC_SPACE_ID = number
+   This is the `space id` used for the project. All posts are made to that specific space.
+   If you didn't have any space before, you can create one in /devs/space page after you run the project.
