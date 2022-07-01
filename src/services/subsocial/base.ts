@@ -14,6 +14,7 @@ import {
   useQuery,
   UseQueryOptions,
 } from 'react-query'
+import { toast } from 'react-toastify'
 
 export type SubstrateApi = Awaited<
   FlatSubsocialApi['subsocial']['substrate']['api']
@@ -64,7 +65,7 @@ export function useSubsocialMutation<Param>(
       ipfsApi: SubsocialIpfsApi
       substrateApi: SubstrateApi
     }
-  ) => Promise<Transaction>,
+  ) => Promise<{ tx: Transaction; summary: string }>,
   config?: UseMutationOptions<Hash, Error, Param, unknown>,
   defaultConfig?: UseMutationOptions<Hash, Error, Param, unknown>
 ): UseMutationResult<Hash, Error, Param, unknown> {
@@ -96,13 +97,28 @@ export function useSubsocialMutation<Param>(
       usedWallet = newWallet
     }
 
-    const tx = await transactionGenerator(param, {
+    const { tx, summary } = await transactionGenerator(param, {
       subsocialApi,
       ipfsApi,
       substrateApi,
     })
-    return tx.signAndSend(currentWallet.address, {
-      signer: usedWallet.signer as any,
+    return new Promise<Hash>(async (resolve) => {
+      const unsub = await tx.signAndSend(
+        currentWallet.address,
+        {
+          signer: usedWallet.signer as any,
+        },
+        (result) => {
+          resolve(result.txHash)
+          console.log(`Current status is ${result.status}`)
+          if (result.status.isBroadcast) {
+            toast(`${summary}...`)
+          } else if (result.status.isInBlock) {
+            toast(`Success ${summary}!`)
+            unsub()
+          }
+        }
+      )
     })
   }
 

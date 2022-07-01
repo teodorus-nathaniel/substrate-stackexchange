@@ -25,12 +25,22 @@ export function useCreateSpace(
       about: desc,
       image: avatarCid,
     } as any)
-    return substrateApi.tx.spaces.createSpace(
+    const tx = substrateApi.tx.spaces.createSpace(
       null,
       name,
       IpfsContent(spaceCid),
-      null
+      {
+        permissions: {
+          everyone: [
+            'CreatePosts',
+            'UpdateOwnPosts',
+            'DeleteOwnPosts',
+            'HideOwnPosts',
+          ],
+        },
+      }
     )
+    return { tx, summary: `Creating Space ${name}` }
   }, config)
 }
 
@@ -44,11 +54,12 @@ export function useCreatePost(
       body,
       tags,
     } as any)
-    return substrateApi.tx.posts.createPost(
+    const tx = substrateApi.tx.posts.createPost(
       getSpaceId(),
       { RegularPost: null },
       IpfsContent(postCid)
     )
+    return { tx, summary: `Creating Post` }
   }, config)
 }
 
@@ -57,17 +68,26 @@ export function useUpsertReaction(
 ) {
   return useSubsocialMutation(async (data, { substrateApi }) => {
     const { kind, postId, reactionId } = data
+    let tx
+    const reactionActionMapper = {
+      Downvote: 'Downvoting post',
+      Upvote: 'Upvoting post',
+      '': 'Deleting reaction',
+    }
+    const summary = reactionActionMapper[kind]
     if (reactionId) {
       if (kind === '') {
-        return substrateApi.tx.reactions.deletePostReaction(postId, reactionId)
+        tx = substrateApi.tx.reactions.deletePostReaction(postId, reactionId)
+      } else {
+        tx = substrateApi.tx.reactions.updatePostReaction(
+          postId,
+          reactionId,
+          kind
+        )
       }
-      return substrateApi.tx.reactions.updatePostReaction(
-        postId,
-        reactionId,
-        kind
-      )
     } else {
-      return substrateApi.tx.reactions.createPostReaction(postId, kind)
+      tx = substrateApi.tx.reactions.createPostReaction(postId, kind)
     }
+    return { tx, summary }
   }, config)
 }
