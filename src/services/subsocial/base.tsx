@@ -114,7 +114,22 @@ export function useSubsocialMutation<Param>(
           if (result.status.isBroadcast) {
             toast(`${summary}...`)
           } else if (result.status.isInBlock) {
-            toast(`Success ${summary}!`)
+            if (
+              !result.isError ||
+              result.dispatchError ||
+              result.internalError
+            ) {
+              toast(
+                <div>
+                  <p>Error {summary}</p>
+                  <p className='text-text-secondary text-sm'>
+                    Error Code: {result.dispatchError?.toString()}
+                  </p>
+                </div>
+              )
+            } else {
+              toast(`Success ${summary}!`)
+            }
             unsub()
           }
         }
