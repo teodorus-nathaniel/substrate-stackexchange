@@ -15,13 +15,7 @@ const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
 export default function AskForm() {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const { mutate: postQuestion, isLoading, error } = useCreatePost()
-  const {
-    getFieldData,
-    handleSubmit,
-    resetForm,
-    // TODO: handle errors
-    errors: _errors,
-  } = useFormikWrapper({
+  const { getFieldData, handleSubmit, resetForm, errors } = useFormikWrapper({
     ...askQuestionForm,
     onSubmit: (values) => {
       console.log('CREATING QUESTION...')

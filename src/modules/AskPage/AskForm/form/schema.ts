@@ -23,7 +23,7 @@ export const askQuestionForm = {
               message: `Body text must be at least 30. Currently you have typed: ${
                 value?.length ?? 0
               }`,
-              path: 'desc',
+              path: 'body',
             })
           : true
       },
