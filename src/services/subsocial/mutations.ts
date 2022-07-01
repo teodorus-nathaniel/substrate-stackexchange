@@ -20,7 +20,7 @@ export function useCreateSpace(
     if (avatar) {
       avatarCid = await ipfsApi.saveFile(avatar)
     }
-    const spaceCid = await ipfsApi.saveSpace({
+    const spaceCid = await ipfsApi.saveContent({
       name,
       about: desc,
       image: avatarCid,

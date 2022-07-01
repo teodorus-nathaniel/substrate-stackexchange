@@ -39,7 +39,10 @@ export default function WalletProfile({
           size='content'
         >
           <p className={clsx('pl-4')}>{wallet.name}</p>
-          <ProfileImage className={clsx('w-9')} src={(wallet as any).avatar} />
+          <ProfileImage
+            className={clsx('w-9')}
+            src={(wallet as any).avatar ?? wallet.wallet?.logo}
+          />
         </Button>
       }
     >
