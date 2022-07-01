@@ -22,11 +22,9 @@ export default function ConnectWalletButton(props: ConnectWalletButtonProps) {
       ) : (
         <WalletSelect
           dappName={APP_NAME}
-          onWalletSelected={(selectedWallet) => {
-            selectedWallet.subscribeAccounts((accounts) => {
-              if (!accounts) return
-              setWallet(accounts[0])
-            })
+          showAccountsList
+          onAccountSelected={(selectedAccount) => {
+            setWallet(selectedAccount)
           }}
           triggerComponent={
             <Button className={clsx('text-sm')}>Connect to wallet</Button>
