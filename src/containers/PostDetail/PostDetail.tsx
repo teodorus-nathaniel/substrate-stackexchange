@@ -39,7 +39,7 @@ export default function PostDetail({
           className={clsx('flex flex-col items-start', 'flex-shrink-0')}
           style={{ width: REACTION_WIDTH }}
         >
-          <ReactionButtons isLoading={isLoading} />
+          <ReactionButtons postId={post?.id} isLoading={isLoading} />
         </div>
         <div className={clsx('flex flex-col', 'flex-1')}>
           <div className={clsx('text-xl')}>
