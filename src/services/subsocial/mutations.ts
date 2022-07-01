@@ -1,3 +1,4 @@
+import { DEFAULT_SPACE_PERMISSIONS } from '#/lib/constants/subsocial'
 import { getSpaceId } from '#/lib/helpers/env'
 import { Hash } from '@polkadot/types/interfaces'
 import { IpfsContent } from '@subsocial/types/substrate/classes'
@@ -29,14 +30,7 @@ export function useCreateSpace(
       null,
       null,
       IpfsContent(spaceCid),
-      {
-        everyone: [
-          'CreatePosts',
-          'UpdateOwnPosts',
-          'DeleteOwnPosts',
-          'HideOwnPosts',
-        ],
-      }
+      DEFAULT_SPACE_PERMISSIONS
     )
     return { tx, summary: `Creating Space ${name}` }
   }, config)
