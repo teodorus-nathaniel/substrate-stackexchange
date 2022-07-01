@@ -3,9 +3,9 @@ import { hoverRingClassName } from '#/lib/constants/common-classnames'
 import { NORMAL_TRANSITION } from '#/lib/constants/transition'
 import { TransitionVariants } from '#/lib/helpers/types'
 import clsx from 'clsx'
-import { AnimatePresence, HTMLMotionProps, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { HTMLProps, useState } from 'react'
 import { BsChevronLeft } from 'react-icons/bs'
 
 const WIDTH = 225
@@ -24,7 +24,7 @@ const contentVariants: TransitionVariants = {
   open: { opacity: 1, x: 0, transition: NORMAL_TRANSITION },
 }
 
-interface Props extends HTMLMotionProps<'aside'> {}
+interface Props extends HTMLProps<HTMLDivElement> {}
 
 type LinkData = { text: string; to: string }
 type NestedLinks = {
@@ -56,7 +56,7 @@ export default function Sidebar({ className, ...props }: Props) {
   const [isOpen, setIsOpen] = useState(true)
 
   return (
-    <div className={clsx('relative', className)}>
+    <div className={clsx(className)} {...props}>
       <button
         className={clsx(
           'p-2 bg-bg-100 text-lg',
@@ -74,14 +74,18 @@ export default function Sidebar({ className, ...props }: Props) {
         />
       </button>
       <motion.aside
-        className={clsx('flex flex-col', 'p-4', 'bg-bg-100', 'rounded-md')}
+        className={clsx(
+          'flex flex-col',
+          'p-4 h-full',
+          'bg-bg-100',
+          'rounded-md'
+        )}
         animate={{
           width: isOpen ? WIDTH : 0,
           opacity: isOpen ? 1 : 0,
           paddingLeft: !isOpen ? 0 : undefined,
           paddingRight: !isOpen ? 0 : undefined,
         }}
-        {...props}
       >
         <AnimatePresence>
           {isOpen && (

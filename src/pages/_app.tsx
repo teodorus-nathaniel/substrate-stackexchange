@@ -31,9 +31,8 @@ export default function App({ Component, pageProps }: AppProps) {
       >
         <div className={clsx('flex items-stretch', 'w-full pt-4')}>
           <Sidebar
-            className={clsx('sticky')}
+            className={clsx('sticky top-8')}
             style={{
-              top: NAVBAR_HEIGHT,
               height: `calc(100vh - ${NAVBAR_HEIGHT + 48}px)`,
             }}
           />
