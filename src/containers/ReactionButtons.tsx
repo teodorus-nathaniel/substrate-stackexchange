@@ -79,7 +79,7 @@ export default function ReactionButtons({
         )}
       >
         <SkeletonFallback
-          color='brand'
+          color={noButtons ? 'brand' : 'default'}
           className={clsx('absolute', 'inset-0', 'w-full h-full')}
           isLoading={isLoading}
         >
