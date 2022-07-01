@@ -112,14 +112,14 @@ export function useSubsocialMutation<Param>(
           resolve(result.txHash)
           console.log(`Current status is ${result.status}`)
           if (result.status.isBroadcast) {
-            toast(`${summary}...`)
+            toast.info(`${summary}...`)
           } else if (result.status.isInBlock) {
             if (
               !result.isError ||
               result.dispatchError ||
               result.internalError
             ) {
-              toast(
+              toast.error(
                 <div>
                   <p>Error {summary}</p>
                   <p className='text-text-secondary text-sm'>
@@ -128,7 +128,7 @@ export function useSubsocialMutation<Param>(
                 </div>
               )
             } else {
-              toast(`Success ${summary}!`)
+              toast.success(`Success ${summary}!`)
             }
             unsub()
           }

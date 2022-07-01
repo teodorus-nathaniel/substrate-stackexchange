@@ -18,7 +18,7 @@ export default function AddressCopy({
 }: AddressCopyProps) {
   const copyToClipboard = () => {
     window.navigator.clipboard.writeText(children)
-    toast('Address copied to clipboard!')
+    toast.info('Address copied to clipboard!')
   }
   return (
     <div className={clsx('flex', className)} {...props}>

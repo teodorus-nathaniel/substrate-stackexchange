@@ -20,6 +20,7 @@ export const createSpaceForm = {
     name: string().required('Your space needs a name!'),
     desc: string(),
     avatar: mixed()
+      .required()
       .test(
         'fileSize',
         'File Size is too large',

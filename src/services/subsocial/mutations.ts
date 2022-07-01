@@ -29,16 +29,7 @@ export function useCreateSpace(
       null,
       name,
       IpfsContent(spaceCid),
-      {
-        permissions: {
-          everyone: [
-            'CreatePosts',
-            'UpdateOwnPosts',
-            'DeleteOwnPosts',
-            'HideOwnPosts',
-          ],
-        },
-      }
+      null
     )
     return { tx, summary: `Creating Space ${name}` }
   }, config)
