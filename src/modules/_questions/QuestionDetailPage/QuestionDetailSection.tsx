@@ -52,7 +52,7 @@ export default function QuestionDetailSection() {
         <PostDetail post={dummyAns} withBorderBottom />
         <PostDetail post={dummyAns1} withBorderBottom />
       </div>
-      <form className={clsx('flex flex-col', 'mt-8')}>
+      <form className={clsx('flex flex-col', 'mt-8', 'text-sm')}>
         <p className={clsx('text-xl font-bold', 'mb-1')}>Your Answer</p>
         <p className={clsx('text-sm text-text-secondary', 'mb-4')}>
           Please be sure to answer the question. Provide details and share your
