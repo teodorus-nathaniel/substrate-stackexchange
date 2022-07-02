@@ -52,7 +52,7 @@ export default function CreatorOverview({
           }
         />
         <div className={clsx('flex flex-col')}>
-          <p className={clsx('text-sm font-bold text-blue-400', 'mb-0.5')}>
+          <p className={clsx('text-xs font-bold text-blue-400', 'mb-0.5')}>
             <IntegratedSkeleton
               content={usedCreator?.content?.name}
               defaultContent={truncateMiddle(usedCreator?.id)}

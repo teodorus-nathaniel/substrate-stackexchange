@@ -52,21 +52,21 @@ export default function PostDetail({
               isLoading={isLoading}
               content={post?.content?.title}
             >
-              {(title) => (
+              {(title) => <p className={clsx('mb-6')}>{title}</p>}
+            </IntegratedSkeleton>
+          </div>
+          <div className={clsx('mb-4')}>
+            <IntegratedSkeleton height={50} content={post?.content?.body}>
+              {(body) => (
                 <RichTextArea
-                  containerClassName={clsx('mb-6')}
-                  asReadOnlyContent={{ content: title }}
-                  name='title'
+                  containerClassName={clsx('text-sm')}
+                  asReadOnlyContent={{ content: body }}
+                  name='body'
                 />
               )}
             </IntegratedSkeleton>
           </div>
-          <IntegratedSkeleton height={50} content={post?.content?.body}>
-            {(body) => (
-              <RichTextArea asReadOnlyContent={{ content: body }} name='body' />
-            )}
-          </IntegratedSkeleton>
-          <div className={clsx('flex justify-between items-end', 'mt-4')}>
+          <div className={clsx('flex justify-between items-end', 'mt-auto')}>
             <TagList tags={post?.content?.tags ?? []} isLoading={isLoading} />
             <CreatorOverview
               isLoading={isLoading}
@@ -82,6 +82,7 @@ export default function PostDetail({
       >
         <div className={clsx('flex flex-col')}>
           <Comment
+            className={clsx('text-sm')}
             comment={`I realise this isn't related to your question but I am really curious. What was the decision to use something that just supports Chrome and what's so much better about Cypress? I've been working on the Open-source project Courgette github.com/canvaspixels/courgette and was wondering what features are drawing everybody towards Cypress.`}
             createdAt={234234233}
             creator={{ id: 'tes', content: { name: 'Dynatle' } } as any}

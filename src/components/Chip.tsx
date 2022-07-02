@@ -5,7 +5,7 @@ interface Props extends HTMLProps<HTMLDivElement> {}
 
 export default function Chip({ className, children, ...props }: Props) {
   return (
-    <div className={clsx('flex', 'text-sm', className)} {...props}>
+    <div className={clsx('flex', className)} {...props}>
       <div
         className={clsx(
           'px-2 py-0.5',
