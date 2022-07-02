@@ -89,15 +89,10 @@ export const CustomEditor = {
   isCodeBlockActive: (editor: EditorType) =>
     !!matchTextBlock(editor, (n) => n.type === 'code-block'),
 
-  toggleCodeBlock: (editor: EditorType) => {
-    const isCodeBlockActive = CustomEditor.isCodeBlockActive(editor)
-    toggleTextBlock(
-      editor,
-      CustomEditor.isCodeBlockActive,
-      (isActive) => (isActive ? 'paragraph' : 'code-block'),
-      isCodeBlockActive ? {} : { merge: () => 'code-block' as any }
-    )
-  },
+  toggleCodeBlock: (editor: EditorType) =>
+    toggleTextBlock(editor, CustomEditor.isCodeBlockActive, (isActive) =>
+      isActive ? 'paragraph' : 'code-block'
+    ),
 }
 
 export function transformOnKeyDown(
