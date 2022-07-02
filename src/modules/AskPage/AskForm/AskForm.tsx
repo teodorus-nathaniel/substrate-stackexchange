@@ -1,5 +1,6 @@
 import Button from '#/components/Button'
 import Select from '#/components/inputs/Select'
+import TextArea from '#/components/inputs/TextArea'
 import TransactionModal from '#/containers/TransactionModal'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
 import { useCreatePost } from '#/services/subsocial/mutations'
@@ -38,15 +39,14 @@ export default function AskForm() {
         isOpen={isOpenModal}
       />
       <h1 className={clsx('text-3xl')}>Ask a Public Question</h1>
-      <RichTextArea
+      <TextArea
         label='Title'
-        startOneLine
+        rows={1}
         className={clsx('text-xl')}
-        labelClassName={clsx('text-sm font-bold mb-0')}
+        labelClassName={clsx('text-sm font-bold')}
         containerClassName={clsx('space-y-1', 'mt-8')}
         helperText='Be specific and imagine you’re asking a question to another person'
         helperTextClassName={clsx('text-xs')}
-        storagePrefix='ask'
         {...getFieldData('title')}
       />
       <RichTextArea
