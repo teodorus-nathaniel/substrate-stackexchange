@@ -1,6 +1,6 @@
-import { CustomText, EditorType } from '#/declarations/slate'
+import { CustomElement, CustomText, EditorType } from '#/declarations/slate'
 import { KeyboardEvent } from 'react'
-import { Editor, Text, Transforms } from 'slate'
+import { Editor, Element, Text, Transforms } from 'slate'
 
 function matchTextProps(
   editor: EditorType,
@@ -25,7 +25,36 @@ function toggleTextMark(
   })
 }
 
+function matchTextBlock(
+  editor: EditorType,
+  checker: (n: CustomElement) => boolean
+) {
+  const [match] = Editor.nodes(editor, {
+    match: (n) => Element.isElement(n) && checker(n),
+    universal: true,
+  })
+  return match
+}
+
+function toggleTextBlock(
+  editor: EditorType,
+  checkActive: (editor: EditorType) => boolean,
+  editedProps: (isActive: boolean) => CustomElement['type'],
+  options?: Parameters<typeof Transforms['setNodes']>[2]
+) {
+  const isActive = checkActive(editor)
+  Transforms.setNodes(
+    editor,
+    { type: editedProps(isActive) },
+    {
+      match: (n) => Element.isElement(n),
+      ...options,
+    }
+  )
+}
+
 export const CustomEditor = {
+  // Text Mark
   isBoldMarkActive: (editor: EditorType) =>
     !!matchTextProps(editor, (n) => n.bold === true),
   isCodeMarkActive: (editor: EditorType) =>
@@ -55,34 +84,63 @@ export const CustomEditor = {
       underline: !isActive,
     }))
   },
+
+  // Text Block
+  isCodeBlockActive: (editor: EditorType) =>
+    !!matchTextBlock(editor, (n) => n.type === 'code-block'),
+
+  toggleCodeBlock: (editor: EditorType) => {
+    const isCodeBlockActive = CustomEditor.isCodeBlockActive(editor)
+    toggleTextBlock(
+      editor,
+      CustomEditor.isCodeBlockActive,
+      (isActive) => (isActive ? 'paragraph' : 'code-block'),
+      isCodeBlockActive ? {} : { merge: () => 'code-block' as any }
+    )
+  },
 }
 
 export function transformOnKeyDown(
   event: KeyboardEvent<HTMLDivElement>,
   editor: EditorType
 ) {
-  if (!event.ctrlKey) return
-  let isPreventDefault = true
+  const activateCtrlKeyBind = keyBindCtrl(event, editor)
+  const activateShiftKeyBind = keyBindShift(event, editor)
+  if (activateCtrlKeyBind || activateShiftKeyBind) event.preventDefault()
+}
+
+function keyBindCtrl(event: KeyboardEvent<HTMLDivElement>, editor: EditorType) {
+  if (!event.ctrlKey) return false
   switch (event.key) {
-    case '`': {
+    case '`':
       CustomEditor.toggleCodeMark(editor)
       break
-    }
-    case 'b': {
+    case 'k':
+      CustomEditor.toggleCodeBlock(editor)
+      break
+    case 'b':
       CustomEditor.toggleBoldMark(editor)
       break
-    }
-    case 'i': {
+    case 'i':
       CustomEditor.toggleItalicMark(editor)
       break
-    }
-    case 'u': {
+    case 'u':
       CustomEditor.toggleUnderlineMark(editor)
       break
-    }
-    default: {
-      isPreventDefault = false
-    }
+    default:
+      return false
   }
-  if (isPreventDefault) event.preventDefault()
+  return true
+}
+
+function keyBindShift(
+  event: KeyboardEvent<HTMLDivElement>,
+  editor: EditorType
+) {
+  if (!event.shiftKey) return false
+  switch (event.key) {
+    default:
+      return false
+  }
+  return true
 }

@@ -3,7 +3,7 @@ import { HistoryEditor } from 'slate-history'
 import { ReactEditor } from 'slate-react'
 
 type EditorType = BaseEditor & ReactEditor & HistoryEditor
-type ElementTypes = 'paragraph'
+type ElementTypes = 'paragraph' | 'code-block'
 type CustomElement = { type: ElementTypes; children: CustomText[] }
 type CustomText = {
   text: string
