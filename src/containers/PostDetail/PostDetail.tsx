@@ -134,11 +134,7 @@ export default function PostDetail({
               <Comment
                 className={clsx('text-sm')}
                 key={comment.id}
-                creatorId={comment.post.struct.createdByAccount}
-                upVoteCount={comment.post.struct.upvotesCount}
-                comment={comment.post.content?.body ?? ''}
-                createdAt={comment.post.struct.createdAtTime}
-                creator={comment.owner}
+                comment={comment}
               />
             ))}
           </div>
@@ -148,7 +144,7 @@ export default function PostDetail({
         style={{ marginLeft: REACTION_WIDTH }}
         className={clsx('text-sm', 'mt-4')}
       >
-        <SkeletonFallback isLoading={isLoading}>
+        <SkeletonFallback isLoading={isLoading} width={100}>
           {openCommentBox ? (
             <form className={clsx('flex flex-col')} onSubmit={handleSubmit}>
               <TextArea placeholder='Comment...' {...getFieldData('body')} />

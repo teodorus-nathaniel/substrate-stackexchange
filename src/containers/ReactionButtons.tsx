@@ -1,11 +1,9 @@
 import Button from '#/components/Button'
+import ReactionArrowIcon from '#/components/ReactionArrowIcon'
 import SkeletonFallback from '#/components/SkeletonFallback'
-import { useUpsertReaction } from '#/services/subsocial/mutations'
-import { useGetUserReactionByPostId } from '#/services/subsocial/queries'
-import { ReactionType } from '@subsocial/types/dto'
+import useUserReactionInteraction from '#/lib/hooks/subsocial/useUserReactionInteraction'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
-import { BsTriangle, BsTriangleFill } from 'react-icons/bs'
 
 interface Props extends HTMLProps<HTMLDivElement> {
   isLoading?: boolean
@@ -26,26 +24,14 @@ export default function ReactionButtons({
   upVoteCount = 0,
   ...props
 }: Props) {
-  const { data: reaction, isLoading: localIsLoading } =
-    useGetUserReactionByPostId({ postId })
-  const { mutate: upsertReaction } = useUpsertReaction()
+  const {
+    onClickReaction,
+    userReaction: { isLoading: localIsLoading },
+    isDownVoted,
+    isUpVoted,
+  } = useUserReactionInteraction(postId)
 
-  const isDownVoted = reaction?.kind === 'Downvote'
-  const isUpVoted = reaction?.kind === 'Upvote'
   const combinedIsLoading = isLoading || localIsLoading
-
-  const onClickReaction = (kind: ReactionType) => () => {
-    const shouldDeleteReaction =
-      (kind === 'Downvote' && isDownVoted) || (kind === 'Upvote' && isUpVoted)
-    if (!postId) return
-    console.log('UPSERTING REACTION...')
-    upsertReaction({
-      kind: shouldDeleteReaction ? '' : kind,
-      postId,
-      reactionId: reaction?.id,
-    })
-  }
-
   const buttonClassNames = clsx('flex space-x-2 items-center', 'text-xl')
 
   return (
@@ -65,7 +51,7 @@ export default function ReactionButtons({
             onClick={onClickReaction('Upvote')}
           >
             <SkeletonFallback width={25} isLoading={isLoading}>
-              {isUpVoted ? <BsTriangleFill /> : <BsTriangle />}
+              <ReactionArrowIcon type='Upvote' isActive={isUpVoted} />
             </SkeletonFallback>
           </Button>
         </div>
@@ -92,14 +78,13 @@ export default function ReactionButtons({
             variant='unstyled'
             rounded
             size='icon-medium'
-            className={clsx('rotate-180')}
             innerContainerClassName={buttonClassNames}
             disabled={combinedIsLoading}
             disabledCursor='loading'
             onClick={onClickReaction('Downvote')}
           >
             <SkeletonFallback width={25} isLoading={isLoading}>
-              {isDownVoted ? <BsTriangleFill /> : <BsTriangle />}
+              <ReactionArrowIcon type='Downvote' isActive={isDownVoted} />
             </SkeletonFallback>
           </Button>
         </div>
