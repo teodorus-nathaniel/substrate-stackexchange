@@ -3,8 +3,11 @@ import { getSpaceId } from '#/lib/helpers/env'
 import { IpfsContent } from '@subsocial/types/substrate/classes'
 import { SubsocialMutationConfig, useSubsocialMutation } from './base'
 import {
+  invalidateGetAllQuestions,
   invalidateGetQuestion,
   invalidateGetReactionByPostIdAndAccount,
+  invalidateGetReplies,
+  invalidateGetReplyIdsByPostId,
 } from './queries'
 import {
   CreateAnswerPayload,
@@ -40,20 +43,28 @@ export function useCreateSpace(
 export function useCreatePost(
   config?: SubsocialMutationConfig<CreateQuestionPayload>
 ) {
-  return useSubsocialMutation(async (data, { ipfsApi, substrateApi }) => {
-    const { title, body, tags } = data
-    const postCid = await ipfsApi.savePost({
-      title,
-      body,
-      tags,
-    } as any)
-    const tx = substrateApi.tx.posts.createPost(
-      getSpaceId(),
-      { RegularPost: null },
-      IpfsContent(postCid)
-    )
-    return { tx, summary: `Creating Post` }
-  }, config)
+  return useSubsocialMutation(
+    async (data, { ipfsApi, substrateApi }) => {
+      const { title, body, tags } = data
+      const postCid = await ipfsApi.savePost({
+        title,
+        body,
+        tags,
+      } as any)
+      const tx = substrateApi.tx.posts.createPost(
+        getSpaceId(),
+        { RegularPost: null },
+        IpfsContent(postCid)
+      )
+      return { tx, summary: `Creating Post` }
+    },
+    config,
+    {
+      onTxSuccess: () => {
+        invalidateGetAllQuestions()
+      },
+    }
+  )
 }
 
 export function useUpsertReaction(
@@ -102,17 +113,30 @@ export function useUpsertReaction(
 export function useCreateReply(
   config?: SubsocialMutationConfig<CreateAnswerPayload>
 ) {
-  return useSubsocialMutation(async (data, { substrateApi, ipfsApi }) => {
-    const { body, rootPostId, isAnswer } = data
-    const postCid = await ipfsApi.saveContent({
-      body,
-      isAnswer,
-    } as any)
-    const tx = substrateApi.tx.posts.createPost(
-      getSpaceId(),
-      { Comment: { parentId: null, rootPostId } },
-      IpfsContent(postCid)
-    )
-    return { tx, summary: `Answering question` }
-  }, config)
+  return useSubsocialMutation(
+    async (data, { substrateApi, ipfsApi }) => {
+      const { body, rootPostId, isAnswer } = data
+      const postCid = await ipfsApi.saveContent({
+        body,
+        isAnswer,
+      } as any)
+      const tx = substrateApi.tx.posts.createPost(
+        getSpaceId(),
+        { Comment: { parentId: null, rootPostId } },
+        IpfsContent(postCid)
+      )
+      return { tx, summary: `Answering question` }
+    },
+    config,
+    {
+      onTxSuccess: (data) => {
+        invalidateGetReplyIdsByPostId({
+          postId: data.rootPostId,
+        })
+        invalidateGetReplies({
+          postId: data.rootPostId,
+        })
+      },
+    }
+  )
 }
