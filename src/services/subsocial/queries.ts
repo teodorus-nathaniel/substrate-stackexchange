@@ -36,7 +36,10 @@ export function useGetProfile(
 export function useGetCurrentUser() {
   const [wallet] = useWalletContext()
   return useSubsocialQuery(
-    { key: getProfileKey, data: { address: wallet?.address ?? '' } },
+    {
+      key: getProfileKey,
+      data: { address: wallet?.address ?? '' },
+    },
     getProfile,
     { enabled: !!wallet?.address }
   )

@@ -5,6 +5,7 @@ import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
 import FollowingFollowerCount from '#/containers/FollowingFollowerCount'
 import { useWalletContext } from '#/contexts/WalletContext'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
+import { encodeAddress } from '#/lib/helpers/wallet'
 import useLogout from '#/lib/hooks/useLogout'
 import { useGetProfile } from '#/services/subsocial/queries'
 import clsx from 'clsx'
@@ -17,7 +18,7 @@ export default function ProfileSection() {
 
   const { query } = useRouter()
   const id = query.id as string | undefined
-  const address = id ?? wallet?.address ?? ''
+  const address = id ?? encodeAddress(wallet?.address) ?? ''
   const { data, isLoading, isFetched } = useGetProfile({
     address,
   })
@@ -60,7 +61,9 @@ export default function ProfileSection() {
       <div className={clsx('font-bold text-lg', 'mt-2')}>
         <IntegratedSkeleton
           content={content?.name}
-          defaultContent={<AddressCopy>{wallet?.address ?? ''}</AddressCopy>}
+          defaultContent={
+            <AddressCopy>{encodeAddress(wallet?.address ?? '')}</AddressCopy>
+          }
         >
           {(name) => <p>{name}</p>}
         </IntegratedSkeleton>

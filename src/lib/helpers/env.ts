@@ -24,3 +24,13 @@ export function getSpaceId() {
     true
   )
 }
+
+export function getAddressPrefix() {
+  return Number.parseInt(
+    checkEnv(
+      process.env['NEXT_PUBLIC_ADDRESS_PREFIX'],
+      'NEXT_PUBLIC_ADDRESS_PREFIX',
+      false
+    ) ?? '28'
+  )
+}

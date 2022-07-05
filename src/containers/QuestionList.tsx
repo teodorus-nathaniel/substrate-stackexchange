@@ -4,6 +4,7 @@ import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
 import PostOverview from '#/containers/PostOverview'
 import { useWalletContext } from '#/contexts/WalletContext'
 import { renderElementOrCustom } from '#/lib/helpers/renderer'
+import { encodeAddress } from '#/lib/helpers/wallet'
 import { useGetAllQuestions } from '#/services/subsocial/queries'
 import clsx from 'clsx'
 import { HTMLProps, useMemo } from 'react'
@@ -29,7 +30,7 @@ export default function QuestionList({
   const filteredQuestions = useMemo(() => {
     if (type !== 'user') return posts
     return posts?.filter(
-      (post) => post.struct.createdByAccount === wallet?.address
+      (post) => post.struct.createdByAccount === encodeAddress(wallet?.address)
     )
   }, [posts, type, wallet])
 
