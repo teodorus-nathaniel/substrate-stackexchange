@@ -4,6 +4,7 @@ import ImageCircleInput from '#/components/inputs/ImageCircleInput'
 import TextField from '#/components/inputs/TextField'
 import TransactionModal from '#/containers/TransactionModal'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
+import { useResetForm } from '#/lib/hooks/useResetForm'
 import { useCreateSpace } from '#/services/subsocial/mutations'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
@@ -16,16 +17,35 @@ const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
 
 export default function SpaceCreatorPage() {
   const [isOpenModal, setIsOpenModal] = useState(false)
-  const { mutate: createSpace, isLoading, data, error } = useCreateSpace()
-  const { getFieldData, handleSubmit, setFieldValue, setFieldTouched } =
-    useFormikWrapper({
-      ...createSpaceForm,
-      onSubmit: (values) => {
-        console.log('CREATING SPACE...')
-        setIsOpenModal(true)
-        createSpace(values)
-      },
-    })
+  const {
+    getFieldData,
+    handleSubmit,
+    setFieldValue,
+    setFieldTouched,
+    resetForm,
+  } = useFormikWrapper({
+    ...createSpaceForm,
+    onSubmit: (values) => {
+      console.log('CREATING SPACE...')
+      setIsOpenModal(true)
+      createSpace(values)
+    },
+  })
+
+  const storagePrefix = 'create-space'
+  const { key, resetFormData } = useResetForm({
+    resetForm,
+    storagePrefix,
+    ...getFieldData('desc'),
+  })
+  const {
+    mutate: createSpace,
+    isLoading,
+    data,
+    error,
+  } = useCreateSpace({
+    onSuccess: resetFormData,
+  })
 
   return (
     <div className={clsx('flex flex-col', 'w-full max-w-screen-sm', 'mx-auto')}>
@@ -73,6 +93,7 @@ export default function SpaceCreatorPage() {
           <TextField {...getFieldData('name')} label='Name' />
           <RichTextArea
             {...getFieldData('desc')}
+            key={key}
             storagePrefix='create-space'
             label='Description'
           />

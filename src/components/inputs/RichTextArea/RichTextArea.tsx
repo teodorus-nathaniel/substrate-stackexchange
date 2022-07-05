@@ -14,10 +14,16 @@ import { renderElement, renderLeaf } from './elements'
 import { deserializeDraft, serializeDraft } from './helpers/serializer'
 import { transformOnKeyDown } from './helpers/transformer'
 
-type ParentProps = EditableProps & RequiredFieldWrapperProps
-export interface RichTextAreaProps extends ParentProps {
+export interface TextAreaStorageProps {
   name: string
   storagePrefix?: string
+}
+
+type ParentProps = EditableProps &
+  RequiredFieldWrapperProps &
+  TextAreaStorageProps
+
+export interface RichTextAreaProps extends ParentProps {
   startOneLine?: boolean
   asReadOnlyContent?: {
     content?: string
@@ -31,9 +37,25 @@ const getNodeFromString = (text: string): Descendant => ({
 
 const defaultInitialValue: Descendant[] = [getNodeFromString('')]
 
+export function useTextAreaStorage({
+  name,
+  storagePrefix: _storagePrefix,
+}: TextAreaStorageProps) {
+  const storagePrefix = _storagePrefix ? `-${_storagePrefix}` : ''
+  const storageKey = `textarea${storagePrefix}-${name}`
+
+  return useMemo(() => {
+    const savedDraft = window.localStorage.getItem(storageKey) ?? ''
+    const setDraft = (draft: string) =>
+      window.localStorage.setItem(storageKey, draft)
+    const clearDraft = () => window.localStorage.removeItem(storageKey)
+    return [savedDraft, setDraft, clearDraft] as const
+  }, [storageKey])
+}
+
 export default function RichTextArea({
   startOneLine,
-  storagePrefix: _storagePrefix,
+  storagePrefix,
   onChange,
   asReadOnlyContent,
   ...props
@@ -43,20 +65,19 @@ export default function RichTextArea({
     editorRef.current = withHistory(withReact(createEditor()))
   const editor = editorRef.current
 
-  const storagePrefix = _storagePrefix ? `-${_storagePrefix}` : ''
-  const storageKey = `textarea${storagePrefix}-${props.name}`
+  const [savedDraft, setDraft] = useTextAreaStorage({
+    name: props.name,
+    storagePrefix,
+  })
   const initialValue = useMemo(() => {
     let value = defaultInitialValue
-    if (typeof window !== 'undefined') {
-      const savedDraft = window.localStorage.getItem(storageKey)
-      if (savedDraft) {
-        onChangeWrapper(onChange, savedDraft, props.name)
-        value = deserializeDraft(savedDraft)
-      }
+    if (savedDraft) {
+      onChangeWrapper(onChange, savedDraft, props.name)
+      value = deserializeDraft(savedDraft)
     }
     return value
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [storageKey])
+  }, [savedDraft])
 
   const parsedDefaultValue = useMemo(() => {
     if (!asReadOnlyContent?.content) return undefined
@@ -82,7 +103,7 @@ export default function RichTextArea({
             )
             if (isAstChange) {
               const content = serializeDraft(value)
-              localStorage.setItem(storageKey, content)
+              setDraft(content)
               // TODO: because this is still json stringify, the length will be more than the actual content
               onChangeWrapper(onChange, content, props.name)
             }

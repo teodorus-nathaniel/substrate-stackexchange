@@ -3,6 +3,7 @@ import Select from '#/components/inputs/Select'
 import TextArea from '#/components/inputs/TextArea'
 import TransactionModal from '#/containers/TransactionModal'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
+import { useResetForm } from '#/lib/hooks/useResetForm'
 import { useCreatePost } from '#/services/subsocial/mutations'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
@@ -15,7 +16,6 @@ const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
 
 export default function AskForm() {
   const [isOpenModal, setIsOpenModal] = useState(false)
-  const { mutate: postQuestion, isLoading, error } = useCreatePost()
   const { getFieldData, handleSubmit, resetForm } = useFormikWrapper({
     ...askQuestionForm,
     onSubmit: (values) => {
@@ -27,6 +27,19 @@ export default function AskForm() {
       }
       postQuestion(usedValues)
     },
+  })
+  const storagePrefix = 'ask'
+  const { key, resetFormData } = useResetForm({
+    resetForm,
+    storagePrefix,
+    ...getFieldData('body'),
+  })
+  const {
+    mutate: postQuestion,
+    isLoading,
+    error,
+  } = useCreatePost({
+    onSuccess: resetFormData,
   })
 
   return (
@@ -50,6 +63,7 @@ export default function AskForm() {
         {...getFieldData('title')}
       />
       <RichTextArea
+        key={key}
         label='Body'
         labelClassName={clsx('font-bold')}
         containerClassName={clsx('mt-8 text-sm')}
@@ -70,11 +84,7 @@ export default function AskForm() {
       />
       <div className={clsx('mt-8 space-x-4', 'flex items-center')}>
         <Button type='submit'>Post your question</Button>
-        <Button
-          onClick={() => resetForm()}
-          type='button'
-          variant='outlined-red'
-        >
+        <Button onClick={resetFormData} type='button' variant='outlined-red'>
           Discard draft
         </Button>
       </div>
