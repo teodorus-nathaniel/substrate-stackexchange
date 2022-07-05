@@ -15,6 +15,7 @@ import {
   UseQueryOptions,
 } from 'react-query'
 import { toast } from 'react-toastify'
+import queryClient from '../client'
 
 export type SubstrateApi = Awaited<
   FlatSubsocialApi['subsocial']['substrate']['api']
@@ -51,12 +52,24 @@ export function useSubsocialQuery<T, V>(
   )
 }
 
+export function createQueryInvalidation<Param>(key: string) {
+  return (data?: Param) => {
+    queryClient.invalidateQueries([key, data])
+  }
+}
+
 function makeCombinedCallback(defaultConfig: any, config: any, attr: string) {
   return (...data: any[]) => {
     defaultConfig && defaultConfig[attr] && defaultConfig[attr](...data)
     config && config[attr] && config[attr](...data)
   }
 }
+export type SubsocialMutationConfig<Param> = UseMutationOptions<
+  Hash,
+  Error,
+  Param,
+  unknown
+> & { onTxSuccess: (data: Param, address: string) => void }
 export function useSubsocialMutation<Param>(
   transactionGenerator: (
     params: Param,
@@ -66,8 +79,8 @@ export function useSubsocialMutation<Param>(
       substrateApi: SubstrateApi
     }
   ) => Promise<{ tx: Transaction; summary: string }>,
-  config?: UseMutationOptions<Hash, Error, Param, unknown>,
-  defaultConfig?: UseMutationOptions<Hash, Error, Param, unknown>
+  config?: SubsocialMutationConfig<Param>,
+  defaultConfig?: SubsocialMutationConfig<Param>
 ): UseMutationResult<Hash, Error, Param, unknown> {
   const [wallet, setWallet] = useWalletContext()
   const subsocialApiContext = useSubsocialApiContext()
@@ -128,6 +141,12 @@ export function useSubsocialMutation<Param>(
                 </div>
               )
             } else {
+              const onTxSuccess = makeCombinedCallback(
+                defaultConfig,
+                config,
+                'onTxSuccess'
+              )
+              onTxSuccess(param, usedWallet.address)
               toast.success(`Success ${summary}!`)
             }
             unsub()

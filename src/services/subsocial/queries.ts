@@ -9,7 +9,7 @@ import {
   getReplies,
   getReplyIdsByPostId,
 } from './api'
-import { useSubsocialQuery } from './base'
+import { createQueryInvalidation, useSubsocialQuery } from './base'
 import {
   GetProfileParam,
   GetQuestionParam,
@@ -20,6 +20,8 @@ import {
 } from './types'
 
 export const getProfileKey = 'getProfile'
+export const invalidateGetProfile =
+  createQueryInvalidation<GetProfileParam>(getProfileKey)
 export function useGetProfile(
   data: Partial<GetProfileParam>,
   config?: QueryConfig
@@ -40,6 +42,10 @@ export function useGetCurrentUser() {
 }
 
 export const getReactionByPostIdAndAccountKey = 'getReactionByPostIdAndAccount'
+export const invalidateGetReactionByPostIdAndAccount =
+  createQueryInvalidation<GetReactionByPostIdAndAccountParam>(
+    getReactionByPostIdAndAccountKey
+  )
 export function useGetReactionByPostIdAndAccount(
   data: GetReactionByPostIdAndAccountParam
 ) {
@@ -66,6 +72,8 @@ export function useGetUserReactionByPostId(
 }
 
 export const getReplyIdsByPostIdKey = 'getReplyIdsByPostId'
+export const invalidateGetReplyIdsByPostId =
+  createQueryInvalidation<GetReplyIdsByPostIdParam>(getReplyIdsByPostIdKey)
 export function useGetReplyIdsByPostId(
   data: Partial<GetReplyIdsByPostIdParam>
 ) {
@@ -77,16 +85,22 @@ export function useGetReplyIdsByPostId(
 }
 
 export const getQuestionKey = 'getQuestion'
+export const invalidateGetQuestion =
+  createQueryInvalidation<GetQuestionParam>(getQuestionKey)
 export function useGetQuestion(data: GetQuestionParam) {
   return useSubsocialQuery({ data, key: getQuestionKey }, getQuestion)
 }
 
 export const getRepliesKey = 'getReplies'
+export const invalidateGetReplies =
+  createQueryInvalidation<GetRepliesParam>(getRepliesKey)
 export function useGetReplies(data: GetRepliesParam) {
   return useSubsocialQuery({ data, key: getRepliesKey }, getReplies)
 }
 
 export const getAllQuestionsKey = 'getAllQuestions'
+export const invalidateGetAllQuestions =
+  createQueryInvalidation(getAllQuestionsKey)
 export function useGetAllQuestions() {
   const [wallet] = useWalletContext()
 
