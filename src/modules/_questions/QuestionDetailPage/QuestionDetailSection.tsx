@@ -69,8 +69,6 @@ export default function QuestionDetailSection() {
         action='Submitting answer'
       />
       <PostDetail
-        isQuestion
-        allReplies={replies}
         post={question}
         withBorderBottom
         isLoading={loadingChecker(question)}

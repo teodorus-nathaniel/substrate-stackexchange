@@ -7,6 +7,7 @@ import SkeletonFallback, {
 } from '#/components/SkeletonFallback'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
 import { useCreateReply } from '#/services/subsocial/mutations'
+import { useGetReplies } from '#/services/subsocial/queries'
 import { PostWithSomeDetails } from '@subsocial/types/dto'
 import clsx from 'clsx'
 import { HTMLProps, useEffect, useMemo, useState } from 'react'
@@ -20,8 +21,6 @@ export interface PostDetailProps extends HTMLProps<HTMLDivElement> {
   post?: PostWithSomeDetails
   isLoading?: boolean
   withBorderBottom?: boolean
-  isQuestion?: boolean
-  allReplies?: PostWithSomeDetails[]
 }
 
 const REACTION_WIDTH = 50
@@ -31,10 +30,10 @@ export default function PostDetail({
   className,
   withBorderBottom,
   isLoading,
-  isQuestion,
-  allReplies,
   ...props
 }: PostDetailProps) {
+  const { data: comments } = useGetReplies({ postId: post?.id })
+
   const { IntegratedSkeleton } = useIntegratedSkeleton(isLoading ?? false)
   const [openCommentBox, setOpenCommentBox] = useState(false)
   const { getFieldData, handleSubmit, resetForm } = useFormikWrapper({
@@ -60,11 +59,11 @@ export default function PostDetail({
   })
 
   const commentsOnly = useMemo(() => {
-    if (!isQuestion || !allReplies) return []
-    return allReplies.filter(
-      (reply) => !(reply?.post?.content as any)?.isAnswer
+    return (
+      comments?.filter((reply) => !(reply?.post?.content as any)?.isAnswer) ??
+      []
     )
-  }, [allReplies, isQuestion])
+  }, [comments])
 
   return (
     <div

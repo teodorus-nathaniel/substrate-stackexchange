@@ -12,10 +12,10 @@ import {
   UseMutationOptions,
   UseMutationResult,
   useQuery,
-  UseQueryOptions,
 } from 'react-query'
 import { toast } from 'react-toastify'
 import queryClient from '../client'
+import { QueryConfig } from './types'
 
 export type SubstrateApi = Awaited<
   FlatSubsocialApi['subsocial']['substrate']['api']
@@ -31,24 +31,31 @@ function queryWrapper<T, V>(
   }
 }
 
+export function mergeQueryConfig<T, V>(
+  config?: QueryConfig<any, any>,
+  defaultConfig?: QueryConfig<T, V>
+): QueryConfig<T, V> {
+  return {
+    ...defaultConfig,
+    ...config,
+    enabled: (defaultConfig?.enabled ?? true) && (config?.enabled ?? true),
+  }
+}
 export function useSubsocialQuery<T, V>(
   params: { key: string; data: V | null },
   func: (api: FlatSubsocialApi, data: V) => Promise<T>,
-  config?: Omit<
-    UseQueryOptions<T, unknown, T, (string | V | null)[]>,
-    'queryFn' | 'queryKey'
-  >
+  config?: QueryConfig<any, any>,
+  defaultConfig?: QueryConfig<T, V>
 ) {
   const subsocialApi = useSubsocialApiContext()
+  const mergedConfig = mergeQueryConfig(
+    mergeQueryConfig(config, defaultConfig),
+    { enabled: !!(subsocialApi && (subsocialApi as any)._subsocial) }
+  )
   return useQuery(
     [params.key, params.data],
     queryWrapper(func, subsocialApi!),
-    {
-      ...config,
-      enabled:
-        !!(subsocialApi && (subsocialApi as any)._subsocial) &&
-        (config?.enabled ?? true),
-    }
+    mergedConfig as any
   )
 }
 
@@ -69,7 +76,7 @@ export type SubsocialMutationConfig<Param> = UseMutationOptions<
   Error,
   Param,
   unknown
-> & { onTxSuccess: (data: Param, address: string) => void }
+> & { onTxSuccess?: (data: Param, address: string) => void }
 export function useSubsocialMutation<Param>(
   transactionGenerator: (
     params: Param,

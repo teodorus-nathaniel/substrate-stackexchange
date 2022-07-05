@@ -2,8 +2,8 @@ import { ReactionType } from '@subsocial/types/dto'
 import { UseQueryOptions } from 'react-query'
 
 // Important Types
-export type QueryConfig = Omit<
-  UseQueryOptions<any, unknown, any, any>,
+export type QueryConfig<T = any, V = any> = Omit<
+  UseQueryOptions<T, unknown, T, (string | V | null)[]>,
   'queryFn' | 'queryKey'
 >
 export interface Reaction {

@@ -29,7 +29,8 @@ export function useGetProfile(
   return useSubsocialQuery(
     { key: getProfileKey, data: { address: data.address ?? '' } },
     getProfile,
-    { ...config, enabled: !!data?.address && (config?.enabled ?? true) }
+    config,
+    { enabled: !!data?.address }
   )
 }
 export function useGetCurrentUser() {
@@ -94,8 +95,16 @@ export function useGetQuestion(data: GetQuestionParam) {
 export const getRepliesKey = 'getReplies'
 export const invalidateGetReplies =
   createQueryInvalidation<GetRepliesParam>(getRepliesKey)
-export function useGetReplies(data: GetRepliesParam) {
-  return useSubsocialQuery({ data, key: getRepliesKey }, getReplies)
+export function useGetReplies(
+  data: Partial<GetRepliesParam>,
+  config?: QueryConfig
+) {
+  return useSubsocialQuery(
+    { data: { postId: data.postId ?? '' }, key: getRepliesKey },
+    getReplies,
+    config,
+    { enabled: !!data.postId }
+  )
 }
 
 export const getAllQuestionsKey = 'getAllQuestions'
