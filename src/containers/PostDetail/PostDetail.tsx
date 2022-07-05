@@ -1,12 +1,20 @@
+import Button from '#/components/Button'
 import RichTextArea from '#/components/inputs/RichTextArea'
-import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
+import TextArea from '#/components/inputs/TextArea'
+import Link from '#/components/Link'
+import SkeletonFallback, {
+  useIntegratedSkeleton,
+} from '#/components/SkeletonFallback'
+import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
+import { useCreateReply } from '#/services/subsocial/mutations'
 import { PostWithSomeDetails } from '@subsocial/types/dto'
 import clsx from 'clsx'
-import { HTMLProps, useMemo } from 'react'
+import { HTMLProps, useEffect, useMemo, useState } from 'react'
 import ReactionButtons from '../ReactionButtons'
 import TagList from '../TagList'
 import Comment from './Comment'
 import CreatorOverview from './CreatorOverview'
+import { createCommentForm } from './form/schema'
 
 export interface PostDetailProps extends HTMLProps<HTMLDivElement> {
   post?: PostWithSomeDetails
@@ -28,6 +36,28 @@ export default function PostDetail({
   ...props
 }: PostDetailProps) {
   const { IntegratedSkeleton } = useIntegratedSkeleton(isLoading ?? false)
+  const [openCommentBox, setOpenCommentBox] = useState(false)
+  const { getFieldData, handleSubmit, resetForm } = useFormikWrapper({
+    ...createCommentForm,
+    onSubmit: (values) => {
+      if (!post?.id) return
+      createReply({
+        body: values.body ?? '',
+        rootPostId: post.id,
+      })
+    },
+  })
+
+  useEffect(() => {
+    if (!openCommentBox) resetForm()
+  }, [openCommentBox, resetForm])
+
+  const { mutate: createReply } = useCreateReply({
+    onSuccess: () => {
+      resetForm()
+      setOpenCommentBox(false)
+    },
+  })
 
   const commentsOnly = useMemo(() => {
     if (!isQuestion || !allReplies) return []
@@ -40,7 +70,7 @@ export default function PostDetail({
     <div
       className={clsx(
         'flex flex-col',
-        withBorderBottom && 'border-b-2 border-bg-200 pb-6',
+        withBorderBottom && 'border-b-2 border-bg-200 pb-4',
         className
       )}
       {...props}
@@ -99,7 +129,7 @@ export default function PostDetail({
           )}
           style={{ marginLeft: REACTION_WIDTH }}
         >
-          <div className={clsx('flex flex-col')}>
+          <div className={clsx('flex flex-col', 'space-y-4')}>
             {commentsOnly.map((comment) => (
               <Comment
                 className={clsx('text-sm')}
@@ -114,6 +144,36 @@ export default function PostDetail({
           </div>
         </div>
       )}
+      <div
+        style={{ marginLeft: REACTION_WIDTH }}
+        className={clsx('text-sm', 'mt-4')}
+      >
+        <SkeletonFallback isLoading={isLoading}>
+          {openCommentBox ? (
+            <form className={clsx('flex flex-col')} onSubmit={handleSubmit}>
+              <TextArea placeholder='Comment...' {...getFieldData('body')} />
+              <div className={clsx('flex', 'mt-3 space-x-2')}>
+                <Button size='small' variant='outlined-brand'>
+                  Submit
+                </Button>
+                <Button
+                  size='small'
+                  variant='unstyled'
+                  type='button'
+                  onClick={() => setOpenCommentBox(false)}
+                  className={clsx('text-text-secondary')}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          ) : (
+            <Link variant='primary' onClick={() => setOpenCommentBox(true)}>
+              Add a comment
+            </Link>
+          )}
+        </SkeletonFallback>
+      </div>
     </div>
   )
 }

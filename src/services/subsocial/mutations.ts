@@ -85,14 +85,14 @@ export function useUpsertReaction(
   }, config)
 }
 
-export function useCreateAnswer(
+export function useCreateReply(
   config?: SubsocialMutationConfig<CreateAnswerPayload>
 ) {
   return useSubsocialMutation(async (data, { substrateApi, ipfsApi }) => {
-    const { body, rootPostId } = data
+    const { body, rootPostId, isAnswer } = data
     const postCid = await ipfsApi.saveContent({
       body,
-      isAnswer: true,
+      isAnswer,
     } as any)
     const tx = substrateApi.tx.posts.createPost(
       getSpaceId(),

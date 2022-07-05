@@ -59,4 +59,5 @@ export type CreateSpacePayload = {
 export type CreateAnswerPayload = {
   rootPostId: string
   body: string
+  isAnswer?: boolean
 }

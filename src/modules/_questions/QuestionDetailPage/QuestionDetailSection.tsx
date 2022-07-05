@@ -4,7 +4,7 @@ import PostDetail from '#/containers/PostDetail'
 import TransactionModal from '#/containers/TransactionModal'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
 import { useResetForm } from '#/lib/hooks/useResetForm'
-import { useCreateAnswer } from '#/services/subsocial/mutations'
+import { useCreateReply } from '#/services/subsocial/mutations'
 import { useGetQuestion, useGetReplies } from '#/services/subsocial/queries'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
@@ -42,6 +42,7 @@ export default function QuestionDetailSection() {
       createAnswer({
         body: values.body ?? '',
         rootPostId: id,
+        isAnswer: true,
       })
     },
   })
@@ -51,7 +52,7 @@ export default function QuestionDetailSection() {
     ...getFieldData('body'),
     storagePrefix,
   })
-  const { mutate: createAnswer, isLoading: creatingAnswer } = useCreateAnswer({
+  const { mutate: createAnswer, isLoading: creatingAnswer } = useCreateReply({
     onSuccess: resetFormData,
   })
 
