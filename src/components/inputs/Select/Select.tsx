@@ -59,7 +59,7 @@ export default function Select<IsMulti extends boolean = false>({
           onChange={(value) => {
             onChangeWrapper(props.onChange, value, props.name ?? '')
           }}
-          id={id}
+          instanceId={id}
           className={clsx(inputClassNames, props?.className)}
         />
       )}
