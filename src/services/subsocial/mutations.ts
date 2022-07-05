@@ -5,6 +5,7 @@ import { IpfsContent } from '@subsocial/types/substrate/classes'
 import { UseMutationOptions } from 'react-query'
 import { useSubsocialMutation } from './base'
 import {
+  CreateAnswerPayload,
   CreateQuestionPayload,
   CreateSpacePayload,
   UpsertReactionPayload,
@@ -81,5 +82,22 @@ export function useUpsertReaction(
       tx = substrateApi.tx.reactions.createPostReaction(postId, kind)
     }
     return { tx, summary }
+  }, config)
+}
+
+export function useCreateAnswer(
+  config?: SubsocialMutationConfig<CreateAnswerPayload>
+) {
+  return useSubsocialMutation(async (data, { substrateApi, ipfsApi }) => {
+    const { body, rootPostId } = data
+    const postCid = await ipfsApi.saveContent({
+      body,
+    })
+    const tx = substrateApi.tx.posts.createPost(
+      getSpaceId(),
+      { Comment: { parentId: null, rootPostId } },
+      IpfsContent(postCid)
+    )
+    return { tx, summary: `Answering question` }
   }, config)
 }

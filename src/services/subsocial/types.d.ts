@@ -48,3 +48,7 @@ export type CreateSpacePayload = {
   desc?: string
   avatar?: File
 }
+export type CreateAnswerPayload = {
+  rootPostId: string
+  body: string
+}
