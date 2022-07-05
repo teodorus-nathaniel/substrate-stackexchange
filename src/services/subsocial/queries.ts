@@ -16,14 +16,18 @@ import {
   GetReactionByPostIdAndAccountParam,
   GetRepliesParam,
   GetReplyIdsByPostIdParam,
+  QueryConfig,
 } from './types'
 
 export const getProfileKey = 'getProfile'
-export function useGetProfile(data: Partial<GetProfileParam>) {
+export function useGetProfile(
+  data: Partial<GetProfileParam>,
+  config?: QueryConfig
+) {
   return useSubsocialQuery(
     { key: getProfileKey, data: { address: data.address ?? '' } },
     getProfile,
-    { enabled: !!data?.address }
+    { ...config, enabled: !!data?.address && (config?.enabled ?? true) }
   )
 }
 export function useGetCurrentUser() {

@@ -9,7 +9,7 @@ import { useGetQuestion, useGetReplies } from '#/services/subsocial/queries'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { createAnswerForm } from './form/schema'
 
 const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'))
@@ -55,6 +55,10 @@ export default function QuestionDetailSection() {
     onSuccess: resetFormData,
   })
 
+  const answers = useMemo(() => {
+    return replies?.filter((reply) => (reply?.post?.content as any)?.isAnswer)
+  }, [replies])
+
   return (
     <div className={clsx('pb-32')}>
       <TransactionModal
@@ -64,15 +68,17 @@ export default function QuestionDetailSection() {
         action='Submitting answer'
       />
       <PostDetail
+        isQuestion
+        allReplies={replies}
         post={question}
         withBorderBottom
         isLoading={loadingChecker(question)}
       />
       <div className={clsx('flex flex-col', 'space-y-8')}>
         <p className={clsx('text-xl font-bold', 'mt-4')}>
-          {replies?.length ?? 0} Answers
+          {answers?.length ?? 0} Answers
         </p>
-        {replies?.map((reply) => (
+        {answers?.map((reply) => (
           <PostDetail
             key={reply.id}
             post={reply}

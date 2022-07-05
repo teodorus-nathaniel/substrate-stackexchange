@@ -15,6 +15,7 @@ export interface CreatorProps extends LinkProps {
   createDate?: number
   isLoading?: boolean
   creatorId?: string
+  shouldFetchCreator?: boolean
 }
 
 export default function CreatorOverview({
@@ -23,17 +24,18 @@ export default function CreatorOverview({
   createDate,
   isLoading,
   creatorId,
+  shouldFetchCreator = false,
   ...props
 }: CreatorProps) {
   const {
     data: localCreator,
     isLoading: localIsLoading,
     isFetched: localIsFetched,
-  } = useGetProfile({ address: creatorId })
+  } = useGetProfile({ address: creatorId }, { enabled: shouldFetchCreator })
 
   const { IntegratedSkeleton, loadingChecker } = useIntegratedSkeleton(
     isLoading || localIsLoading,
-    localIsFetched
+    localIsFetched || !shouldFetchCreator
   )
   const usedCreator = creator ?? localCreator
 
@@ -55,7 +57,7 @@ export default function CreatorOverview({
           <p className={clsx('text-xs font-bold text-blue-400', 'mb-0.5')}>
             <IntegratedSkeleton
               content={usedCreator?.content?.name}
-              defaultContent={truncateMiddle(usedCreator?.id)}
+              defaultContent={truncateMiddle(creatorId)}
               width={100}
             >
               {(name) => name}

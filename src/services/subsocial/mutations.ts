@@ -92,7 +92,8 @@ export function useCreateAnswer(
     const { body, rootPostId } = data
     const postCid = await ipfsApi.saveContent({
       body,
-    })
+      isAnswer: true,
+    } as any)
     const tx = substrateApi.tx.posts.createPost(
       getSpaceId(),
       { Comment: { parentId: null, rootPostId } },

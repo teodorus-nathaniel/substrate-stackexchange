@@ -1,6 +1,11 @@
 import { ReactionType } from '@subsocial/types/dto'
+import { UseQueryOptions } from 'react-query'
 
 // Important Types
+export type QueryConfig = Omit<
+  UseQueryOptions<any, unknown, any, any>,
+  'queryFn' | 'queryKey'
+>
 export interface Reaction {
   created: {
     account: string

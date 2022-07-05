@@ -1,17 +1,19 @@
 import RichTextArea from '#/components/inputs/RichTextArea'
 import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
-import { PostData } from '@subsocial/types/dto'
+import { PostWithSomeDetails } from '@subsocial/types/dto'
 import clsx from 'clsx'
-import { HTMLProps } from 'react'
+import { HTMLProps, useMemo } from 'react'
 import ReactionButtons from '../ReactionButtons'
 import TagList from '../TagList'
 import Comment from './Comment'
 import CreatorOverview from './CreatorOverview'
 
 export interface PostDetailProps extends HTMLProps<HTMLDivElement> {
-  post?: PostData
+  post?: PostWithSomeDetails
   isLoading?: boolean
   withBorderBottom?: boolean
+  isQuestion?: boolean
+  allReplies?: PostWithSomeDetails[]
 }
 
 const REACTION_WIDTH = 50
@@ -21,9 +23,18 @@ export default function PostDetail({
   className,
   withBorderBottom,
   isLoading,
+  isQuestion,
+  allReplies,
   ...props
 }: PostDetailProps) {
   const { IntegratedSkeleton } = useIntegratedSkeleton(isLoading ?? false)
+
+  const commentsOnly = useMemo(() => {
+    if (!isQuestion || !allReplies) return []
+    return allReplies.filter(
+      (reply) => !(reply?.post?.content as any)?.isAnswer
+    )
+  }, [allReplies, isQuestion])
 
   return (
     <div
@@ -40,8 +51,8 @@ export default function PostDetail({
           style={{ width: REACTION_WIDTH }}
         >
           <ReactionButtons
-            upVoteCount={post?.struct?.upvotesCount}
-            downVoteCount={post?.struct?.downvotesCount}
+            upVoteCount={post?.post?.struct?.upvotesCount}
+            downVoteCount={post?.post?.struct?.downvotesCount}
             postId={post?.id}
             isLoading={isLoading}
           />
@@ -50,13 +61,13 @@ export default function PostDetail({
           <div className={clsx('text-xl')}>
             <IntegratedSkeleton
               isLoading={isLoading}
-              content={post?.content?.title}
+              content={post?.post?.content?.title}
             >
               {(title) => <p className={clsx('mb-6')}>{title}</p>}
             </IntegratedSkeleton>
           </div>
           <div className={clsx('mb-4')}>
-            <IntegratedSkeleton height={50} content={post?.content?.body}>
+            <IntegratedSkeleton height={50} content={post?.post?.content?.body}>
               {(body) => (
                 <RichTextArea
                   containerClassName={clsx('text-sm')}
@@ -67,28 +78,42 @@ export default function PostDetail({
             </IntegratedSkeleton>
           </div>
           <div className={clsx('flex justify-between items-end', 'mt-auto')}>
-            <TagList tags={post?.content?.tags ?? []} isLoading={isLoading} />
+            <TagList
+              tags={post?.post?.content?.tags ?? []}
+              isLoading={isLoading}
+            />
             <CreatorOverview
               isLoading={isLoading}
-              createDate={post?.struct?.createdAtTime}
-              creatorId={post?.struct?.ownerId}
+              createDate={post?.post?.struct?.createdAtTime}
+              creator={post?.owner}
+              creatorId={post?.post.struct.createdByAccount}
             />
           </div>
         </div>
       </div>
-      <div
-        className={clsx('border-t-2 border-dashed border-bg-200', 'pt-4 mt-8')}
-        style={{ marginLeft: REACTION_WIDTH }}
-      >
-        <div className={clsx('flex flex-col')}>
-          <Comment
-            className={clsx('text-sm')}
-            comment={`I realise this isn't related to your question but I am really curious. What was the decision to use something that just supports Chrome and what's so much better about Cypress? I've been working on the Open-source project Courgette github.com/canvaspixels/courgette and was wondering what features are drawing everybody towards Cypress.`}
-            createdAt={234234233}
-            creator={{ id: 'tes', content: { name: 'Dynatle' } } as any}
-          />
+      {commentsOnly.length > 0 && (
+        <div
+          className={clsx(
+            'border-t-2 border-dashed border-bg-200',
+            'pt-4 mt-8'
+          )}
+          style={{ marginLeft: REACTION_WIDTH }}
+        >
+          <div className={clsx('flex flex-col')}>
+            {commentsOnly.map((comment) => (
+              <Comment
+                className={clsx('text-sm')}
+                key={comment.id}
+                creatorId={comment.post.struct.createdByAccount}
+                upVoteCount={comment.post.struct.upvotesCount}
+                comment={comment.post.content?.body ?? ''}
+                createdAt={comment.post.struct.createdAtTime}
+                creator={comment.owner}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

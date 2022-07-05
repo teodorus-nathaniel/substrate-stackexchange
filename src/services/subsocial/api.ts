@@ -70,7 +70,7 @@ export async function getQuestion(
   api: FlatSubsocialApi,
   params: GetQuestionParam
 ) {
-  return api.findPost({ id: params.postId as any })
+  return api.findPostWithSomeDetails({ id: params.postId as any })
 }
 
 export async function getAllQuestions(api: FlatSubsocialApi) {
@@ -84,5 +84,7 @@ export async function getReplies(
   params: GetRepliesParam
 ) {
   const replyIds = await getReplyIdsByPostId(api, params)
-  return api.findPublicPosts(replyIds)
+  return api.findPublicPostsWithSomeDetails({
+    ids: replyIds,
+  })
 }
