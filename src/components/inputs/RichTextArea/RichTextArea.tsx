@@ -1,7 +1,7 @@
 import { EditorType } from '#/declarations/slate'
 import { onChangeWrapper } from '#/lib/helpers/form'
 import clsx from 'clsx'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { createEditor, Descendant } from 'slate'
 import { withHistory } from 'slate-history'
 import { Editable, Slate, withReact } from 'slate-react'
@@ -45,7 +45,10 @@ export function useTextAreaStorage({
   const storageKey = `textarea${storagePrefix}-${name}`
 
   return useMemo(() => {
-    const savedDraft = window.localStorage.getItem(storageKey) ?? ''
+    const savedDraft =
+      typeof window !== 'undefined'
+        ? window.localStorage.getItem(storageKey) ?? ''
+        : ''
     const setDraft = (draft: string) =>
       window.localStorage.setItem(storageKey, draft)
     const clearDraft = () => window.localStorage.removeItem(storageKey)
@@ -69,13 +72,11 @@ export default function RichTextArea({
     name: props.name,
     storagePrefix,
   })
-  const initialValue = useMemo(() => {
-    let value = defaultInitialValue
+  useEffect(() => {
     if (savedDraft) {
       onChangeWrapper(onChange, savedDraft, props.name)
-      value = deserializeDraft(savedDraft)
+      editor.children = deserializeDraft(savedDraft)
     }
-    return value
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedDraft])
 
@@ -95,7 +96,7 @@ export default function RichTextArea({
       {(id, classNames) => (
         <Slate
           editor={editor}
-          value={asReadOnlyContent ? parsedDefaultValue : initialValue}
+          value={asReadOnlyContent ? parsedDefaultValue : defaultInitialValue}
           key={asReadOnlyContent ? parsedDefaultValue : undefined}
           onChange={(value) => {
             const isAstChange = editor.operations.some(
