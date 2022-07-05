@@ -5,7 +5,7 @@ import TransactionModal from '#/containers/TransactionModal'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
 import { useResetForm } from '#/lib/hooks/useResetForm'
 import { useCreateAnswer } from '#/services/subsocial/mutations'
-import { useGetQuestion } from '#/services/subsocial/queries'
+import { useGetQuestion, useGetReplies } from '#/services/subsocial/queries'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
@@ -23,6 +23,16 @@ export default function QuestionDetailSection() {
     isFetched,
   } = useGetQuestion({ postId: id })
   const { loadingChecker } = useIntegratedSkeleton(isLoading, isFetched)
+
+  const {
+    data: replies,
+    isLoading: isLoadingReplies,
+    isFetched: isFetchedReplies,
+  } = useGetReplies({ postId: id })
+  const { loadingChecker: loadingCheckerReplies } = useIntegratedSkeleton(
+    isLoadingReplies,
+    isFetchedReplies
+  )
 
   const [isOpenTxModal, setIsOpenTxModal] = useState(false)
   const { getFieldData, handleSubmit, resetForm } = useFormikWrapper({
@@ -59,9 +69,17 @@ export default function QuestionDetailSection() {
         isLoading={loadingChecker(question)}
       />
       <div className={clsx('flex flex-col', 'space-y-8')}>
-        <p className={clsx('text-xl font-bold', 'mt-4')}>4 Answers</p>
-        {/* <PostDetail post={dummyAns} withBorderBottom />
-        <PostDetail post={dummyAns1} withBorderBottom /> */}
+        <p className={clsx('text-xl font-bold', 'mt-4')}>
+          {replies?.length ?? 0} Answers
+        </p>
+        {replies?.map((reply) => (
+          <PostDetail
+            key={reply.id}
+            post={reply}
+            withBorderBottom
+            isLoading={loadingCheckerReplies(reply)}
+          />
+        ))}
       </div>
       <form
         onSubmit={handleSubmit}

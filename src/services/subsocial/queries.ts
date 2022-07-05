@@ -6,6 +6,7 @@ import {
   getProfile,
   getQuestion,
   getReactionByPostIdAndAccount,
+  getReplies,
   getReplyIdsByPostId,
 } from './api'
 import { useSubsocialQuery } from './base'
@@ -13,6 +14,7 @@ import {
   GetProfileParam,
   GetQuestionParam,
   GetReactionByPostIdAndAccountParam,
+  GetRepliesParam,
   GetReplyIdsByPostIdParam,
 } from './types'
 
@@ -73,6 +75,11 @@ export function useGetReplyIdsByPostId(
 export const getQuestionKey = 'getQuestion'
 export function useGetQuestion(data: GetQuestionParam) {
   return useSubsocialQuery({ data, key: getQuestionKey }, getQuestion)
+}
+
+export const getRepliesKey = 'getReplies'
+export function useGetReplies(data: GetRepliesParam) {
+  return useSubsocialQuery({ data, key: getRepliesKey }, getReplies)
 }
 
 export const getAllQuestionsKey = 'getAllQuestions'

@@ -8,6 +8,7 @@ import {
   GetProfileParam,
   GetQuestionParam,
   GetReactionByPostIdAndAccountParam,
+  GetRepliesParam,
   GetReplyIdsByPostIdParam,
   Reaction,
 } from './types'
@@ -76,4 +77,12 @@ export async function getAllQuestions(api: FlatSubsocialApi) {
   const substrate = api.subsocial.substrate
   const postIds = await substrate.postIdsBySpaceId(getSpaceId() as any)
   return api.findPublicPosts(postIds)
+}
+
+export async function getReplies(
+  api: FlatSubsocialApi,
+  params: GetRepliesParam
+) {
+  const replyIds = await getReplyIdsByPostId(api, params)
+  return api.findPublicPosts(replyIds)
 }
