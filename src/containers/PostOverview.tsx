@@ -2,7 +2,8 @@ import RichTextArea from '#/components/inputs/RichTextArea'
 import Link from '#/components/Link'
 import SkeletonFallback from '#/components/SkeletonFallback'
 import { getRelativeDateFromNow } from '#/lib/helpers/date'
-import { useGetReplyIdsByPostId } from '#/services/subsocial/queries'
+import { useFilterAnswersAndComments } from '#/lib/hooks/subsocial/useGetAnswersFromReplies'
+import { useGetReplies } from '#/services/subsocial/queries'
 import { PostData } from '@subsocial/types/dto'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
@@ -13,19 +14,26 @@ import UserProfileLink from './UserProfileLink'
 export interface PostProps extends HTMLProps<HTMLDivElement> {
   post?: PostData
   isLoading?: boolean
+  checkShouldRender?: (answerCount: number) => boolean
 }
 
 export default function PostOverview({
   className,
   isLoading,
   post,
+  checkShouldRender,
   ...props
 }: PostProps) {
-  const { data: replyIds, isLoading: isLoadingReply } = useGetReplyIdsByPostId({
+  const { data: replies, isLoading: isLoadingReply } = useGetReplies({
     postId: post?.id,
   })
 
-  const answerCount = replyIds?.length ?? 0
+  const { answers } = useFilterAnswersAndComments(replies)
+  const answerCount = answers.length
+
+  if (checkShouldRender && !checkShouldRender(answerCount)) {
+    return null
+  }
 
   return (
     <div
@@ -75,9 +83,7 @@ export default function PostOverview({
                 answerCount > 0 ? 'text-text-secondary' : 'text-brand'
               )}
             >
-              {answerCount > 0
-                ? `${replyIds?.length} Answer(s)`
-                : 'No answers yet!'}
+              {answerCount > 0 ? `${answerCount} Answer(s)` : 'No answers yet!'}
             </p>
           </SkeletonFallback>
           <div className={clsx('text-sm', 'flex items-center', 'space-x-1')}>

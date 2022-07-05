@@ -5,12 +5,13 @@ import Link from '#/components/Link'
 import SkeletonFallback, {
   useIntegratedSkeleton,
 } from '#/components/SkeletonFallback'
+import { useFilterAnswersAndComments } from '#/lib/hooks/subsocial/useGetAnswersFromReplies'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
 import { useCreateReply } from '#/services/subsocial/mutations'
 import { useGetReplies } from '#/services/subsocial/queries'
 import { PostWithSomeDetails } from '@subsocial/types/dto'
 import clsx from 'clsx'
-import { HTMLProps, useEffect, useMemo, useState } from 'react'
+import { HTMLProps, useEffect, useState } from 'react'
 import ReactionButtons from '../ReactionButtons'
 import TagList from '../TagList'
 import Comment from './Comment'
@@ -32,7 +33,7 @@ export default function PostDetail({
   isLoading,
   ...props
 }: PostDetailProps) {
-  const { data: comments } = useGetReplies({ postId: post?.id })
+  const { data: replies } = useGetReplies({ postId: post?.id })
 
   const { IntegratedSkeleton } = useIntegratedSkeleton(isLoading ?? false)
   const [openCommentBox, setOpenCommentBox] = useState(false)
@@ -58,12 +59,7 @@ export default function PostDetail({
     },
   })
 
-  const commentsOnly = useMemo(() => {
-    return (
-      comments?.filter((reply) => !(reply?.post?.content as any)?.isAnswer) ??
-      []
-    )
-  }, [comments])
+  const { comments } = useFilterAnswersAndComments(replies)
 
   return (
     <div
@@ -120,7 +116,7 @@ export default function PostDetail({
           </div>
         </div>
       </div>
-      {commentsOnly.length > 0 && (
+      {comments.length > 0 && (
         <div
           className={clsx(
             'border-t-2 border-dashed border-bg-200',
@@ -129,7 +125,7 @@ export default function PostDetail({
           style={{ marginLeft: REACTION_WIDTH }}
         >
           <div className={clsx('flex flex-col', 'space-y-4')}>
-            {commentsOnly.map((comment) => (
+            {comments.map((comment) => (
               <Comment
                 className={clsx('text-sm')}
                 key={comment.id}
