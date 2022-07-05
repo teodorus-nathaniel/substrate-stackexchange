@@ -48,10 +48,7 @@ export default function PostOverview({
         <div className={clsx(isLoading ? 'block' : 'flex', 'text-xl pb-1')}>
           <SkeletonFallback isLoading={isLoading}>
             <Link variant='primary' href={`/questions/${post?.id}`}>
-              <RichTextArea
-                asReadOnlyContent={{ content: post?.content?.title }}
-                name='title'
-              />
+              <p>{post?.content?.title}</p>
             </Link>
           </SkeletonFallback>
         </div>
