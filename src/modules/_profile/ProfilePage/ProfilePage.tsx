@@ -8,6 +8,7 @@ export default function ProfilePage() {
     <TwoColumnsPageLayout
       leftSection={
         <QuestionList
+          title='Your Questions'
           type='user'
           className={clsx('pb-20')}
           noQuestionNotice='You have not asked any question.'

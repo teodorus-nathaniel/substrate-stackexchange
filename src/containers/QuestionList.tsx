@@ -12,6 +12,7 @@ import { HTMLProps, useMemo } from 'react'
 export type QuestionListFilters = 'new' | 'unanswered' | 'user'
 export interface QuestionListProps extends HTMLProps<HTMLDivElement> {
   type: QuestionListFilters
+  title?: string
   noQuestionNotice?: string | JSX.Element
   noQuestionNoticeSubtitleWithButton?: string
 }
@@ -19,6 +20,7 @@ export interface QuestionListProps extends HTMLProps<HTMLDivElement> {
 export default function QuestionList({
   type,
   className,
+  title,
   noQuestionNotice,
   noQuestionNoticeSubtitleWithButton,
   ...props
@@ -67,23 +69,38 @@ export default function QuestionList({
     )
   }
 
+  const postsContainerClassName = clsx('flex flex-col space-y-8')
+
   return (
     <div className={clsx(className)} {...props}>
-      <div className='flex flex-col space-y-8'>
+      <div className='flex flex-col'>
         {(() => {
           if (loadingChecker(filteredQuestions)) {
-            return Array.from({ length: 3 }).map((_, idx) => (
-              <PostOverview isLoading key={idx} />
-            ))
+            return (
+              <div className={postsContainerClassName}>
+                {Array.from({ length: 3 }).map((_, idx) => (
+                  <PostOverview isLoading key={idx} />
+                ))}
+              </div>
+            )
           } else if ((filteredQuestions?.length ?? 0) > 0) {
-            return filteredQuestions?.map((post) => (
-              <PostOverview
-                isLoading={false}
-                key={post.id}
-                post={post}
-                checkShouldRender={checkShouldRender}
-              />
-            ))
+            return (
+              <div className='flex flex-col'>
+                {title && (
+                  <h1 className={clsx('mb-6 text-xl font-bold')}>{title}</h1>
+                )}
+                <div className={postsContainerClassName}>
+                  {filteredQuestions?.map((post) => (
+                    <PostOverview
+                      isLoading={false}
+                      key={post.id}
+                      post={post}
+                      checkShouldRender={checkShouldRender}
+                    />
+                  ))}
+                </div>
+              </div>
+            )
           } else {
             return renderElementOrCustom(noQuestionNotice, (notice) =>
               defaultNoQuestionNotice(notice)
