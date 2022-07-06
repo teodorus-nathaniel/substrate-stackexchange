@@ -14,8 +14,11 @@ import {
   useQuery,
 } from 'react-query'
 import { toast } from 'react-toastify'
-import queryClient from '../client'
-import { generateQueryWrapper, mergeQueryConfig } from '../common/base'
+import {
+  generateQueryWrapper,
+  makeCombinedCallback,
+  mergeQueryConfig,
+} from '../common/base'
 import { QueryConfig } from '../common/types'
 
 export type SubstrateApi = Awaited<
@@ -46,18 +49,6 @@ export function useSubsocialQuery<ReturnValue, Params>(
   )
 }
 
-export function createQueryInvalidation<Param>(key: string) {
-  return (data?: Param) => {
-    queryClient.invalidateQueries([key, data])
-  }
-}
-
-function makeCombinedCallback(defaultConfig: any, config: any, attr: string) {
-  return (...data: any[]) => {
-    defaultConfig && defaultConfig[attr] && defaultConfig[attr](...data)
-    config && config[attr] && config[attr](...data)
-  }
-}
 export type SubsocialMutationConfig<Param> = UseMutationOptions<
   Hash,
   Error,

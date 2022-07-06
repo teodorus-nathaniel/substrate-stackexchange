@@ -1,3 +1,4 @@
+import queryClient from '../client'
 import { QueryConfig } from './types'
 
 export function generateQueryWrapper<ReturnOfPreQuery, CommonParams>(
@@ -26,5 +27,22 @@ export function mergeQueryConfig<T, V>(
     ...defaultConfig,
     ...config,
     enabled: (defaultConfig?.enabled ?? true) && (config?.enabled ?? true),
+  }
+}
+
+export function createQueryInvalidation<Param>(key: string) {
+  return (data?: Param) => {
+    queryClient.invalidateQueries([key, data])
+  }
+}
+
+export function makeCombinedCallback(
+  defaultConfig: any,
+  config: any,
+  attr: string
+) {
+  return (...data: any[]) => {
+    defaultConfig && defaultConfig[attr] && defaultConfig[attr](...data)
+    config && config[attr] && config[attr](...data)
   }
 }

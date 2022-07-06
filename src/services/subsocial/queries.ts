@@ -1,5 +1,6 @@
 import { useWalletContext } from '#/contexts/WalletContext'
 import queryClient from '../client'
+import { createQueryInvalidation } from '../common/base'
 import { QueryConfig } from '../common/types'
 import {
   getAllQuestions,
@@ -10,7 +11,7 @@ import {
   getReplies,
   getReplyIdsByPostId,
 } from './api'
-import { createQueryInvalidation, useSubsocialQuery } from './base'
+import { useSubsocialQuery } from './base'
 import {
   GetProfileParam,
   GetQuestionParam,
