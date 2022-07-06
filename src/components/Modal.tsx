@@ -24,6 +24,7 @@ export interface ModalProps extends Omit<CardProps, 'size' | 'ref'> {
   desc?: string
   children?: any
   ringColor?: 'default' | 'error'
+  dialogProps?: Omit<Parameters<typeof Dialog>[0], 'onClose' | 'isOpen'>
 }
 
 const MotionDialogPanel = motion<any>(Dialog.Panel)
@@ -39,6 +40,7 @@ const Modal = forwardRef(function Modal(
     children,
     ringColor = 'default',
     className,
+    dialogProps,
     ...props
   }: ModalProps,
   ref
@@ -49,6 +51,7 @@ const Modal = forwardRef(function Modal(
         as='div'
         onClose={handleClose}
         className={clsx('relative', 'z-40')}
+        {...dialogProps}
       >
         <Transition.Child
           as={Fragment}
