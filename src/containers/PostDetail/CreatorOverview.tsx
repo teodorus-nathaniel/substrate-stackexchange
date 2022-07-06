@@ -75,7 +75,8 @@ export default function CreatorOverview({
             {creatorId && (
               <TippingButton
                 className={clsx('ml-2', 'text-lg')}
-                beneficiary={creatorId}
+                dest={creatorId}
+                profile={usedCreator}
               />
             )}
           </div>

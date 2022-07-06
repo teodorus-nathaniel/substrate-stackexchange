@@ -1,23 +1,26 @@
 import Button, { ButtonProps } from '#/components/Button'
 import { useWalletContext } from '#/contexts/WalletContext'
 import { encodeAddress } from '#/lib/helpers/wallet'
+import { ProfileData } from '@subsocial/types/dto'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { BsCash } from 'react-icons/bs'
 import TippingModal from './TippingModal'
 
 export interface TippingButtonProps extends ButtonProps {
-  beneficiary: string
+  dest: string
+  profile: ProfileData | undefined
 }
 
 export default function TippingButton({
   className,
-  beneficiary,
+  dest,
+  profile,
   ...props
 }: TippingButtonProps) {
   const [openModal, setOpenModal] = useState(false)
   const [wallet] = useWalletContext()
-  if (encodeAddress(beneficiary) === encodeAddress(wallet?.address)) {
+  if (encodeAddress(dest) === encodeAddress(wallet?.address)) {
     return null
   }
 
@@ -34,7 +37,8 @@ export default function TippingButton({
         <BsCash />
       </Button>
       <TippingModal
-        beneficiary={beneficiary}
+        profile={profile}
+        dest={dest}
         isOpen={openModal}
         handleClose={() => setOpenModal(false)}
       />

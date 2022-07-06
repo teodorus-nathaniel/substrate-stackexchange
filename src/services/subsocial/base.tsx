@@ -25,11 +25,14 @@ export type Transaction = ReturnType<SubstrateApi['tx']['']['']>
 
 export const subsocialQueryWrapper = generateQueryWrapper(async () => null)
 
-export function useSubsocialQuery<T, V>(
-  params: { key: string; data: V | null },
-  func: (data: { params: V; additionalData: FlatSubsocialApi }) => Promise<T>,
+export function useSubsocialQuery<ReturnValue, Params>(
+  params: { key: string; data: Params | null },
+  func: (data: {
+    params: Params
+    additionalData: FlatSubsocialApi
+  }) => Promise<ReturnValue>,
   config?: QueryConfig<any, any>,
-  defaultConfig?: QueryConfig<T, V>
+  defaultConfig?: QueryConfig<ReturnValue, Params>
 ) {
   const subsocialApi = useSubsocialApiContext()
   const mergedConfig = mergeQueryConfig(
