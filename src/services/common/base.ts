@@ -8,7 +8,7 @@ export function generateQueryWrapper<ReturnOfPreQuery, CommonParams>(
       params: Params
       additionalData: AdditionalParam
       preQueryData: ReturnOfPreQuery
-    }) => ReturnType,
+    }) => Promise<ReturnType>,
     additionalData: AdditionalParam
   ) => {
     return async ({ queryKey }: any) => {
