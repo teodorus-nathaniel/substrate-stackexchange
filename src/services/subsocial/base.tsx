@@ -122,44 +122,48 @@ export function useSubsocialMutation<Param>(
       ipfsApi,
       substrateApi,
     })
-    return new Promise<Hash>(async (resolve) => {
-      const unsub = await tx.signAndSend(
-        currentWallet.address,
-        {
-          signer: usedWallet.signer as any,
-        },
-        (result) => {
-          resolve(result.txHash)
-          console.log(`Current status is ${result.status}`)
-          if (result.status.isBroadcast) {
-            toast.info(`${summary}...`)
-          } else if (result.status.isInBlock) {
-            if (
-              result.isError ||
-              result.dispatchError ||
-              result.internalError
-            ) {
-              toast.error(
-                <div>
-                  <p>Error {summary}</p>
-                  <p className='text-text-secondary text-sm'>
-                    Error Code: {result.dispatchError?.toString()}
-                  </p>
-                </div>
-              )
-            } else {
-              const onTxSuccess = makeCombinedCallback(
-                defaultConfig,
-                config,
-                'onTxSuccess'
-              )
-              onTxSuccess(param, usedWallet.address)
-              toast.success(`Success ${summary}!`)
+    return new Promise<Hash>(async (resolve, reject) => {
+      try {
+        const unsub = await tx.signAndSend(
+          currentWallet.address,
+          {
+            signer: usedWallet.signer as any,
+          },
+          (result) => {
+            resolve(result.txHash)
+            console.log(`Current status is ${result.status}`)
+            if (result.status.isBroadcast) {
+              toast.info(`${summary}...`)
+            } else if (result.status.isInBlock) {
+              if (
+                result.isError ||
+                result.dispatchError ||
+                result.internalError
+              ) {
+                toast.error(
+                  <div>
+                    <p>Error {summary}</p>
+                    <p className='text-text-secondary text-sm'>
+                      Error Code: {result.dispatchError?.toString()}
+                    </p>
+                  </div>
+                )
+              } else {
+                const onTxSuccess = makeCombinedCallback(
+                  defaultConfig,
+                  config,
+                  'onTxSuccess'
+                )
+                onTxSuccess(param, usedWallet.address)
+                toast.success(`Success ${summary}!`)
+              }
+              unsub()
             }
-            unsub()
           }
-        }
-      )
+        )
+      } catch (e) {
+        reject(e)
+      }
     })
   }
 
