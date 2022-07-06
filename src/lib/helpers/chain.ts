@@ -9,6 +9,9 @@ export function encodeAddress(address: string | undefined) {
   return encodePolkadotAddress(decodeAddress(address), getAddressPrefix())
 }
 
-export function formatBalance(value: string) {
+export function formatBalance(value: string | number) {
   return (+value / 1_000_000_000_000).toFixed(4)
+}
+export function parseBalance(value: string | number) {
+  return +value * 1_000_000_000_000
 }

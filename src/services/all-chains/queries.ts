@@ -1,8 +1,11 @@
+import { createQueryInvalidation } from '../common/base'
 import { QueryConfig } from '../common/types'
 import { useAllChainsQuery } from './base'
 import { GetTokenParams } from './types'
 
 export const getTokenBalanceKey = 'getTokenBalance'
+export const invalidateGetTokenBalance =
+  createQueryInvalidation<GetTokenParams>(getTokenBalanceKey)
 export function useGetTokenBalance(
   params: Partial<GetTokenParams>,
   config?: QueryConfig

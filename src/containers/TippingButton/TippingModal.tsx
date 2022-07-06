@@ -6,7 +6,7 @@ import TextField from '#/components/inputs/TextField'
 import Modal, { ModalProps } from '#/components/Modal'
 import { useWalletContext } from '#/contexts/WalletContext'
 import { chains, TokenTickers } from '#/lib/constants/chains'
-import { formatBalance } from '#/lib/helpers/chain'
+import { formatBalance, parseBalance } from '#/lib/helpers/chain'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
 import { useTransfer } from '#/services/all-chains/mutations'
 import { useGetTokenBalance } from '#/services/all-chains/queries'
@@ -39,20 +39,28 @@ export default function TippingModal({
   ...props
 }: TippingModalProps) {
   const [wallet] = useWalletContext()
-  const { getFieldData, values, handleSubmit } = useFormikWrapper({
-    ...tippingForm,
-    onSubmit: ({ amount, network }) => {
-      tip({
-        dest,
-        network: network?.value as TokenTickers,
-        value: amount,
-      })
-    },
-  })
-  const { mutate: tip } = useTransfer()
+  const { getFieldData, values, handleSubmit, setFieldError, resetForm } =
+    useFormikWrapper({
+      ...tippingForm,
+      onSubmit: ({ amount, network }) => {
+        const parsedAmount = parseBalance(amount)
+        if (parsedAmount > balance) {
+          setFieldError('amount', 'Your balance is not sufficient')
+          return
+        }
+        tip({
+          dest,
+          network: network?.value as TokenTickers,
+          value: parsedAmount,
+        })
+      },
+    })
   const { data: balance } = useGetTokenBalance({
     address: wallet?.address ?? '',
     network: values.network?.value as TokenTickers | undefined,
+  })
+  const { mutate: tip } = useTransfer({
+    onSuccess: () => resetForm(),
   })
 
   const profileName = profile?.content?.name
