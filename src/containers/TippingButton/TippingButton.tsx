@@ -1,6 +1,6 @@
 import Button, { ButtonProps } from '#/components/Button'
 import { useWalletContext } from '#/contexts/WalletContext'
-import { encodeAddress } from '#/lib/helpers/wallet'
+import { encodeAddress } from '#/lib/helpers/chain'
 import { ProfileData } from '@subsocial/types/dto'
 import clsx from 'clsx'
 import { useState } from 'react'
