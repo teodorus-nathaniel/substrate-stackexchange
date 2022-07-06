@@ -162,6 +162,7 @@ export function useSubsocialMutation<Param>(
           }
         )
       } catch (e) {
+        toast.error((e as any).message)
         reject(e)
       }
     })
