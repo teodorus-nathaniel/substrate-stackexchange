@@ -5,6 +5,7 @@ import PopOver from '#/components/PopOver'
 import ProfileImage from '#/components/ProfileImage'
 import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
+import { encodeAddress } from '#/lib/helpers/wallet'
 import useLogout from '#/lib/hooks/useLogout'
 import { useGetCurrentUser } from '#/services/subsocial/queries'
 import { WalletAccount } from '@talisman-connect/wallets'
@@ -26,6 +27,8 @@ export default function WalletProfile({
     isLoading,
     isFetched
   )
+
+  const encodedWalletAddress = encodeAddress(wallet.address)
 
   return (
     <PopOver
@@ -67,7 +70,7 @@ export default function WalletProfile({
               content={content?.name}
               defaultContent={
                 <AddressCopy className={clsx('font-bold')}>
-                  {wallet.address}
+                  {encodedWalletAddress}
                 </AddressCopy>
               }
             >
@@ -75,7 +78,7 @@ export default function WalletProfile({
                 <div className={clsx('flex flex-col')}>
                   <p className={clsx('leading-snug')}>{name}</p>
                   <AddressCopy className={clsx('text-xs text-text-secondary')}>
-                    {wallet.address}
+                    {encodedWalletAddress}
                   </AddressCopy>
                 </div>
               )}
