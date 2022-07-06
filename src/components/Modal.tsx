@@ -15,7 +15,7 @@ const sizes = {
   xs: clsx('max-w-sm'),
 }
 
-export interface ModalProps extends Omit<CardProps, 'size'> {
+export interface ModalProps extends Omit<CardProps, 'size' | 'ref'> {
   isOpen: boolean
   handleClose: () => void
   size?: keyof typeof sizes
