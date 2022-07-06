@@ -39,22 +39,28 @@ export default function TippingModal({
   ...props
 }: TippingModalProps) {
   const [wallet] = useWalletContext()
-  const { getFieldData, values, handleSubmit, setFieldError, resetForm } =
-    useFormikWrapper({
-      ...tippingForm,
-      onSubmit: ({ amount, network }) => {
-        const parsedAmount = parseBalance(amount)
-        if (parsedAmount > balance) {
-          setFieldError('amount', 'Your balance is not sufficient')
-          return
-        }
-        tip({
-          dest,
-          network: network?.value as TokenTickers,
-          value: parsedAmount,
-        })
-      },
-    })
+  const {
+    getFieldData,
+    values,
+    handleSubmit,
+    setFieldError,
+    resetForm,
+    setFieldValue,
+  } = useFormikWrapper({
+    ...tippingForm,
+    onSubmit: ({ amount, network }) => {
+      const parsedAmount = parseBalance(amount)
+      if (parsedAmount > balance) {
+        setFieldError('amount', 'Your balance is not sufficient')
+        return
+      }
+      tip({
+        dest,
+        network: network?.value as TokenTickers,
+        value: parsedAmount,
+      })
+    },
+  })
   const { data: balance, isLoading } = useGetTokenBalance({
     address: wallet?.address ?? '',
     network: values.network?.value as TokenTickers | undefined,
@@ -103,6 +109,12 @@ export default function TippingModal({
                 noClickEffect
                 size='icon-small'
                 variant='unstyled'
+                type='button'
+                onClick={() => {
+                  if (balance > 0) {
+                    setFieldValue('amount', formatBalance(balance))
+                  }
+                }}
                 className={clsx('text-text-secondary', classNames)}
               >
                 Max
