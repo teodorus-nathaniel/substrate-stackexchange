@@ -1,5 +1,5 @@
 import { OptionType } from '#/components/inputs/Select/Select'
-import { number, object } from 'yup'
+import { mixed, number, object } from 'yup'
 
 export interface TippingFormType {
   amount: number
@@ -13,6 +13,16 @@ export const tippingForm = {
   initialValues: tippingFormInitialValues,
   validationSchema: object().shape({
     amount: number().moreThan(0),
-    network: object().required(),
+    network: mixed().test({
+      name: 'network-validator',
+      test: function (value) {
+        return !value
+          ? this.createError({
+              message: 'Token must be selected',
+              path: 'network',
+            })
+          : true
+      },
+    }),
   }),
 }

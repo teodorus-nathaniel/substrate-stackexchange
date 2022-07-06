@@ -13,6 +13,7 @@ import { useGetTokenBalance } from '#/services/all-chains/queries'
 import { ProfileData } from '@subsocial/types/dto'
 import { truncateMiddle } from '@talisman-connect/ui'
 import clsx from 'clsx'
+import { BsCash } from 'react-icons/bs'
 import { tippingForm } from './form/schema'
 
 export interface TippingModalProps extends ModalProps {
@@ -38,7 +39,7 @@ export default function TippingModal({
   ...props
 }: TippingModalProps) {
   const [wallet] = useWalletContext()
-  const { getFieldData, values } = useFormikWrapper({
+  const { getFieldData, values, handleSubmit } = useFormikWrapper({
     ...tippingForm,
     onSubmit: ({ amount, network }) => {
       tip({
@@ -57,7 +58,7 @@ export default function TippingModal({
   const profileName = profile?.content?.name
   return (
     <Modal autoFocus={false} withCloseButton={false} size='sm' {...props}>
-      <div className={clsx('flex flex-col', 'p-4')}>
+      <form onSubmit={handleSubmit} className={clsx('flex flex-col', 'p-4')}>
         <p className={clsx('text-center text-xl')}>
           How much do you want to tip <br />
           <strong>{profileName ?? truncateMiddle(dest)}</strong>
@@ -97,7 +98,12 @@ export default function TippingModal({
             )}
           />
         </div>
-      </div>
+        <div className={clsx('flex', 'mt-6', 'justify-center')}>
+          <Button type='submit' className='w-full'>
+            Send Tip <BsCash className='ml-3' />
+          </Button>
+        </div>
+      </form>
     </Modal>
   )
 }
