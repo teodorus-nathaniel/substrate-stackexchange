@@ -32,6 +32,7 @@ export default function UserProfileLink({
     <Link
       variant='primary'
       className={clsx('flex items-center', className)}
+      href={`/profile/${profileId}`}
       {...props}
     >
       <div className={clsx('w-5 h-5', 'mr-2', 'relative top-px')}>
@@ -57,7 +58,7 @@ export default function UserProfileLink({
       </div>
       <SkeletonFallback isLoading={usedIsLoading} width={75}>
         <p className='font-bold'>
-          {usedProfile?.content?.name ?? truncateMiddle(usedProfile?.id)}
+          {usedProfile?.content?.name ?? truncateMiddle(profileId)}
         </p>
       </SkeletonFallback>
     </Link>

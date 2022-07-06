@@ -63,7 +63,7 @@ export default function CreatorOverview({
               'flex justify-between items-center'
             )}
           >
-            <Link variant='primary'>
+            <Link variant='primary' href={`/profile/${creatorId}`}>
               <IntegratedSkeleton
                 content={usedCreator?.content?.name}
                 defaultContent={truncateMiddle(creatorId)}

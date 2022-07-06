@@ -9,9 +9,10 @@ import { useGetAllQuestions } from '#/services/subsocial/queries'
 import clsx from 'clsx'
 import { HTMLProps, useMemo } from 'react'
 
-export type QuestionListFilters = 'new' | 'unanswered' | 'user'
+export type QuestionListFilters = 'new' | 'unanswered' | 'user' | 'other-user'
 export interface QuestionListProps extends HTMLProps<HTMLDivElement> {
   type: QuestionListFilters
+  otherUserAddress?: string
   title?: string
   noQuestionNotice?: string | JSX.Element
   noQuestionNoticeSubtitleWithButton?: string
@@ -21,6 +22,7 @@ export default function QuestionList({
   type,
   className,
   title,
+  otherUserAddress = '',
   noQuestionNotice,
   noQuestionNoticeSubtitleWithButton,
   ...props
@@ -30,11 +32,14 @@ export default function QuestionList({
   const [wallet] = useWalletContext()
 
   const filteredQuestions = useMemo(() => {
-    if (type !== 'user') return posts
-    return posts?.filter(
-      (post) => post.struct.createdByAccount === encodeAddress(wallet?.address)
-    )
-  }, [posts, type, wallet])
+    if (type !== 'user' && type !== 'other-user') return posts
+    return posts?.filter((post) => {
+      if (type === 'user') {
+        return post.struct.createdByAccount === encodeAddress(wallet?.address)
+      }
+      return post.struct.createdByAccount === encodeAddress(otherUserAddress)
+    })
+  }, [posts, type, wallet, otherUserAddress])
 
   // TODO: change this to better way (preferably after changing data to ssr)
   const checkShouldRender = (answerCount: number) => {

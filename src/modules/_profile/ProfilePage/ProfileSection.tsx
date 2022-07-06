@@ -3,6 +3,7 @@ import Button from '#/components/Button'
 import ProfileImage from '#/components/ProfileImage'
 import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
 import FollowingFollowerCount from '#/containers/FollowingFollowerCount'
+import TippingButton from '#/containers/TippingButton'
 import { useWalletContext } from '#/contexts/WalletContext'
 import { encodeAddress } from '#/lib/helpers/chain'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
@@ -28,6 +29,8 @@ export default function ProfileSection() {
     isFetched
   )
 
+  const isCurrentUser = !id || id === encodeAddress(wallet?.address)
+
   return (
     <div className={clsx('flex flex-col')}>
       <div className={clsx('flex justify-between')}>
@@ -38,23 +41,35 @@ export default function ProfileSection() {
         />
         <div className={clsx('mt-3')}>
           <div className={clsx('flex items-center', 'space-x-3')}>
-            <Button
-              variant='unstyled-border'
-              className={clsx('text-blue-400')}
-              size='icon-medium'
-              rounded
-            >
-              <BsPencil />
-            </Button>
-            <Button
-              variant='unstyled-border'
-              className={clsx('text-red-500')}
-              size='icon-medium'
-              rounded
-              onClick={logout}
-            >
-              <BsBoxArrowInRight />
-            </Button>
+            {isCurrentUser ? (
+              <>
+                <Button
+                  variant='unstyled-border'
+                  className={clsx('text-blue-400')}
+                  size='icon-medium'
+                  rounded
+                >
+                  <BsPencil />
+                </Button>
+                <Button
+                  variant='unstyled-border'
+                  className={clsx('text-red-500')}
+                  size='icon-medium'
+                  rounded
+                  onClick={logout}
+                >
+                  <BsBoxArrowInRight />
+                </Button>
+              </>
+            ) : (
+              <TippingButton
+                variant='unstyled-border'
+                className={clsx('text-brand')}
+                size='icon-medium'
+                dest={address}
+                profile={data}
+              />
+            )}
           </div>
         </div>
       </div>
