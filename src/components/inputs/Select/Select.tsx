@@ -16,7 +16,7 @@ const UsualSelect = dynamic(() => import('react-select'))
 
 export type OptionType = {
   value: string
-  label?: string
+  label?: any
 }
 
 type ParentProps<IsMulti extends boolean> = CreatableProps<
@@ -55,7 +55,7 @@ export default function Select<IsMulti extends boolean = false>({
       {(id) => (
         <Component
           {...(getCleanedInputProps(props) as any)}
-          styles={customSelectStyles as any}
+          styles={customSelectStyles(props.isMulti) as any}
           onChange={(value) => {
             onChangeWrapper(props.onChange, value, props.name ?? '')
           }}

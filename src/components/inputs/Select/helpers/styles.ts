@@ -1,7 +1,9 @@
 import { StylesConfig } from 'react-select'
 import { OptionType } from '../Select'
 
-export const customSelectStyles: StylesConfig<OptionType> = {
+export const customSelectStyles: (
+  isMulti?: boolean
+) => StylesConfig<OptionType> = (isMulti) => ({
   control: (provided) => ({
     ...provided,
     color: 'rgb(var(--text-primary))',
@@ -46,8 +48,8 @@ export const customSelectStyles: StylesConfig<OptionType> = {
   input: (provided) => ({
     ...provided,
     margin: 0,
-    paddingTop: 4,
-    paddingBottom: 4,
+    paddingTop: isMulti ? 4 : 0,
+    paddingBottom: isMulti ? 4 : 0,
     color: 'rgb(var(--text-primary))',
   }),
   singleValue: (provided, state) => {
@@ -81,4 +83,4 @@ export const customSelectStyles: StylesConfig<OptionType> = {
       filter: 'brightness(1.2)',
     },
   }),
-}
+})
