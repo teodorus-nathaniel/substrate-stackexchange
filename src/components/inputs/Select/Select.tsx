@@ -2,7 +2,7 @@ import { hoverRingClassName } from '#/lib/constants/common-classnames'
 import { onChangeWrapper } from '#/lib/helpers/form'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
-import { HTMLProps } from 'react'
+import { forwardRef, HTMLProps } from 'react'
 import { GroupBase } from 'react-select'
 import { CreatableProps } from 'react-select/creatable'
 import FieldWrapper, {
@@ -33,10 +33,10 @@ export interface SelectProps<IsMulti extends boolean>
   creatable?: boolean
 }
 
-export default function Select<IsMulti extends boolean = false>({
-  creatable = false,
-  ...props
-}: SelectProps<IsMulti>) {
+const Select = forwardRef(function Select<IsMulti extends boolean = false>(
+  { creatable = false, ...props }: SelectProps<IsMulti>,
+  ref: any
+) {
   const className = clsx(
     'bg-bg-200',
     'py-2 pl-4 pr-1',
@@ -55,7 +55,8 @@ export default function Select<IsMulti extends boolean = false>({
       {(id) => (
         <Component
           {...(getCleanedInputProps(props) as any)}
-          styles={customSelectStyles(props.isMulti) as any}
+          ref={ref}
+          styles={customSelectStyles(props) as any}
           onChange={(value) => {
             onChangeWrapper(props.onChange, value, props.name ?? '')
           }}
@@ -65,4 +66,5 @@ export default function Select<IsMulti extends boolean = false>({
       )}
     </FieldWrapper>
   )
-}
+})
+export default Select
