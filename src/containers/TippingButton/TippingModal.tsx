@@ -55,7 +55,7 @@ export default function TippingModal({
         })
       },
     })
-  const { data: balance } = useGetTokenBalance({
+  const { data: balance, isLoading } = useGetTokenBalance({
     address: wallet?.address ?? '',
     network: values.network?.value as TokenTickers | undefined,
   })
@@ -93,7 +93,11 @@ export default function TippingModal({
             type='number'
             {...getFieldData('amount')}
             label='Amount'
-            helperTextOnRightOfLabel={`Balance: ${formatBalance(balance ?? 0)}`}
+            helperTextOnRightOfLabel={
+              isLoading
+                ? 'Loading...'
+                : `Balance: ${formatBalance(balance ?? 0)}`
+            }
             rightElement={(classNames) => (
               <Button
                 noClickEffect
