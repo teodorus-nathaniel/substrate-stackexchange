@@ -10,6 +10,9 @@ export interface RequiredFieldWrapperProps {
   labelClassName?: string
   helperText?: string
   helperTextClassName?: string
+  rightElement?: (classNames: string) => JSX.Element
+  helperTextOnRightOfLabel?: string
+  helperTextOnRightOfLabelClassNames?: string
 
   error?: string | boolean
   required?: boolean
@@ -31,6 +34,9 @@ export default function FieldWrapper({
   id,
   error,
   required,
+  rightElement,
+  helperTextOnRightOfLabel,
+  helperTextOnRightOfLabelClassNames,
   children,
 }: FieldWrapperProps) {
   const generatedId = useId()
@@ -49,6 +55,12 @@ export default function FieldWrapper({
   const errorClassNames = clsx('ring-2 ring-red-500 ring-offset-2')
   const inputClassNames = clsx(commonClassNames, error && errorClassNames)
 
+  const rightElementClassNames = clsx(
+    'absolute',
+    'right-2',
+    'top-1/2 -translate-y-1/2'
+  )
+
   const hasErrorMessage = error && typeof error === 'string'
 
   return (
@@ -61,12 +73,30 @@ export default function FieldWrapper({
       )}
     >
       {label && (
-        <label htmlFor={usedId} className={clsx('mb-0.5', labelClassName)}>
-          {label}
-          {required && <span className='text-red-500'> *</span>}
-        </label>
+        <div
+          className={clsx(
+            'mb-0.5 flex items-end justify-between',
+            labelClassName
+          )}
+        >
+          <label htmlFor={usedId}>
+            {label}
+            {required && <span className='text-red-500'> *</span>}
+          </label>
+          <p
+            className={clsx(
+              'text-text-secondary',
+              helperTextOnRightOfLabelClassNames
+            )}
+          >
+            {helperTextOnRightOfLabel}
+          </p>
+        </div>
       )}
-      {children(usedId, inputClassNames)}
+      <div className='relative w-full flex flex-col'>
+        {children(usedId, inputClassNames)}
+        {rightElement && rightElement(rightElementClassNames)}
+      </div>
       {(helperText || hasErrorMessage) && (
         <p
           className={clsx(
@@ -94,6 +124,9 @@ export function getCleanedInputProps<T extends RequiredFieldWrapperProps>(
     helperText: _helperText,
     helperTextClassName: _helperTextProps,
     id: _id,
+    helperTextOnRightOfLabel: _helperTextOnRightOfLabel,
+    helperTextOnRightOfLabelClassNames: _helperTextOnRightOfLabelClassNames,
+    rightElement: _rightElement,
     ...otherProps
   } = props
 
