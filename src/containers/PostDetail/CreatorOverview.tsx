@@ -1,4 +1,4 @@
-import Link, { LinkProps } from '#/components/Link'
+import Link from '#/components/Link'
 import ProfileImage from '#/components/ProfileImage'
 import SkeletonFallback, {
   useIntegratedSkeleton,
@@ -9,8 +9,10 @@ import { useGetProfile } from '#/services/subsocial/queries'
 import { ProfileData } from '@subsocial/types/dto'
 import { truncateMiddle } from '@talisman-connect/ui'
 import clsx from 'clsx'
+import { HTMLProps } from 'react'
+import TippingButton from '../TippingButton'
 
-export interface CreatorProps extends LinkProps {
+export interface CreatorProps extends HTMLProps<HTMLDivElement> {
   creator?: ProfileData
   createDate?: number
   isLoading?: boolean
@@ -40,7 +42,7 @@ export default function CreatorOverview({
   const usedCreator = creator ?? localCreator
 
   return (
-    <Link
+    <div
       className={clsx('bg-bg-100', 'py-2 px-3 rounded-md', className)}
       {...props}
     >
@@ -54,16 +56,30 @@ export default function CreatorOverview({
           }
         />
         <div className={clsx('flex flex-col')}>
-          <p className={clsx('text-xs font-bold text-blue-400', 'mb-0.5')}>
-            <IntegratedSkeleton
-              content={usedCreator?.content?.name}
-              defaultContent={truncateMiddle(creatorId)}
-              width={100}
-            >
-              {(name) => name}
-            </IntegratedSkeleton>
-          </p>
-          <p className={clsx('text-xs text-text-secondary')}>
+          <div
+            className={clsx(
+              'text-sm font-bold',
+              'mb-0.5',
+              'flex justify-between items-center'
+            )}
+          >
+            <Link variant='primary'>
+              <IntegratedSkeleton
+                content={usedCreator?.content?.name}
+                defaultContent={truncateMiddle(creatorId)}
+                width={100}
+              >
+                {(name) => name}
+              </IntegratedSkeleton>
+            </Link>
+            {creatorId && (
+              <TippingButton
+                className={clsx('ml-2', 'text-lg')}
+                beneficiary={creatorId}
+              />
+            )}
+          </div>
+          <p className={clsx('text-xs text-text-secondary', 'mb-1')}>
             asked{' '}
             <SkeletonFallback isLoading={isLoading} inline width={60}>
               {createDate ? formatDate(createDate) : '-'}
@@ -71,6 +87,6 @@ export default function CreatorOverview({
           </p>
         </div>
       </div>
-    </Link>
+    </div>
   )
 }
