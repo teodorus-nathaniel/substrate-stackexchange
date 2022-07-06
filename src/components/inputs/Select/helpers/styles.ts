@@ -1,9 +1,12 @@
 import { StylesConfig } from 'react-select'
 import { OptionType } from '../Select'
 
-export const customSelectStyles: (
+type Config = {
   isMulti?: boolean
-) => StylesConfig<OptionType> = (isMulti) => ({
+}
+export const customSelectStyles: ({
+  isMulti,
+}: Config) => StylesConfig<OptionType> = ({ isMulti }) => ({
   control: (provided) => ({
     ...provided,
     color: 'rgb(var(--text-primary))',
@@ -54,9 +57,7 @@ export const customSelectStyles: (
   }),
   singleValue: (provided, state) => {
     const opacity = state.isDisabled ? 0.5 : 1
-    const transition = 'opacity 300ms'
-
-    return { ...provided, opacity, transition }
+    return { ...provided, color: 'rgb(var(--text-primary))', opacity }
   },
   option: (provided, state) => ({
     ...provided,
