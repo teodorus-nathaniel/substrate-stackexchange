@@ -26,3 +26,7 @@ $ npm run dev
 3. NEXT_PUBLIC_SPACE_ID = number
    This is the `space id` used for the project. All posts are made to that specific space.
    If you didn't have any space before, you can create one in /devs/space page after you run the project.
+4. NEXT_PUBLIC_ADDRESS_PREFIX = number
+   This is the address prefix that is needed for polkadot based address. Each parachain has their own address prefix.
+   This prefix is what made your polkadot address in each parachain different, while having the same private key.
+   e.g. Subsocial has prefix of 28.
