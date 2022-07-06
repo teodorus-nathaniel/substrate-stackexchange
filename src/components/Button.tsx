@@ -45,6 +45,7 @@ export interface ButtonProps
   disabled?: boolean
   disabledCursor?: 'not-allowed' | 'loading'
   rounded?: boolean
+  noClickEffect?: boolean
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
@@ -55,6 +56,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
     variant = 'filled-brand',
     size = 'medium',
     type,
+    noClickEffect = false,
     loading,
     disabled,
     disabledCursor = 'not-allowed',
@@ -70,7 +72,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
     disabledCursor === 'not-allowed' && 'disabled:cursor-not-allowed',
     disabledCursor === 'loading' && 'disabled:cursor-wait',
     'transition-colors ease-out',
-    'enabled:active:translate-y-px',
+    !noClickEffect && 'enabled:active:translate-y-px',
     'disabled:opacity-75',
     loading && 'overflow-hidden',
     sizes[size],
