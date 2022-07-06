@@ -73,7 +73,7 @@ const Modal = forwardRef(function Modal(
           <div
             className={clsx(
               'flex items-center justify-center',
-              'min-h-full text-center p-8'
+              'min-h-full p-8'
             )}
           >
             <Transition.Child
