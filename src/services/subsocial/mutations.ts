@@ -1,6 +1,7 @@
 import { DEFAULT_SPACE_PERMISSIONS } from '#/lib/constants/subsocial'
 import { getSpaceId } from '#/lib/helpers/env'
 import { IpfsContent } from '@subsocial/types/substrate/classes'
+import { TransferPayload } from '../all-chains/types'
 import { SubsocialMutationConfig, useSubsocialMutation } from './base'
 import {
   invalidateGetAllQuestions,
@@ -13,7 +14,6 @@ import {
   CreateAnswerPayload,
   CreateQuestionPayload,
   CreateSpacePayload,
-  TransferPayload,
   UpsertReactionPayload,
 } from './types'
 

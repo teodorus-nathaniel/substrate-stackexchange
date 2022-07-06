@@ -56,7 +56,3 @@ export type CreateAnswerPayload = {
   body: string
   isAnswer?: boolean
 }
-export type TransferPayload = {
-  dest: string
-  value: number
-}

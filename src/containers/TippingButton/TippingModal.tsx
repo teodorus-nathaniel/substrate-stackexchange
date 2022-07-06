@@ -9,6 +9,7 @@ import { chains, TokenTickers } from '#/lib/constants/chains'
 import { formatBalance } from '#/lib/helpers/chain'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
 import { useGetTokenBalance } from '#/services/all-chains/queries'
+import { useTransfer } from '#/services/subsocial/mutations'
 import { ProfileData } from '@subsocial/types/dto'
 import { truncateMiddle } from '@talisman-connect/ui'
 import clsx from 'clsx'
@@ -39,11 +40,15 @@ export default function TippingModal({
   const [wallet] = useWalletContext()
   const { getFieldData, values } = useFormikWrapper({
     ...tippingForm,
-    onSubmit: () => {
-      // TIP
+    onSubmit: ({ amount, network }) => {
+      tip({
+        dest,
+        network: network?.value as TokenTickers,
+        value: amount,
+      })
     },
   })
-  // const { mutate } = useTransfer()
+  const { mutate: tip } = useTransfer()
   const { data: balance } = useGetTokenBalance({
     address: wallet?.address ?? '',
     network: values.network?.value as TokenTickers | undefined,
