@@ -13,6 +13,7 @@ import {
   CreateAnswerPayload,
   CreateQuestionPayload,
   CreateSpacePayload,
+  TransferPayload,
   UpsertReactionPayload,
 } from './types'
 
@@ -139,4 +140,12 @@ export function useCreateReply(
       },
     }
   )
+}
+
+export function useTransfer(config?: SubsocialMutationConfig<TransferPayload>) {
+  return useSubsocialMutation(async (data, { substrateApi }) => {
+    const { dest, value } = data
+    const tx = substrateApi.tx.balances.transfer(dest, value)
+    return { tx, summary: `Transferring ${value} coins` }
+  }, config)
 }

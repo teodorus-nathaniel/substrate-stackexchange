@@ -13,17 +13,23 @@ import {
   Reaction,
 } from './types'
 
-export async function getProfile(
-  api: FlatSubsocialApi,
+export async function getProfile({
+  additionalData: api,
+  params,
+}: {
   params: GetProfileParam
-) {
+  additionalData: FlatSubsocialApi
+}) {
   return api.findProfile(params.address)
 }
 
-export async function getReactionByPostIdAndAccount(
-  api: FlatSubsocialApi,
+export async function getReactionByPostIdAndAccount({
+  additionalData: api,
+  params,
+}: {
   params: GetReactionByPostIdAndAccountParam
-) {
+  additionalData: FlatSubsocialApi
+}) {
   const substrateApi = api.subsocial.substrate
   const [reactionId] = await substrateApi.getPostReactionIdsByAccount(
     params.address,
@@ -33,10 +39,13 @@ export async function getReactionByPostIdAndAccount(
   return reaction?.toJSON() as any as Reaction
 }
 
-export async function getBatchReactionsByPostIdsAndAccount(
-  api: FlatSubsocialApi,
+export async function getBatchReactionsByPostIdsAndAccount({
+  additionalData: api,
+  params,
+}: {
   params: GetBatchReactionsByPostIdsAndAccountParam
-) {
+  additionalData: FlatSubsocialApi
+}) {
   const substrate = api.subsocial.substrate
   const substrateApi = await substrate.api
   const tuples = params.postIds.map((id) => [params.address, id])
@@ -47,18 +56,24 @@ export async function getBatchReactionsByPostIdsAndAccount(
   ).map((reaction) => reaction.toJSON())
 }
 
-export async function getReplyIdsByPostId(
-  api: FlatSubsocialApi,
+export async function getReplyIdsByPostId({
+  additionalData: api,
+  params,
+}: {
   params: GetReplyIdsByPostIdParam
-) {
+  additionalData: FlatSubsocialApi
+}) {
   const substrateApi = api.subsocial.substrate
   return substrateApi.getReplyIdsByPostId(idToBn(params.postId))
 }
 
-export async function getBatchReplyIdsByPostIds(
-  api: FlatSubsocialApi,
+export async function getBatchReplyIdsByPostIds({
+  additionalData: api,
+  params,
+}: {
   params: GetBatchReplyIdsByPostIdsParam
-) {
+  additionalData: FlatSubsocialApi
+}) {
   const substrateApi = api.subsocial.substrate
   const promises = params.postIds.map((id) =>
     substrateApi.getReplyIdsByPostId(idToBn(id))
@@ -66,24 +81,34 @@ export async function getBatchReplyIdsByPostIds(
   return Promise.all(promises)
 }
 
-export async function getQuestion(
-  api: FlatSubsocialApi,
+export async function getQuestion({
+  additionalData: api,
+  params,
+}: {
   params: GetQuestionParam
-) {
+  additionalData: FlatSubsocialApi
+}) {
   return api.findPostWithSomeDetails({ id: params.postId as any })
 }
 
-export async function getAllQuestions(api: FlatSubsocialApi) {
+export async function getAllQuestions({
+  additionalData: api,
+}: {
+  additionalData: FlatSubsocialApi
+}) {
   const substrate = api.subsocial.substrate
   const postIds = await substrate.postIdsBySpaceId(getSpaceId() as any)
   return api.findPublicPosts(postIds)
 }
 
-export async function getReplies(
-  api: FlatSubsocialApi,
+export async function getReplies({
+  params,
+  additionalData: api,
+}: {
   params: GetRepliesParam
-) {
-  const replyIds = await getReplyIdsByPostId(api, params)
+  additionalData: FlatSubsocialApi
+}) {
+  const replyIds = await getReplyIdsByPostId({ params, additionalData: api })
   return api.findPublicPostsWithSomeDetails({
     ids: replyIds,
   })

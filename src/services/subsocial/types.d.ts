@@ -1,11 +1,6 @@
 import { ReactionType } from '@subsocial/types/dto'
-import { UseQueryOptions } from 'react-query'
 
 // Important Types
-export type QueryConfig<T = any, V = any> = Omit<
-  UseQueryOptions<T, unknown, T, (string | V | null)[]>,
-  'queryFn' | 'queryKey'
->
 export interface Reaction {
   created: {
     account: string
@@ -60,4 +55,8 @@ export type CreateAnswerPayload = {
   rootPostId: string
   body: string
   isAnswer?: boolean
+}
+export type TransferPayload = {
+  dest: string
+  value: number
 }

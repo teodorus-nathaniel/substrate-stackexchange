@@ -1,5 +1,6 @@
 import { useWalletContext } from '#/contexts/WalletContext'
 import queryClient from '../client'
+import { QueryConfig } from '../common/types'
 import {
   getAllQuestions,
   getBatchReactionsByPostIdsAndAccount,
@@ -16,7 +17,6 @@ import {
   GetReactionByPostIdAndAccountParam,
   GetRepliesParam,
   GetReplyIdsByPostIdParam,
-  QueryConfig,
 } from './types'
 
 export const getProfileKey = 'getProfile'
@@ -118,14 +118,17 @@ export function useGetAllQuestions() {
 
   return useSubsocialQuery(
     { key: getAllQuestionsKey, data: null },
-    async (api) => {
-      const questions = await getAllQuestions(api)
+    async ({ additionalData: api }) => {
+      const questions = await getAllQuestions({ additionalData: api })
 
       async function getReactionsFromUser() {
         if (!wallet) return
-        const reactions = await getBatchReactionsByPostIdsAndAccount(api, {
-          address: wallet.address,
-          postIds: questions.map(({ id }) => id),
+        const reactions = await getBatchReactionsByPostIdsAndAccount({
+          params: {
+            address: wallet.address,
+            postIds: questions.map(({ id }) => id),
+          },
+          additionalData: api,
         })
         const promises = reactions.map((reaction, idx) => {
           const param: GetReactionByPostIdAndAccountParam = {

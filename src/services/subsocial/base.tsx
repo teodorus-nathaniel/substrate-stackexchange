@@ -15,35 +15,19 @@ import {
 } from 'react-query'
 import { toast } from 'react-toastify'
 import queryClient from '../client'
-import { QueryConfig } from './types'
+import { generateQueryWrapper, mergeQueryConfig } from '../common/base'
+import { QueryConfig } from '../common/types'
 
 export type SubstrateApi = Awaited<
   FlatSubsocialApi['subsocial']['substrate']['api']
 >
 export type Transaction = ReturnType<SubstrateApi['tx']['']['']>
 
-function queryWrapper<T, V>(
-  func: (api: FlatSubsocialApi, data: V) => T,
-  subsocialApi: FlatSubsocialApi
-) {
-  return ({ queryKey }: any) => {
-    return func(subsocialApi, queryKey[1])
-  }
-}
+export const subsocialQueryWrapper = generateQueryWrapper(async () => null)
 
-export function mergeQueryConfig<T, V>(
-  config?: QueryConfig<any, any>,
-  defaultConfig?: QueryConfig<T, V>
-): QueryConfig<T, V> {
-  return {
-    ...defaultConfig,
-    ...config,
-    enabled: (defaultConfig?.enabled ?? true) && (config?.enabled ?? true),
-  }
-}
 export function useSubsocialQuery<T, V>(
   params: { key: string; data: V | null },
-  func: (api: FlatSubsocialApi, data: V) => Promise<T>,
+  func: (data: { params: V; additionalData: FlatSubsocialApi }) => Promise<T>,
   config?: QueryConfig<any, any>,
   defaultConfig?: QueryConfig<T, V>
 ) {
@@ -54,7 +38,7 @@ export function useSubsocialQuery<T, V>(
   )
   return useQuery(
     [params.key, params.data],
-    queryWrapper(func, subsocialApi!),
+    subsocialQueryWrapper(func, subsocialApi!),
     mergedConfig as any
   )
 }
