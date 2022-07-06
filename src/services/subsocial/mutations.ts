@@ -1,8 +1,8 @@
 import { DEFAULT_SPACE_PERMISSIONS } from '#/lib/constants/subsocial'
 import { getSpaceId } from '#/lib/helpers/env'
 import { IpfsContent } from '@subsocial/types/substrate/classes'
-import { TransferPayload } from '../all-chains/types'
-import { SubsocialMutationConfig, useSubsocialMutation } from './base'
+import { MutationConfig } from '../common/base'
+import { useSubsocialMutation } from './base'
 import {
   invalidateGetAllQuestions,
   invalidateGetQuestion,
@@ -17,9 +17,7 @@ import {
   UpsertReactionPayload,
 } from './types'
 
-export function useCreateSpace(
-  config?: SubsocialMutationConfig<CreateSpacePayload>
-) {
+export function useCreateSpace(config?: MutationConfig<CreateSpacePayload>) {
   return useSubsocialMutation(async (data, { ipfsApi, substrateApi }) => {
     const { avatar, name, desc } = data
     let avatarCid: string | undefined
@@ -41,9 +39,7 @@ export function useCreateSpace(
   }, config)
 }
 
-export function useCreatePost(
-  config?: SubsocialMutationConfig<CreateQuestionPayload>
-) {
+export function useCreatePost(config?: MutationConfig<CreateQuestionPayload>) {
   return useSubsocialMutation(
     async (data, { ipfsApi, substrateApi }) => {
       const { title, body, tags } = data
@@ -69,7 +65,7 @@ export function useCreatePost(
 }
 
 export function useUpsertReaction(
-  config?: SubsocialMutationConfig<UpsertReactionPayload>
+  config?: MutationConfig<UpsertReactionPayload>
 ) {
   return useSubsocialMutation(
     async (data, { substrateApi }) => {
@@ -111,9 +107,7 @@ export function useUpsertReaction(
   )
 }
 
-export function useCreateReply(
-  config?: SubsocialMutationConfig<CreateAnswerPayload>
-) {
+export function useCreateReply(config?: MutationConfig<CreateAnswerPayload>) {
   return useSubsocialMutation(
     async (data, { substrateApi, ipfsApi }) => {
       const { body, rootPostId, isAnswer } = data
@@ -140,12 +134,4 @@ export function useCreateReply(
       },
     }
   )
-}
-
-export function useTransfer(config?: SubsocialMutationConfig<TransferPayload>) {
-  return useSubsocialMutation(async (data, { substrateApi }) => {
-    const { dest, value } = data
-    const tx = substrateApi.tx.balances.transfer(dest, value)
-    return { tx, summary: `Transferring ${value} coins` }
-  }, config)
 }
