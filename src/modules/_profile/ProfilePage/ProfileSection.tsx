@@ -10,7 +10,11 @@ import { encodeAddress } from '#/lib/helpers/chain'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
 import useIsCurrentUser from '#/lib/hooks/isCurrentUser'
 import useLogout from '#/lib/hooks/useLogout'
-import { useGetProfile } from '#/services/subsocial/queries'
+import { useToggleFollowAccount } from '#/services/subsocial/mutations'
+import {
+  useGetIsCurrentUserFollowing,
+  useGetProfile,
+} from '#/services/subsocial/queries'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
@@ -35,6 +39,26 @@ export default function ProfileSection() {
     isLoading,
     isFetched
   )
+
+  const {
+    data: isFollowing,
+    isLoading: isLoadingCheckFollowing,
+    isFetched: isFetchedCheckFollowing,
+  } = useGetIsCurrentUserFollowing({
+    currentUserAddress: wallet?.address,
+    target: id,
+  })
+  const { IntegratedSkeleton: IntegratedSkeletonCheckFollowing } =
+    useIntegratedSkeleton(isLoadingCheckFollowing, isFetchedCheckFollowing)
+  const { mutate: toggleFollow } = useToggleFollowAccount()
+  const toggleFollowAccount = () => {
+    if (!id || isFollowing === undefined) return
+    toggleFollow({
+      target: id,
+      isCurrentlyFollowing: isFollowing,
+      targetName: content?.name,
+    })
+  }
 
   const isCurrentUser = useIsCurrentUser(id)
   const displayCurrentUserProfile = !id || isCurrentUser
@@ -111,6 +135,24 @@ export default function ProfileSection() {
           </div>
         )}
       </IntegratedSkeleton>
+      {!isCurrentUser && (
+        <div className='mt-8 text-sm'>
+          <IntegratedSkeletonCheckFollowing
+            width={100}
+            content={content}
+            className={clsx('h-8')}
+          >
+            {() => (
+              <Button
+                variant={isFollowing ? 'unstyled-border' : 'filled-brand'}
+                onClick={toggleFollowAccount}
+              >
+                {isFollowing ? 'Following' : 'Follow'}
+              </Button>
+            )}
+          </IntegratedSkeletonCheckFollowing>
+        </div>
+      )}
     </div>
   )
 }

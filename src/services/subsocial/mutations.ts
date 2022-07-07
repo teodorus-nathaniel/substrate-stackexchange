@@ -1,10 +1,12 @@
 import { DEFAULT_SPACE_PERMISSIONS } from '#/lib/constants/subsocial'
 import { getSpaceId } from '#/lib/helpers/env'
 import { IpfsContent } from '@subsocial/types/substrate/classes'
+import { truncateMiddle } from '@talisman-connect/ui'
 import { MutationConfig } from '../common/base'
 import { Transaction, useSubsocialMutation } from './base'
 import {
   invalidateGetAllQuestions,
+  invalidateGetIsCurrentUserFollowing,
   invalidateGetPost,
   invalidateGetProfile,
   invalidateGetReactionByPostIdAndAccount,
@@ -15,6 +17,7 @@ import {
   CreateAnswerPayload,
   CreateQuestionPayload,
   CreateSpacePayload,
+  ToggleFollowAccountPayload,
   UpdateProfilePayload,
   UpsertReactionPayload,
 } from './types'
@@ -158,7 +161,7 @@ export function useCreateReply(config?: MutationConfig<CreateAnswerPayload>) {
         { Comment: { parentId: null, rootPostId } },
         IpfsContent(postCid)
       ) as unknown as Transaction
-      return { tx, summary: `Answering question` }
+      return { tx, summary: isAnswer ? `Answering question` : 'Replying' }
     },
     config,
     {
@@ -169,6 +172,37 @@ export function useCreateReply(config?: MutationConfig<CreateAnswerPayload>) {
         invalidateGetReplies({
           postId: data.rootPostId,
         })
+      },
+    }
+  )
+}
+
+export function useToggleFollowAccount(
+  config?: MutationConfig<ToggleFollowAccountPayload>
+) {
+  return useSubsocialMutation(
+    async (data, { substrateApi }) => {
+      const { target, isCurrentlyFollowing, targetName } = data
+      let tx
+      let summary
+      if (isCurrentlyFollowing) {
+        tx = substrateApi.tx.profileFollows.unfollowAccount(target)
+        summary = 'Unfollowing'
+      } else {
+        tx = substrateApi.tx.profileFollows.followAccount(target)
+        summary = 'Following'
+      }
+      summary = `${summary} ${targetName || truncateMiddle(target)}`
+      return { tx: tx as unknown as Transaction, summary }
+    },
+    config,
+    {
+      onTxSuccess: (data, address) => {
+        invalidateGetIsCurrentUserFollowing({
+          currentUserAddress: address,
+          target: data.target,
+        })
+        invalidateGetProfile({ address: data.target })
       },
     }
   )

@@ -6,6 +6,7 @@ import {
   getAllQuestions,
   getBatchReactionsByPostIdsAndAccount,
   getFollowers,
+  getIsCurrentUserFollowing,
   getPost,
   getProfile,
   getReactionByPostIdAndAccount,
@@ -15,6 +16,7 @@ import {
 import { useSubsocialQuery } from './base'
 import {
   GetFollowersParam,
+  GetIsCurrentUserFollowingParam,
   GetPostParam,
   GetProfileParam,
   GetReactionByPostIdAndAccountParam,
@@ -49,6 +51,8 @@ export function useGetCurrentUser() {
 }
 
 export const getFollowersKey = 'getFollowers'
+export const invalidateGetFollowers =
+  createQueryInvalidation<GetFollowersParam>(getFollowersKey)
 export function useGetFollowers(
   data: Partial<GetFollowersParam>,
   config?: QueryConfig
@@ -72,6 +76,29 @@ export function useGetFollowers(
     },
     config,
     { enabled: !!data?.address }
+  )
+}
+
+export const getIsCurrentUserFollowingKey = 'getIsCurrentUserFollowing'
+export const invalidateGetIsCurrentUserFollowing =
+  createQueryInvalidation<GetIsCurrentUserFollowingParam>(
+    getIsCurrentUserFollowingKey
+  )
+export function useGetIsCurrentUserFollowing(
+  data: Partial<GetIsCurrentUserFollowingParam>,
+  config?: QueryConfig
+) {
+  return useSubsocialQuery(
+    {
+      key: getIsCurrentUserFollowingKey,
+      data: {
+        currentUserAddress: data.currentUserAddress ?? '',
+        target: data.target ?? '',
+      },
+    },
+    getIsCurrentUserFollowing,
+    config,
+    { enabled: !!data?.currentUserAddress && !!data.target }
   )
 }
 

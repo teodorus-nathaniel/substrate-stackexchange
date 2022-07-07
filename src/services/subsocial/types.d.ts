@@ -15,6 +15,10 @@ export interface Reaction {
 // Query Params
 export type GetProfileParam = { address: string }
 export type GetFollowersParam = { address: string }
+export type GetIsCurrentUserFollowingParam = {
+  currentUserAddress: string
+  target: string
+}
 export type GetFollowingParam = { address: string }
 export type GetReactionByPostIdAndAccountParam = {
   address: string
@@ -63,4 +67,9 @@ export type CreateAnswerPayload = {
   rootPostId: string
   body: string
   isAnswer?: boolean
+}
+export type ToggleFollowAccountPayload = {
+  target: string
+  isCurrentlyFollowing: boolean
+  targetName?: string
 }
