@@ -2,7 +2,7 @@ import { DEFAULT_SPACE_PERMISSIONS } from '#/lib/constants/subsocial'
 import { getSpaceId } from '#/lib/helpers/env'
 import { IpfsContent } from '@subsocial/types/substrate/classes'
 import { MutationConfig } from '../common/base'
-import { useSubsocialMutation } from './base'
+import { Transaction, useSubsocialMutation } from './base'
 import {
   invalidateGetAllQuestions,
   invalidateGetQuestion,
@@ -34,7 +34,7 @@ export function useCreateSpace(config?: MutationConfig<CreateSpacePayload>) {
       null,
       IpfsContent(spaceCid),
       DEFAULT_SPACE_PERMISSIONS
-    )
+    ) as unknown as Transaction
     return { tx, summary: `Creating Space ${name}` }
   }, config)
 }
@@ -52,7 +52,7 @@ export function useCreatePost(config?: MutationConfig<CreateQuestionPayload>) {
         getSpaceId(),
         { RegularPost: null },
         IpfsContent(postCid)
-      )
+      ) as unknown as Transaction
       return { tx, summary: `Creating Post` }
     },
     config,
@@ -90,7 +90,7 @@ export function useUpsertReaction(
       } else {
         tx = substrateApi.tx.reactions.createPostReaction(postId, kind)
       }
-      return { tx, summary }
+      return { tx: tx as unknown as Transaction, summary }
     },
     config,
     {
@@ -119,7 +119,7 @@ export function useCreateReply(config?: MutationConfig<CreateAnswerPayload>) {
         getSpaceId(),
         { Comment: { parentId: null, rootPostId } },
         IpfsContent(postCid)
-      )
+      ) as unknown as Transaction
       return { tx, summary: `Answering question` }
     },
     config,

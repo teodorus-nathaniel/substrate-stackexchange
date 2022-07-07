@@ -1,7 +1,10 @@
+import Link from '#/components/Link'
+import { getBlockExplorerBlockInfoLink } from '#/lib/helpers/chain'
 import { activateWalletFromSavedAccount } from '#/lib/helpers/wallet'
 import { Hash } from '@polkadot/types/interfaces'
 import { isEmptyObj } from '@subsocial/utils'
 import { WalletAccount } from '@talisman-connect/wallets'
+import clsx from 'clsx'
 import { UseMutationOptions } from 'react-query'
 import { toast } from 'react-toastify'
 import queryClient from '../client'
@@ -69,6 +72,7 @@ export async function createTxAndSend<Param, OtherParams extends unknown[]>(
   param: Param,
   currentWallet: WalletAccount,
   setWallet: (newWallet: WalletAccount) => void,
+  networkRpc: string,
   config?: MutationConfig<Param>,
   defaultConfig?: MutationConfig<Param>,
   ...otherParams: OtherParams
@@ -84,13 +88,22 @@ export async function createTxAndSend<Param, OtherParams extends unknown[]>(
   }
 
   const { tx, summary } = await transactionGenerator(param, ...otherParams)
-  return sendTransaction(tx, usedWallet, summary, param, config, defaultConfig)
+  return sendTransaction(
+    tx,
+    usedWallet,
+    summary,
+    param,
+    networkRpc,
+    config,
+    defaultConfig
+  )
 }
 export function sendTransaction<Param>(
   tx: Transaction,
   wallet: WalletAccount,
   summary: string,
   param: Param,
+  networkRpc: string,
   config?: MutationConfig<Param>,
   defaultConfig?: MutationConfig<Param>
 ) {
@@ -101,12 +114,22 @@ export function sendTransaction<Param>(
         {
           signer: wallet.signer as any,
         },
-        (result) => {
-          resolve(result.txHash)
-          console.log(`Current status is ${result.status}`)
+        async (result) => {
+          resolve(result.txHash as unknown as Hash)
           if (result.status.isBroadcast) {
             toast.info(`${summary}...`)
           } else if (result.status.isInBlock) {
+            const blockHash = (result.status.toJSON() ?? ({} as any)).inBlock
+            const blockExplorerLink = (
+              <Link
+                variant='primary'
+                className={clsx('text-xs')}
+                target='_blank'
+                href={getBlockExplorerBlockInfoLink(networkRpc, blockHash)}
+              >
+                See Detail
+              </Link>
+            )
             if (
               result.isError ||
               result.dispatchError ||
@@ -118,6 +141,7 @@ export function sendTransaction<Param>(
                   <p className='text-text-secondary text-sm'>
                     Error Code: {result.dispatchError?.toString()}
                   </p>
+                  {blockExplorerLink}
                 </div>
               )
             } else {
@@ -127,7 +151,12 @@ export function sendTransaction<Param>(
                 'onTxSuccess'
               )
               onTxSuccess(param, wallet.address)
-              toast.success(`Success ${summary}!`)
+              toast.success(
+                <div>
+                  <p>Success {summary}!</p>
+                  {blockExplorerLink}
+                </div>
+              )
             }
             unsub()
           }

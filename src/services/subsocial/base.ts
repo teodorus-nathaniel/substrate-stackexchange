@@ -1,5 +1,6 @@
 import { useSubsocialApiContext } from '#/contexts/SubsocialApiContext'
 import { useWalletContext } from '#/contexts/WalletContext'
+import subsocialConfig from '#/lib/config/subsocial-api'
 import { ApiPromise } from '@polkadot/api'
 import { Hash } from '@polkadot/types/interfaces'
 import { SubsocialIpfsApi } from '@subsocial/api'
@@ -18,9 +19,7 @@ import { QueryConfig } from '../common/types'
 export type SubstrateApi = Awaited<
   FlatSubsocialApi['subsocial']['substrate']['api']
 >
-export type Transaction =
-  | ReturnType<SubstrateApi['tx']['']['']>
-  | ReturnType<ApiPromise['tx']['']['']>
+export type Transaction = ReturnType<ApiPromise['tx']['']['']>
 
 export const subsocialQueryWrapper = generateQueryWrapper(async () => null)
 
@@ -81,6 +80,7 @@ export function useSubsocialMutation<Param>(
       param,
       wallet,
       setWallet,
+      subsocialConfig.substrateNodeUrl,
       config,
       defaultConfig,
       {

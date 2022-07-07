@@ -9,6 +9,10 @@ export function encodeAddress(address: string | undefined) {
   return encodePolkadotAddress(decodeAddress(address), getAddressPrefix())
 }
 
+export function getBlockExplorerBlockInfoLink(rpc: string, blockHash: string) {
+  return `https://polkadot.js.org/apps/?${rpc}#/explorer/query/${blockHash}`
+}
+
 export function formatBalance(value: string | number) {
   return (+value / 1_000_000_000_000).toFixed(4)
 }

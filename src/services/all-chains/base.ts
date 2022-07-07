@@ -1,4 +1,5 @@
 import { useWalletContext } from '#/contexts/WalletContext'
+import { chains } from '#/lib/constants/chains'
 import { ApiPromise } from '@polkadot/api'
 import { Hash } from '@polkadot/types/interfaces'
 import { useMutation, UseMutationResult, useQuery } from 'react-query'
@@ -45,11 +46,13 @@ export function useAllChainsMutation<Param extends AllChainsCommonParams>(
   const workerFunc = async (param: Param) => {
     if (!wallet) throw new Error('You need to connect your wallet first!')
     const api = await connections.getConnection(param.network)
+    const chainInfo = chains[param.network]
     return createTxAndSend(
       transactionGenerator,
       param,
       wallet,
       setWallet,
+      chainInfo.rpc,
       config,
       defaultConfig,
       api
