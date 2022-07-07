@@ -1,4 +1,5 @@
 import Link, { LinkProps } from '#/components/Link'
+import { useWalletContext } from '#/contexts/WalletContext'
 import { hoverRingClassName } from '#/lib/constants/common-classnames'
 import { NORMAL_TRANSITION } from '#/lib/constants/transition'
 import { TransitionVariants } from '#/lib/helpers/types'
@@ -26,10 +27,12 @@ const contentVariants: TransitionVariants = {
 
 interface Props extends HTMLProps<HTMLDivElement> {}
 
-type LinkData = { text: string; to: string }
+type LinkAuthType = 'user' | undefined
+type LinkData = { text: string; to: string; type?: LinkAuthType }
 type NestedLinks = {
   title: string
   content: LinkData[]
+  type?: LinkAuthType
 }
 const links: (NestedLinks | LinkData)[] = [
   { text: 'Home', to: '/' },
@@ -38,22 +41,38 @@ const links: (NestedLinks | LinkData)[] = [
     content: [
       { text: 'New', to: '/questions/new' },
       { text: 'Unanswered', to: '/questions/unanswered' },
-      { text: 'Your Questions', to: '/profile/questions' },
+      { text: 'Your Questions', to: '/profile/questions', type: 'user' },
     ],
   },
   {
     title: 'Users',
     content: [
-      { text: 'All', to: '/users' },
+      // { text: 'All', to: '/users' },
       { text: 'Following', to: '/profile/following' },
       { text: 'Followers', to: '/profile/followers' },
     ],
+    type: 'user',
   },
 ]
+
+const checkAuthorization = (
+  linkType: LinkAuthType,
+  currentUserType: '' | LinkAuthType
+) => {
+  if (linkType === 'user') {
+    return currentUserType === 'user'
+  }
+  return true
+}
 
 export default function Sidebar({ className, ...props }: Props) {
   const { pathname } = useRouter()
   const [isOpen, setIsOpen] = useState(true)
+
+  const [wallet] = useWalletContext()
+  const currentUserType: LinkAuthType | undefined = wallet?.address
+    ? 'user'
+    : undefined
 
   return (
     <div className={clsx(className)} {...props}>
@@ -80,6 +99,9 @@ export default function Sidebar({ className, ...props }: Props) {
           'bg-bg-100',
           'rounded-md'
         )}
+        initial={{
+          width: WIDTH,
+        }}
         animate={{
           width: isOpen ? WIDTH : 0,
           opacity: isOpen ? 1 : 0,
@@ -87,9 +109,10 @@ export default function Sidebar({ className, ...props }: Props) {
           paddingRight: !isOpen ? 0 : undefined,
         }}
       >
-        <AnimatePresence>
-          {isOpen && (
+        <AnimatePresence exitBeforeEnter>
+          {isOpen && wallet !== undefined && (
             <motion.div
+              key={currentUserType}
               variants={containerVariants}
               transition={NORMAL_TRANSITION}
               initial='close'
@@ -98,6 +121,8 @@ export default function Sidebar({ className, ...props }: Props) {
             >
               {links.map((data) => {
                 if ('to' in data) {
+                  if (!checkAuthorization(data.type, currentUserType))
+                    return null
                   return (
                     <SidebarLink
                       key={data.to}
@@ -107,7 +132,8 @@ export default function Sidebar({ className, ...props }: Props) {
                     />
                   )
                 }
-                const { content, title } = data
+                const { content, title, type } = data
+                if (!checkAuthorization(type, currentUserType)) return null
                 return (
                   <motion.div
                     className='pb-6 flex flex-col space-y-1'
