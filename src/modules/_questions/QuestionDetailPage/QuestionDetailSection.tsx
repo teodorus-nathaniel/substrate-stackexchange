@@ -12,7 +12,9 @@ import { useRouter } from 'next/router'
 import { useMemo, useState } from 'react'
 import { createAnswerForm } from './form/schema'
 
-const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'))
+const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
+  ssr: false,
+})
 
 export default function QuestionDetailSection() {
   const { query } = useRouter()
