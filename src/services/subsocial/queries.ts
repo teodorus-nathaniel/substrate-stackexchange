@@ -1,4 +1,5 @@
 import { useWalletContext } from '#/contexts/WalletContext'
+import { ProfileData } from '@subsocial/types/dto'
 import queryClient from '../client'
 import { createQueryInvalidation } from '../common/base'
 import { QueryConfig } from '../common/types'
@@ -6,6 +7,7 @@ import {
   getAllQuestions,
   getBatchReactionsByPostIdsAndAccount,
   getFollowers,
+  getFollowing,
   getIsCurrentUserFollowing,
   getPost,
   getProfile,
@@ -16,6 +18,7 @@ import {
 import { useSubsocialQuery } from './base'
 import {
   GetFollowersParam,
+  GetFollowingParam,
   GetIsCurrentUserFollowingParam,
   GetPostParam,
   GetProfileParam,
@@ -24,6 +27,14 @@ import {
   GetReplyIdsByPostIdParam,
 } from './types'
 
+const setProfilesQueryCache = (
+  profiles: (ProfileData & { address: string })[]
+) => {
+  const promises = profiles.map((profile) => {
+    return queryClient.setQueryData([getProfile, profile.address], profile)
+  })
+  return Promise.all(promises)
+}
 export const getProfileKey = 'getProfile'
 export const invalidateGetProfile =
   createQueryInvalidation<GetProfileParam>(getProfileKey)
@@ -64,14 +75,29 @@ export function useGetFollowers(
     },
     async function (queryData) {
       const res = await getFollowers(queryData)
-      const followers = res
-      const promises = followers.map((follower) => {
-        return queryClient.setQueryData(
-          [getProfile, follower.address],
-          follower
-        )
-      })
-      await Promise.all(promises)
+      await setProfilesQueryCache(res)
+      return res
+    },
+    config,
+    { enabled: !!data?.address }
+  )
+}
+
+export const getFollowingKey = 'getFollowing'
+export const invalidateGetFollowing =
+  createQueryInvalidation<GetFollowingParam>(getFollowingKey)
+export function useGetFollowing(
+  data: Partial<GetFollowingParam>,
+  config?: QueryConfig
+) {
+  return useSubsocialQuery(
+    {
+      key: getFollowingKey,
+      data: { address: data.address ?? '' },
+    },
+    async function (queryData) {
+      const res = await getFollowing(queryData)
+      await setProfilesQueryCache(res)
       return res
     },
     config,

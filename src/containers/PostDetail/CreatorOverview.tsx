@@ -48,7 +48,12 @@ export default function CreatorOverview({
 
   return (
     <div
-      className={clsx('bg-bg-100', 'py-2 px-3 rounded-md', className)}
+      className={clsx(
+        'bg-bg-100',
+        displayAskDate ? 'py-2 px-3' : 'px-6 py-4',
+        'rounded-md',
+        className
+      )}
       {...props}
     >
       <div className={clsx('flex items-center', 'space-x-2.5')}>

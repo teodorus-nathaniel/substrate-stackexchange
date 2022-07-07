@@ -6,6 +6,7 @@ import {
   GetBatchReactionsByPostIdsAndAccountParam,
   GetBatchReplyIdsByPostIdsParam,
   GetFollowersParam,
+  GetFollowingParam,
   GetIsCurrentUserFollowingParam,
   GetPostParam,
   GetProfileParam,
@@ -41,6 +42,26 @@ export async function getFollowers({
   return followers.map((profile, idx) => ({
     ...profile,
     address: followersOfAccount[idx],
+  }))
+}
+
+export async function getFollowing({
+  additionalData: api,
+  params,
+}: {
+  params: GetFollowingParam
+  additionalData: FlatSubsocialApi
+}) {
+  const substrateApi = await api.subsocial.substrate.api
+  const res =
+    (await substrateApi.query.profileFollows.accountsFollowedByAccount(
+      params.address
+    )) as any
+  const followingIds = bnsToIds(res)
+  const followings = await api.findProfiles(followingIds)
+  return followings.map((profile, idx) => ({
+    ...profile,
+    address: followingIds[idx],
   }))
 }
 

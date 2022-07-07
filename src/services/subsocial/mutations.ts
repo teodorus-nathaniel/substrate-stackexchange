@@ -6,6 +6,8 @@ import { MutationConfig } from '../common/base'
 import { Transaction, useSubsocialMutation } from './base'
 import {
   invalidateGetAllQuestions,
+  invalidateGetFollowers,
+  invalidateGetFollowing,
   invalidateGetIsCurrentUserFollowing,
   invalidateGetPost,
   invalidateGetProfile,
@@ -203,6 +205,8 @@ export function useToggleFollowAccount(
           target: data.target,
         })
         invalidateGetProfile({ address: data.target })
+        invalidateGetFollowers({ address })
+        invalidateGetFollowing({ address })
       },
     }
   )

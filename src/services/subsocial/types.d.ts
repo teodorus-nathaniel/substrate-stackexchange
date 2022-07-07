@@ -15,6 +15,7 @@ export interface Reaction {
 // Query Params
 export type GetProfileParam = { address: string }
 export type GetFollowersParam = { address: string }
+export type GetFollowingParam = { address: string }
 export type GetIsCurrentUserFollowingParam = {
   currentUserAddress: string
   target: string
