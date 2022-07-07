@@ -128,6 +128,7 @@ export default function PostDetail({
               isLoading={isLoading}
             />
             <CreatorOverview
+              displayAskDate
               isLoading={isLoading}
               createDate={usedPost?.post?.struct?.createdAtTime}
               creator={usedPost?.owner}

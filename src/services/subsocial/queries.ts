@@ -5,6 +5,7 @@ import { QueryConfig } from '../common/types'
 import {
   getAllQuestions,
   getBatchReactionsByPostIdsAndAccount,
+  getFollowers,
   getPost,
   getProfile,
   getReactionByPostIdAndAccount,
@@ -13,6 +14,7 @@ import {
 } from './api'
 import { useSubsocialQuery } from './base'
 import {
+  GetFollowersParam,
   GetPostParam,
   GetProfileParam,
   GetReactionByPostIdAndAccountParam,
@@ -43,6 +45,33 @@ export function useGetCurrentUser() {
     },
     getProfile,
     { enabled: !!wallet?.address }
+  )
+}
+
+export const getFollowersKey = 'getFollowers'
+export function useGetFollowers(
+  data: Partial<GetFollowersParam>,
+  config?: QueryConfig
+) {
+  return useSubsocialQuery(
+    {
+      key: getFollowersKey,
+      data: { address: data.address ?? '' },
+    },
+    async function (queryData) {
+      const res = await getFollowers(queryData)
+      const followers = res
+      const promises = followers.map((follower) => {
+        return queryClient.setQueryData(
+          [getProfile, follower.address],
+          follower
+        )
+      })
+      await Promise.all(promises)
+      return res
+    },
+    config,
+    { enabled: !!data?.address }
   )
 }
 

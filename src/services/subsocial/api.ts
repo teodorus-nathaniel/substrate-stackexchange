@@ -1,10 +1,11 @@
 import { getSpaceId } from '#/lib/helpers/env'
 import { FlatSubsocialApi } from '@subsocial/api/flat-subsocial'
 import { AnyReactionId } from '@subsocial/types'
-import { idToBn } from '@subsocial/utils'
+import { bnsToIds, idToBn } from '@subsocial/utils'
 import {
   GetBatchReactionsByPostIdsAndAccountParam,
   GetBatchReplyIdsByPostIdsParam,
+  GetFollowersParam,
   GetPostParam,
   GetProfileParam,
   GetReactionByPostIdAndAccountParam,
@@ -21,6 +22,25 @@ export async function getProfile({
   additionalData: FlatSubsocialApi
 }) {
   return api.findProfile(params.address)
+}
+
+export async function getFollowers({
+  additionalData: api,
+  params,
+}: {
+  params: GetFollowersParam
+  additionalData: FlatSubsocialApi
+}) {
+  const substrateApi = await api.subsocial.substrate.api
+  const res = (await substrateApi.query.profileFollows.accountFollowers(
+    params.address
+  )) as any
+  const followersOfAccount = bnsToIds(res)
+  const followers = await api.findProfiles(followersOfAccount)
+  return followers.map((profile, idx) => ({
+    ...profile,
+    address: followersOfAccount[idx],
+  }))
 }
 
 export async function getReactionByPostIdAndAccount({

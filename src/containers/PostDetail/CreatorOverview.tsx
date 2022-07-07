@@ -19,6 +19,7 @@ export interface CreatorProps extends HTMLProps<HTMLDivElement> {
   isLoading?: boolean
   creatorId?: string
   shouldFetchCreator?: boolean
+  displayAskDate?: boolean
 }
 
 export default function CreatorOverview({
@@ -28,6 +29,7 @@ export default function CreatorOverview({
   isLoading,
   creatorId,
   shouldFetchCreator = false,
+  displayAskDate = false,
   ...props
 }: CreatorProps) {
   const {
@@ -86,12 +88,14 @@ export default function CreatorOverview({
               />
             )}
           </div>
-          <p className={clsx('text-xs text-text-secondary', 'mb-1')}>
-            asked{' '}
-            <SkeletonFallback isLoading={isLoading} inline width={60}>
-              {createDate ? formatDate(createDate) : '-'}
-            </SkeletonFallback>
-          </p>
+          {displayAskDate && (
+            <p className={clsx('text-xs text-text-secondary', 'mb-1')}>
+              asked{' '}
+              <SkeletonFallback isLoading={isLoading} inline width={60}>
+                {createDate ? formatDate(createDate) : '-'}
+              </SkeletonFallback>
+            </p>
+          )}
         </div>
       </div>
     </div>

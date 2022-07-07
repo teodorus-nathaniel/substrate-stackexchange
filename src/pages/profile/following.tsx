@@ -1,5 +1,5 @@
 import getCommonStaticProps from '#/lib/helpers/static-props'
-import FollowersPage from '#/modules/_profile/FollowersPage'
+import FollowingPage from '#/modules/_profile/FollowingPage'
 
 export const getStaticProps = getCommonStaticProps({ guard: { type: 'user' } })
-export default FollowersPage
+export default FollowingPage
