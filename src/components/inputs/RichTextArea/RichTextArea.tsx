@@ -1,5 +1,6 @@
 import { EditorType } from '#/declarations/slate'
 import { onChangeWrapper } from '#/lib/helpers/form'
+import useRerender from '#/lib/hooks/useRerender'
 import clsx from 'clsx'
 import { useEffect, useMemo, useRef } from 'react'
 import { createEditor, Descendant } from 'slate'
@@ -28,6 +29,7 @@ export interface RichTextAreaProps extends ParentProps {
   asReadOnlyContent?: {
     content?: string
   }
+  saveContent?: boolean
 }
 
 const getNodeFromString = (text: string): Descendant => ({
@@ -61,31 +63,43 @@ export default function RichTextArea({
   storagePrefix,
   onChange,
   asReadOnlyContent,
+  saveContent = false,
   ...props
 }: RichTextAreaProps) {
   const editorRef = useRef<EditorType | null>(null)
   if (!editorRef.current)
     editorRef.current = withHistory(withReact(createEditor()))
   const editor = editorRef.current
+  const rerender = useRerender()
 
+  const localValueRef = useRef('')
+  useEffect(() => {
+    if (asReadOnlyContent) return
+    const value = props.value as string
+    if (value !== localValueRef.current && editorRef.current) {
+      editorRef.current.children = value ? deserializeDraft(value) : ''
+      rerender()
+    }
+  }, [props.value, editor, rerender, asReadOnlyContent])
+
+  console.log(asReadOnlyContent)
   const [savedDraft, setDraft] = useTextAreaStorage({
     name: props.name,
     storagePrefix,
   })
   useEffect(() => {
-    if (savedDraft) {
+    if (savedDraft && saveContent) {
       onChangeWrapper(onChange, savedDraft, props.name)
       editor.children = deserializeDraft(savedDraft)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [savedDraft])
+  }, [savedDraft, saveContent])
 
   const parsedDefaultValue = useMemo(() => {
-    if (!asReadOnlyContent?.content) return undefined
     try {
-      return JSON.parse(asReadOnlyContent?.content)
+      return deserializeDraft(asReadOnlyContent?.content ?? '')
     } catch (e) {
-      return [getNodeFromString(asReadOnlyContent?.content)]
+      return [getNodeFromString(asReadOnlyContent?.content ?? '')]
     }
   }, [asReadOnlyContent?.content])
 
@@ -104,7 +118,10 @@ export default function RichTextArea({
             )
             if (isAstChange) {
               const content = serializeDraft(value)
-              setDraft(content)
+              if (saveContent) {
+                setDraft(content)
+              }
+              localValueRef.current = content
               // TODO: because this is still json stringify, the length will be more than the actual content
               onChangeWrapper(onChange, content, props.name)
             }
