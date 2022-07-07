@@ -82,7 +82,6 @@ export default function RichTextArea({
     }
   }, [props.value, editor, rerender, asReadOnlyContent])
 
-  console.log(asReadOnlyContent)
   const [savedDraft, setDraft] = useTextAreaStorage({
     name: props.name,
     storagePrefix,
