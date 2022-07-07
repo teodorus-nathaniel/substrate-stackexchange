@@ -83,6 +83,7 @@ export default function SpaceCreatorPage() {
         >
           <ImageCircleInput
             {...getFieldData('avatar')}
+            imageContainerClassName='mx-auto'
             value={undefined}
             onChange={(_, file) => {
               setFieldTouched('avatar')
