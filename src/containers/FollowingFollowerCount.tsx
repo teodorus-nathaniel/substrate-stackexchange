@@ -23,7 +23,8 @@ export default function FollowingFollowerCount({
     >
       <Link
         variant='primary'
-        className={clsx('text-sm', 'text-text-primary text-center')}
+        className={clsx('text-sm', '!text-text-primary text-center')}
+        href='/profile/followers'
       >
         <SkeletonFallback
           className={clsx('w-[3ch]')}
@@ -37,7 +38,8 @@ export default function FollowingFollowerCount({
       <span className='text-lg font-bold'> &middot; </span>
       <Link
         variant='primary'
-        className={clsx('text-sm', 'text-text-primary text-center')}
+        className={clsx('text-sm', '!text-text-primary text-center')}
+        href='/profile/following'
       >
         <SkeletonFallback
           className={clsx('w-[3ch]')}

@@ -2,7 +2,7 @@ import { SCREEN_HEIGHT_WITHOUT_NAVBAR } from '#/lib/constants/style'
 import clsx from 'clsx'
 
 const sizes = {
-  small: clsx('max-w-xs'),
+  small: clsx('max-w-[18rem]'),
   xs: clsx('max-w-[15rem]'),
 }
 
