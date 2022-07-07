@@ -3,7 +3,7 @@ import Link from '#/components/Link'
 import ReactionArrowIcon from '#/components/ReactionArrowIcon'
 import { formatDate } from '#/lib/helpers/date'
 import useUserReactionInteraction from '#/lib/hooks/subsocial/useUserReactionInteraction'
-import { useGetQuestion } from '#/services/subsocial/queries'
+import { useGetPost } from '#/services/subsocial/queries'
 import { PostWithSomeDetails } from '@subsocial/types/dto'
 import { truncateMiddle } from '@talisman-connect/ui'
 import clsx from 'clsx'
@@ -22,7 +22,7 @@ export default function Comment({
   shouldFetchComment,
   ...props
 }: CommentsProps) {
-  const { data: localComment } = useGetQuestion(
+  const { data: localComment } = useGetPost(
     { postId: commentId! },
     { enabled: shouldFetchComment && !!commentId }
   )

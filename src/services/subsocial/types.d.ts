@@ -28,7 +28,7 @@ export type GetReplyIdsByPostIdParam = {
 export type GetBatchReplyIdsByPostIdsParam = {
   postIds: string[]
 }
-export type GetQuestionParam = {
+export type GetPostParam = {
   postId: string
 }
 export type GetRepliesParam = {

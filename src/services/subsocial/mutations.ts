@@ -5,7 +5,7 @@ import { MutationConfig } from '../common/base'
 import { Transaction, useSubsocialMutation } from './base'
 import {
   invalidateGetAllQuestions,
-  invalidateGetQuestion,
+  invalidateGetPost,
   invalidateGetReactionByPostIdAndAccount,
   invalidateGetReplies,
   invalidateGetReplyIdsByPostId,
@@ -99,7 +99,7 @@ export function useUpsertReaction(
           postId: data.postId,
           address,
         })
-        invalidateGetQuestion({
+        invalidateGetPost({
           postId: data.postId,
         })
       },

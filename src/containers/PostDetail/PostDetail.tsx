@@ -8,7 +8,7 @@ import SkeletonFallback, {
 import { useFilterAnswersAndComments } from '#/lib/hooks/subsocial/useGetAnswersFromReplies'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
 import { useCreateReply } from '#/services/subsocial/mutations'
-import { useGetQuestion, useGetReplies } from '#/services/subsocial/queries'
+import { useGetPost, useGetReplies } from '#/services/subsocial/queries'
 import { PostWithSomeDetails } from '@subsocial/types/dto'
 import clsx from 'clsx'
 import { HTMLProps, useEffect, useState } from 'react'
@@ -41,7 +41,7 @@ export default function PostDetail({
     data: localPost,
     isLoading: localIsFetchingPost,
     isFetched,
-  } = useGetQuestion(
+  } = useGetPost(
     { postId: postId ?? '' },
     { enabled: !!postId && shouldFetchPost }
   )

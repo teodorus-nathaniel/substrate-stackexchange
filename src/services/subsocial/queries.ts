@@ -5,16 +5,16 @@ import { QueryConfig } from '../common/types'
 import {
   getAllQuestions,
   getBatchReactionsByPostIdsAndAccount,
+  getPost,
   getProfile,
-  getQuestion,
   getReactionByPostIdAndAccount,
   getReplies,
   getReplyIdsByPostId,
 } from './api'
 import { useSubsocialQuery } from './base'
 import {
+  GetPostParam,
   GetProfileParam,
-  GetQuestionParam,
   GetReactionByPostIdAndAccountParam,
   GetRepliesParam,
   GetReplyIdsByPostIdParam,
@@ -89,11 +89,11 @@ export function useGetReplyIdsByPostId(
   )
 }
 
-export const getQuestionKey = 'getQuestion'
-export const invalidateGetQuestion =
-  createQueryInvalidation<GetQuestionParam>(getQuestionKey)
-export function useGetQuestion(data: GetQuestionParam, config?: QueryConfig) {
-  return useSubsocialQuery({ data, key: getQuestionKey }, getQuestion, config)
+export const getPostKey = 'getPost'
+export const invalidateGetPost =
+  createQueryInvalidation<GetPostParam>(getPostKey)
+export function useGetPost(data: GetPostParam, config?: QueryConfig) {
+  return useSubsocialQuery({ data, key: getPostKey }, getPost, config)
 }
 
 export const getRepliesKey = 'getReplies'
@@ -108,7 +108,7 @@ export function useGetReplies(
     async (queryData) => {
       const replies = await getReplies(queryData)
       const promises = replies.map((reply) =>
-        queryClient.setQueryData([getQuestionKey, { postId: reply.id }], reply)
+        queryClient.setQueryData([getPostKey, { postId: reply.id }], reply)
       )
       return Promise.all(promises)
     },

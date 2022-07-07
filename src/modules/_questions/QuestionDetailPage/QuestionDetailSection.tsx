@@ -5,7 +5,7 @@ import TransactionModal from '#/containers/TransactionModal'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
 import { useResetForm } from '#/lib/hooks/useResetForm'
 import { useCreateReply } from '#/services/subsocial/mutations'
-import { useGetQuestion, useGetReplies } from '#/services/subsocial/queries'
+import { useGetPost, useGetReplies } from '#/services/subsocial/queries'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
@@ -17,11 +17,7 @@ const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'))
 export default function QuestionDetailSection() {
   const { query } = useRouter()
   const id = (query['id'] ?? '') as string
-  const {
-    data: question,
-    isLoading,
-    isFetched,
-  } = useGetQuestion({ postId: id })
+  const { data: question, isLoading, isFetched } = useGetPost({ postId: id })
   const { loadingChecker } = useIntegratedSkeleton(isLoading, isFetched)
 
   const {

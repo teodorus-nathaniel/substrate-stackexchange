@@ -5,8 +5,8 @@ import { idToBn } from '@subsocial/utils'
 import {
   GetBatchReactionsByPostIdsAndAccountParam,
   GetBatchReplyIdsByPostIdsParam,
+  GetPostParam,
   GetProfileParam,
-  GetQuestionParam,
   GetReactionByPostIdAndAccountParam,
   GetRepliesParam,
   GetReplyIdsByPostIdParam,
@@ -81,11 +81,11 @@ export async function getBatchReplyIdsByPostIds({
   return Promise.all(promises)
 }
 
-export async function getQuestion({
+export async function getPost({
   additionalData: api,
   params,
 }: {
-  params: GetQuestionParam
+  params: GetPostParam
   additionalData: FlatSubsocialApi
 }) {
   return api.findPostWithSomeDetails({ id: params.postId as any })
