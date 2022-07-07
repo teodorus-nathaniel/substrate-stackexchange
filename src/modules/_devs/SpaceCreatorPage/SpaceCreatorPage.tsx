@@ -57,8 +57,8 @@ export default function SpaceCreatorPage() {
         handleClose={() => setIsOpenModal(false)}
         hash={data?.toString()}
       />
-      <h1 className={clsx('text-2xl')}>Welcome Developer!</h1>
-      <p className={clsx('pt-2')}>
+      <h1 className={clsx('text-2xl', 'text-center')}>Welcome Developer!</h1>
+      <p className={clsx('pt-2', 'text-center')}>
         This page will help you create a <strong>space</strong> in subsocial
         easily!
       </p>
