@@ -70,6 +70,7 @@ export default function AskForm() {
         helperText='Include all the information someone would need to answer your question'
         helperTextClassName={clsx('text-xs')}
         storagePrefix='ask'
+        saveContent
         {...getFieldData('body')}
       />
       <Select
