@@ -4,6 +4,7 @@ import Link, { LinkProps } from '#/components/Link'
 import SkeletonFallback from '#/components/SkeletonFallback'
 import { DEFAULT_PROFILE_PIC } from '#/lib/constants/file'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
+import useIsCurrentUser from '#/lib/hooks/isCurrentUser'
 import { useGetProfile } from '#/services/subsocial/queries'
 import { ProfileData } from '@subsocial/types/dto'
 import { truncateMiddle } from '@talisman-connect/ui'
@@ -28,11 +29,13 @@ export default function UserProfileLink({
   const usedProfile = profile || localProfile
   const usedIsLoading = isLoading || localIsLoading
 
+  const isCurrentUser = useIsCurrentUser(profileId)
+
   return (
     <Link
       variant='primary'
       className={clsx('flex items-center', className)}
-      href={`/profile/${profileId}`}
+      href={`/profile/${isCurrentUser ? '' : profileId}`}
       {...props}
     >
       <div className={clsx('w-5 h-5', 'mr-2', 'relative top-px')}>
@@ -58,7 +61,9 @@ export default function UserProfileLink({
       </div>
       <SkeletonFallback isLoading={usedIsLoading} width={75}>
         <p className='font-bold'>
-          {usedProfile?.content?.name ?? truncateMiddle(profileId)}
+          {isCurrentUser
+            ? 'You'
+            : usedProfile?.content?.name ?? truncateMiddle(profileId)}
         </p>
       </SkeletonFallback>
     </Link>

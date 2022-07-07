@@ -8,6 +8,7 @@ import TippingButton from '#/containers/TippingButton'
 import { useWalletContext } from '#/contexts/WalletContext'
 import { encodeAddress } from '#/lib/helpers/chain'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
+import useIsCurrentUser from '#/lib/hooks/isCurrentUser'
 import useLogout from '#/lib/hooks/useLogout'
 import { useGetProfile } from '#/services/subsocial/queries'
 import clsx from 'clsx'
@@ -35,7 +36,8 @@ export default function ProfileSection() {
     isFetched
   )
 
-  const isCurrentUser = !id || id === encodeAddress(wallet?.address)
+  const isCurrentUser = useIsCurrentUser(id)
+  const displayCurrentUserProfile = !id || isCurrentUser
 
   return (
     <div className={clsx('flex flex-col')}>
@@ -47,7 +49,7 @@ export default function ProfileSection() {
         />
         <div className={clsx('mt-3')}>
           <div className={clsx('flex items-center', 'space-x-3')}>
-            {isCurrentUser ? (
+            {displayCurrentUserProfile ? (
               <>
                 <Link href='/profile/edit'>
                   <Button

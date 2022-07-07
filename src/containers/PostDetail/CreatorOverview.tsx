@@ -5,6 +5,7 @@ import SkeletonFallback, {
 } from '#/components/SkeletonFallback'
 import { formatDate } from '#/lib/helpers/date'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
+import useIsCurrentUser from '#/lib/hooks/isCurrentUser'
 import { useGetProfile } from '#/services/subsocial/queries'
 import { ProfileData } from '@subsocial/types/dto'
 import { truncateMiddle } from '@talisman-connect/ui'
@@ -41,6 +42,8 @@ export default function CreatorOverview({
   )
   const usedCreator = creator ?? localCreator
 
+  const isCurrentUser = useIsCurrentUser(creatorId)
+
   return (
     <div
       className={clsx('bg-bg-100', 'py-2 px-3 rounded-md', className)}
@@ -63,13 +66,16 @@ export default function CreatorOverview({
               'flex justify-between items-center'
             )}
           >
-            <Link variant='primary' href={`/profile/${creatorId}`}>
+            <Link
+              variant='primary'
+              href={`/profile/${isCurrentUser ? '' : creatorId}`}
+            >
               <IntegratedSkeleton
-                content={usedCreator?.content?.name}
+                content={isCurrentUser ? 'You' : usedCreator?.content?.name}
                 defaultContent={truncateMiddle(creatorId)}
                 width={100}
               >
-                {(name) => name}
+                {(name) => (isCurrentUser ? 'You' : name)}
               </IntegratedSkeleton>
             </Link>
             {creatorId && (
