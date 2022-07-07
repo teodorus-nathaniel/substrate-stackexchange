@@ -133,6 +133,8 @@ export default function RichTextArea({
             className={clsx(
               !startOneLine && !asReadOnlyContent && 'min-h-[8em]',
               !asReadOnlyContent && classNames,
+              props.disabled &&
+                '!brightness-75 !cursor-not-allowed !ring-0 !ring-offset-0',
               props.className
             )}
             id={id}

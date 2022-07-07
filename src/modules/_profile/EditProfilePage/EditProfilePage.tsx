@@ -2,6 +2,7 @@ import Button from '#/components/Button'
 import Card from '#/components/Card'
 import ImageCircleInput from '#/components/inputs/ImageCircleInput'
 import TextField from '#/components/inputs/TextField'
+import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
 import TransactionModal from '#/containers/TransactionModal'
 import { useWalletContext } from '#/contexts/WalletContext'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
@@ -11,7 +12,7 @@ import { useUpdateProfile } from '#/services/subsocial/mutations'
 import { useGetProfile } from '#/services/subsocial/queries'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { editProfileForm } from './form/schema'
 
 const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
@@ -29,7 +30,12 @@ export default function EditProfilePage() {
   const [isOpenModal, setIsOpenModal] = useState(false)
 
   const [wallet] = useWalletContext()
-  const { data: profile } = useGetProfile({ address: wallet?.address })
+  const {
+    data: profile,
+    isLoading: isLoadingProfile,
+    isFetched,
+  } = useGetProfile({ address: wallet?.address })
+  const { loadingChecker } = useIntegratedSkeleton(isLoadingProfile, isFetched)
 
   const [formError, setFormError] = useState('')
   const {
@@ -57,7 +63,7 @@ export default function EditProfilePage() {
     },
   })
 
-  useEffect(() => {
+  const reloadFormFromProfile = useCallback(() => {
     if (!profile) return
     setValues({
       name: profile.content?.name ?? '',
@@ -65,6 +71,10 @@ export default function EditProfilePage() {
       avatar: profile.content?.avatar ?? '',
     })
   }, [profile, setValues])
+
+  useEffect(() => {
+    reloadFormFromProfile()
+  }, [reloadFormFromProfile])
 
   const storagePrefix = 'edit-profile'
   const { key, resetFormData } = useResetForm({
@@ -74,17 +84,20 @@ export default function EditProfilePage() {
   })
   const {
     mutate: updateProfile,
-    isLoading,
+    isLoading: isLoadingUpdate,
     data,
     error,
   } = useUpdateProfile({
     onSuccess: resetFormData,
   })
 
+  const loadingProfileOrUpdating =
+    isLoadingUpdate || loadingChecker(isLoadingProfile)
+
   return (
     <div className={clsx('flex flex-col', 'w-full max-w-lg', 'mx-auto')}>
       <TransactionModal
-        isLoading={isLoading}
+        isLoading={isLoadingUpdate}
         errorMsg={error?.message ?? ''}
         action='Creating Subsocial Space'
         isOpen={isOpenModal}
@@ -114,16 +127,22 @@ export default function EditProfilePage() {
               setFieldTouched('avatar')
               setFieldValue('avatar', file)
             }}
+            disabled={loadingProfileOrUpdating}
             helperText='Image should be less than 2MB'
             helperTextClassName={clsx('text-xs')}
           />
-          <TextField {...getFieldData('name')} label='Name' />
+          <TextField
+            {...getFieldData('name')}
+            label='Name'
+            disabled={loadingProfileOrUpdating}
+          />
           <RichTextArea
             {...getFieldData('about')}
             className={clsx('!min-h-[6em]')}
             key={key}
             storagePrefix='create-space'
             label='About'
+            disabled={loadingProfileOrUpdating}
           />
           <p className='!mt-6'>
             {formError && (
@@ -133,10 +152,20 @@ export default function EditProfilePage() {
             )}
           </p>
           <div className={clsx('!mt-4', 'flex items-center', 'space-x-4')}>
-            <Button loading={isLoading} type='submit'>
+            <Button
+              loading={isLoadingUpdate}
+              type='submit'
+              disabled={loadingProfileOrUpdating}
+            >
               Update Profile
             </Button>
-            <Button type='button' loading={isLoading} variant='outlined-red'>
+            <Button
+              disabled={loadingProfileOrUpdating}
+              onClick={reloadFormFromProfile}
+              type='button'
+              loading={isLoadingUpdate}
+              variant='outlined-red'
+            >
               Discard Changes
             </Button>
           </div>

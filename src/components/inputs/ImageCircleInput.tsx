@@ -53,10 +53,12 @@ export default function ImageCircleInput({
         <Button
           className={clsx(
             'bg-bg-200',
+            props.disabled && 'brightness-75 cursor-not-allowed',
             'w-32 h-32',
             'relative group mx-auto',
             imageContainerClassName
           )}
+          noClickEffect={props.disabled}
           rounded
           type='button'
           onClick={() => inputRef.current?.click()}
