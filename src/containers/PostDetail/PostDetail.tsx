@@ -1,5 +1,4 @@
 import Button from '#/components/Button'
-import RichTextArea from '#/components/inputs/RichTextArea'
 import TextArea from '#/components/inputs/TextArea'
 import Link from '#/components/Link'
 import SkeletonFallback, {
@@ -11,12 +10,17 @@ import { useCreateReply } from '#/services/subsocial/mutations'
 import { useGetPost, useGetReplies } from '#/services/subsocial/queries'
 import { PostWithSomeDetails } from '@subsocial/types/dto'
 import clsx from 'clsx'
+import dynamic from 'next/dynamic'
 import { HTMLProps, useEffect, useState } from 'react'
 import ReactionButtons from '../ReactionButtons'
 import TagList from '../TagList'
 import Comment from './Comment'
 import CreatorOverview from './CreatorOverview'
 import { createCommentForm } from './form/schema'
+
+const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
+  ssr: false,
+})
 
 export interface PostDetailProps extends HTMLProps<HTMLDivElement> {
   post?: PostWithSomeDetails

@@ -10,6 +10,11 @@ import useLogout from '#/lib/hooks/useLogout'
 import { useGetCurrentUser } from '#/services/subsocial/queries'
 import { WalletAccount } from '@talisman-connect/wallets'
 import clsx from 'clsx'
+import dynamic from 'next/dynamic'
+
+const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
+  ssr: false,
+})
 
 export interface WalletProfileProps extends ButtonProps {
   wallet: WalletAccount
@@ -87,7 +92,14 @@ export default function WalletProfile({
         </div>
         <div className='flex flex-col mt-3'>
           <p className='text-text-secondary text-xs'>
-            <IntegratedSkeleton content={content?.summary} />
+            <IntegratedSkeleton content={content?.about}>
+              {(about) => (
+                <RichTextArea
+                  asReadOnlyContent={{ content: about }}
+                  name='about'
+                />
+              )}
+            </IntegratedSkeleton>
           </p>
         </div>
         <Link href='/profile'>
