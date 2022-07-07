@@ -1,5 +1,6 @@
 import AddressCopy from '#/components/AddressCopy'
 import Button from '#/components/Button'
+import Link from '#/components/Link'
 import ProfileImage from '#/components/ProfileImage'
 import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
 import FollowingFollowerCount from '#/containers/FollowingFollowerCount'
@@ -10,8 +11,13 @@ import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
 import useLogout from '#/lib/hooks/useLogout'
 import { useGetProfile } from '#/services/subsocial/queries'
 import clsx from 'clsx'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { BsBoxArrowInRight, BsPencil } from 'react-icons/bs'
+
+const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
+  ssr: false,
+})
 
 export default function ProfileSection() {
   const [wallet] = useWalletContext()
@@ -43,14 +49,16 @@ export default function ProfileSection() {
           <div className={clsx('flex items-center', 'space-x-3')}>
             {isCurrentUser ? (
               <>
-                <Button
-                  variant='unstyled-border'
-                  className={clsx('text-blue-400')}
-                  size='icon-medium'
-                  rounded
-                >
-                  <BsPencil />
-                </Button>
+                <Link href='/profile/edit'>
+                  <Button
+                    variant='unstyled-border'
+                    className={clsx('text-blue-400')}
+                    size='icon-medium'
+                    rounded
+                  >
+                    <BsPencil />
+                  </Button>
+                </Link>
                 <Button
                   variant='unstyled-border'
                   className={clsx('text-red-500')}
@@ -94,10 +102,10 @@ export default function ProfileSection() {
         followerCount={data?.struct.followersCount}
         className={clsx('mt-2')}
       />
-      <IntegratedSkeleton className={clsx('mt-6')} content={content?.summary}>
-        {(summary) => (
+      <IntegratedSkeleton className={clsx('mt-6')} content={content?.about}>
+        {(about) => (
           <div className={clsx('text-text-secondary text-sm', 'mt-6')}>
-            {summary}
+            <RichTextArea name='about' asReadOnlyContent={{ content: about }} />
           </div>
         )}
       </IntegratedSkeleton>
