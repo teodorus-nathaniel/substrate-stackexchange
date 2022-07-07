@@ -48,7 +48,7 @@ export default function SpaceCreatorPage() {
   })
 
   return (
-    <div className={clsx('flex flex-col', 'w-full max-w-screen-sm', 'mx-auto')}>
+    <div className={clsx('flex flex-col', 'w-full max-w-lg', 'mx-auto')}>
       <TransactionModal
         isLoading={isLoading}
         errorMsg={error?.message ?? ''}
@@ -65,7 +65,7 @@ export default function SpaceCreatorPage() {
       <Card
         className={clsx(
           'bg-bg-100',
-          'px-6 pt-6 pb-12 mt-8',
+          'px-8 pt-8 pb-12 mt-8',
           'flex flex-col items-center'
         )}
       >
