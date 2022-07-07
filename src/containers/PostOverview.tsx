@@ -1,4 +1,3 @@
-import RichTextArea from '#/components/inputs/RichTextArea'
 import Link from '#/components/Link'
 import SkeletonFallback from '#/components/SkeletonFallback'
 import { getRelativeDateFromNow } from '#/lib/helpers/date'
@@ -6,11 +5,15 @@ import { useFilterAnswersAndComments } from '#/lib/hooks/subsocial/useGetAnswers
 import { useGetReplies } from '#/services/subsocial/queries'
 import { PostData } from '@subsocial/types/dto'
 import clsx from 'clsx'
+import dynamic from 'next/dynamic'
 import { HTMLProps } from 'react'
 import ReactionButtons from './ReactionButtons'
 import TagList from './TagList'
 import UserProfileLink from './UserProfileLink'
 
+const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
+  ssr: false,
+})
 export interface PostProps extends HTMLProps<HTMLDivElement> {
   post?: PostData
   isLoading?: boolean
