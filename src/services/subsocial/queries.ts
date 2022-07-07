@@ -92,8 +92,8 @@ export function useGetReplyIdsByPostId(
 export const getQuestionKey = 'getQuestion'
 export const invalidateGetQuestion =
   createQueryInvalidation<GetQuestionParam>(getQuestionKey)
-export function useGetQuestion(data: GetQuestionParam) {
-  return useSubsocialQuery({ data, key: getQuestionKey }, getQuestion)
+export function useGetQuestion(data: GetQuestionParam, config?: QueryConfig) {
+  return useSubsocialQuery({ data, key: getQuestionKey }, getQuestion, config)
 }
 
 export const getRepliesKey = 'getReplies'
@@ -105,7 +105,13 @@ export function useGetReplies(
 ) {
   return useSubsocialQuery(
     { data: { postId: data.postId ?? '' }, key: getRepliesKey },
-    getReplies,
+    async (queryData) => {
+      const replies = await getReplies(queryData)
+      const promises = replies.map((reply) =>
+        queryClient.setQueryData([getQuestionKey, { postId: reply.id }], reply)
+      )
+      return Promise.all(promises)
+    },
     config,
     { enabled: !!data.postId }
   )

@@ -8,7 +8,7 @@ import SkeletonFallback, {
 import { useFilterAnswersAndComments } from '#/lib/hooks/subsocial/useGetAnswersFromReplies'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
 import { useCreateReply } from '#/services/subsocial/mutations'
-import { useGetReplies } from '#/services/subsocial/queries'
+import { useGetQuestion, useGetReplies } from '#/services/subsocial/queries'
 import { PostWithSomeDetails } from '@subsocial/types/dto'
 import clsx from 'clsx'
 import { HTMLProps, useEffect, useState } from 'react'
@@ -20,6 +20,8 @@ import { createCommentForm } from './form/schema'
 
 export interface PostDetailProps extends HTMLProps<HTMLDivElement> {
   post?: PostWithSomeDetails
+  postId?: string
+  shouldFetchPost?: boolean
   isLoading?: boolean
   withBorderBottom?: boolean
 }
@@ -28,14 +30,27 @@ const REACTION_WIDTH = 50
 
 export default function PostDetail({
   post,
+  postId,
+  shouldFetchPost = false,
   className,
   withBorderBottom,
   isLoading,
   ...props
 }: PostDetailProps) {
+  const {
+    data: localPost,
+    isLoading: localIsFetchingPost,
+    isFetched,
+  } = useGetQuestion(
+    { postId: postId ?? '' },
+    { enabled: !!postId && shouldFetchPost }
+  )
   const { data: replies } = useGetReplies({ postId: post?.id })
 
-  const { IntegratedSkeleton } = useIntegratedSkeleton(isLoading ?? false)
+  const { IntegratedSkeleton } = useIntegratedSkeleton(
+    isLoading || localIsFetchingPost,
+    shouldFetchPost ? isFetched : true
+  )
   const [openCommentBox, setOpenCommentBox] = useState(false)
   const { getFieldData, handleSubmit, resetForm } = useFormikWrapper({
     ...createCommentForm,
@@ -60,6 +75,7 @@ export default function PostDetail({
   })
 
   const { comments } = useFilterAnswersAndComments(replies)
+  const usedPost = localPost ?? post
 
   return (
     <div
@@ -76,9 +92,9 @@ export default function PostDetail({
           style={{ width: REACTION_WIDTH }}
         >
           <ReactionButtons
-            upVoteCount={post?.post?.struct?.upvotesCount}
-            downVoteCount={post?.post?.struct?.downvotesCount}
-            postId={post?.id}
+            upVoteCount={usedPost?.post?.struct?.upvotesCount}
+            downVoteCount={usedPost?.post?.struct?.downvotesCount}
+            postId={usedPost?.id}
             isLoading={isLoading}
           />
         </div>
@@ -104,14 +120,14 @@ export default function PostDetail({
           </div>
           <div className={clsx('flex justify-between items-end', 'mt-auto')}>
             <TagList
-              tags={post?.post?.content?.tags ?? []}
+              tags={usedPost?.post?.content?.tags ?? []}
               isLoading={isLoading}
             />
             <CreatorOverview
               isLoading={isLoading}
-              createDate={post?.post?.struct?.createdAtTime}
-              creator={post?.owner}
-              creatorId={post?.post.struct.createdByAccount}
+              createDate={usedPost?.post?.struct?.createdAtTime}
+              creator={usedPost?.owner}
+              creatorId={usedPost?.post.struct.createdByAccount}
             />
           </div>
         </div>
@@ -130,6 +146,8 @@ export default function PostDetail({
                 className={clsx('text-sm')}
                 key={comment.id}
                 comment={comment}
+                commentId={comment.id}
+                shouldFetchComment
               />
             ))}
           </div>

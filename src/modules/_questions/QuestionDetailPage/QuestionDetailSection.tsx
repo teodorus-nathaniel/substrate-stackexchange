@@ -69,6 +69,8 @@ export default function QuestionDetailSection() {
         action='Submitting answer'
       />
       <PostDetail
+        shouldFetchPost
+        postId={id}
         post={question}
         withBorderBottom
         isLoading={loadingChecker(question)}
@@ -79,6 +81,8 @@ export default function QuestionDetailSection() {
         </p>
         {answers?.map((reply) => (
           <PostDetail
+            shouldFetchPost
+            postId={reply?.id}
             key={reply.id}
             post={reply}
             withBorderBottom
