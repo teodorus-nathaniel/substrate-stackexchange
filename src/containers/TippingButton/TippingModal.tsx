@@ -44,8 +44,8 @@ export default function TippingModal({
     values,
     handleSubmit,
     setFieldError,
-    resetForm,
     setFieldValue,
+    setFieldTouched,
   } = useFormikWrapper({
     ...tippingForm,
     onSubmit: ({ amount, network }) => {
@@ -66,7 +66,10 @@ export default function TippingModal({
     network: values.network?.value as TokenTickers | undefined,
   })
   const { mutate: tip } = useTransfer({
-    onSuccess: () => resetForm(),
+    onSuccess: () => {
+      setFieldValue('amount', 0)
+      setFieldTouched('amount', false)
+    },
   })
 
   const profileName = profile?.content?.name
