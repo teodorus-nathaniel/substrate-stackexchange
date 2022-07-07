@@ -6,6 +6,7 @@ import { Transaction, useSubsocialMutation } from './base'
 import {
   invalidateGetAllQuestions,
   invalidateGetPost,
+  invalidateGetProfile,
   invalidateGetReactionByPostIdAndAccount,
   invalidateGetReplies,
   invalidateGetReplyIdsByPostId,
@@ -14,6 +15,7 @@ import {
   CreateAnswerPayload,
   CreateQuestionPayload,
   CreateSpacePayload,
+  UpdateProfilePayload,
   UpsertReactionPayload,
 } from './types'
 
@@ -59,6 +61,42 @@ export function useCreatePost(config?: MutationConfig<CreateQuestionPayload>) {
     {
       onTxSuccess: () => {
         invalidateGetAllQuestions()
+      },
+    }
+  )
+}
+
+export function useUpdateProfile(
+  config?: MutationConfig<UpdateProfilePayload>
+) {
+  return useSubsocialMutation(
+    async (data, { ipfsApi, substrateApi }) => {
+      const { about, avatar, name, profileId } = data
+      let avatarCid = undefined
+      if (typeof avatar === 'object') {
+        avatarCid = await ipfsApi.saveFile(avatar)
+      } else if (typeof avatar === 'string') {
+        avatarCid = avatar
+      }
+      const profileCid = await ipfsApi.savePost({
+        avatar: avatarCid,
+        name,
+        about,
+      } as any)
+      let tx
+      if (profileId) {
+        tx = substrateApi.tx.profiles.updateProfile({
+          content: IpfsContent(profileCid),
+        })
+      } else {
+        tx = substrateApi.tx.profiles.createProfile(IpfsContent(profileCid))
+      }
+      return { tx: tx as unknown as Transaction, summary: `Creating Post` }
+    },
+    config,
+    {
+      onTxSuccess: (_, address) => {
+        invalidateGetProfile({ address })
       },
     }
   )

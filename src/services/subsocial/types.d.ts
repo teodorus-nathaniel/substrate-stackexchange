@@ -46,6 +46,12 @@ export type CreateQuestionPayload = {
   body: string
   tags: string[]
 }
+export type UpdateProfilePayload = {
+  profileId?: string
+  name?: string
+  about?: string
+  avatar?: File | string
+}
 export type CreateSpacePayload = {
   name: string
   desc?: string
