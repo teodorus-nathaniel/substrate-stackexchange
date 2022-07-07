@@ -4,6 +4,7 @@ import { useId } from 'react'
 
 export interface RequiredFieldWrapperProps {
   containerClassName?: string
+  inputParentClassName?: string
   fullWidth?: boolean
 
   label?: string
@@ -26,6 +27,7 @@ export interface FieldWrapperProps extends RequiredFieldWrapperProps {
 
 export default function FieldWrapper({
   containerClassName,
+  inputParentClassName,
   label,
   labelClassName,
   helperText,
@@ -93,7 +95,9 @@ export default function FieldWrapper({
           </p>
         </div>
       )}
-      <div className='relative w-full flex flex-col'>
+      <div
+        className={clsx('relative w-full flex flex-col', inputParentClassName)}
+      >
         {children(usedId, inputClassNames)}
         {rightElement && rightElement(rightElementClassNames)}
       </div>
