@@ -2,6 +2,7 @@ import {
   decodeAddress,
   encodeAddress as encodePolkadotAddress,
 } from '@polkadot/keyring'
+import { hexToU8a, isHex } from '@polkadot/util'
 import { getAddressPrefix } from './env'
 
 export function encodeAddress(address: string | undefined) {
@@ -11,6 +12,17 @@ export function encodeAddress(address: string | undefined) {
 
 export function getBlockExplorerBlockInfoLink(rpc: string, blockHash: string) {
   return `https://polkadot.js.org/apps/?${rpc}#/explorer/query/${blockHash}`
+}
+
+export function isValidAddress(address: string) {
+  try {
+    encodePolkadotAddress(
+      isHex(address) ? hexToU8a(address) : decodeAddress(address)
+    )
+    return true
+  } catch (error) {
+    return false
+  }
 }
 
 export function formatBalance(value: string | number) {
