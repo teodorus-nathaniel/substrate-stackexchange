@@ -37,7 +37,6 @@ export default function ReactionButtons({
 
   const combinedIsLoading = isLoading || localIsLoading
   const buttonClassNames = clsx('flex space-x-2 items-center', 'text-xl')
-  console.log(localIsLoading)
 
   return (
     <>

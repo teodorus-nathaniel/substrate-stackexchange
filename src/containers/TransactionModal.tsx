@@ -103,7 +103,6 @@ function ErrorModalContent({ errorMsg }: { errorMsg: string }) {
 }
 
 function SuccesssModalContent({ hash }: { hash: string | undefined }) {
-  console.log(hash)
   return (
     <motion.div
       exit={exitAnimation}
