@@ -50,7 +50,11 @@ export default function QuestionDetailSection() {
     ...getFieldData('body'),
     storagePrefix,
   })
-  const { mutate: createAnswer, isLoading: creatingAnswer } = useCreateReply({
+  const {
+    mutate: createAnswer,
+    isLoading: creatingAnswer,
+    error: errorCreatingAnswer,
+  } = useCreateReply({
     onSuccess: resetFormData,
   })
 
@@ -65,6 +69,7 @@ export default function QuestionDetailSection() {
         isOpen={isOpenTxModal}
         handleClose={() => setIsOpenTxModal(false)}
         action='Submitting answer'
+        errorMsg={errorCreatingAnswer?.message}
       />
       <PostDetail
         shouldFetchPost

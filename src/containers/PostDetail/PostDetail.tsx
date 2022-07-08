@@ -14,6 +14,7 @@ import dynamic from 'next/dynamic'
 import { HTMLProps, useEffect, useState } from 'react'
 import ReactionButtons from '../ReactionButtons'
 import TagList from '../TagList'
+import TransactionModal from '../TransactionModal'
 import Comment from './Comment'
 import CreatorOverview from './CreatorOverview'
 import { createCommentForm } from './form/schema'
@@ -60,6 +61,7 @@ export default function PostDetail({
     ...createCommentForm,
     onSubmit: (values) => {
       if (!post?.id) return
+      setOpenModal(true)
       createReply({
         body: values.body ?? '',
         rootPostId: post.id,
@@ -71,7 +73,12 @@ export default function PostDetail({
     if (!openCommentBox) resetForm()
   }, [openCommentBox, resetForm])
 
-  const { mutate: createReply } = useCreateReply({
+  const [openModal, setOpenModal] = useState(false)
+  const {
+    mutate: createReply,
+    isLoading: loadingCreatingReply,
+    error: errorCreatingReply,
+  } = useCreateReply({
     onSuccess: () => {
       resetForm()
       setOpenCommentBox(false)
@@ -82,112 +89,124 @@ export default function PostDetail({
   const usedPost = localPost ?? post
 
   return (
-    <div
-      className={clsx(
-        'flex flex-col',
-        withBorderBottom && 'border-b-2 border-bg-200 pb-4',
-        className
-      )}
-      {...props}
-    >
-      <div className={clsx('flex', 'w-full')}>
-        <div
-          className={clsx('flex flex-col items-start', 'flex-shrink-0')}
-          style={{ width: REACTION_WIDTH }}
-        >
-          <ReactionButtons
-            upVoteCount={usedPost?.post?.struct?.upvotesCount}
-            downVoteCount={usedPost?.post?.struct?.downvotesCount}
-            postId={usedPost?.id}
-            isLoading={isLoading}
-          />
-        </div>
-        <div className={clsx('flex flex-col', 'flex-1')}>
-          <div className={clsx('text-xl')}>
-            <IntegratedSkeleton
-              isLoading={isLoading}
-              content={post?.post?.content?.title}
-            >
-              {(title) => <p className={clsx('mb-6')}>{title}</p>}
-            </IntegratedSkeleton>
-          </div>
-          <div className={clsx('mb-4')}>
-            <IntegratedSkeleton height={50} content={post?.post?.content?.body}>
-              {(body) => (
-                <RichTextArea
-                  containerClassName={clsx('text-sm')}
-                  asReadOnlyContent={{ content: body }}
-                  name='body'
-                />
-              )}
-            </IntegratedSkeleton>
-          </div>
-          <div className={clsx('flex justify-between items-end', 'mt-auto')}>
-            <TagList
-              tags={usedPost?.post?.content?.tags ?? []}
-              isLoading={isLoading}
-            />
-            <CreatorOverview
-              displayAskDate
-              isLoading={isLoading}
-              createDate={usedPost?.post?.struct?.createdAtTime}
-              creator={usedPost?.owner}
-              creatorId={usedPost?.post.struct.createdByAccount}
-            />
-          </div>
-        </div>
-      </div>
-      {comments.length > 0 && (
-        <div
-          className={clsx(
-            'border-t-2 border-dashed border-bg-200',
-            'pt-4 mt-8'
-          )}
-          style={{ marginLeft: REACTION_WIDTH }}
-        >
-          <div className={clsx('flex flex-col', 'space-y-4')}>
-            {comments.map((comment) => (
-              <Comment
-                className={clsx('text-sm')}
-                key={comment.id}
-                comment={comment}
-                commentId={comment.id}
-                shouldFetchComment
-              />
-            ))}
-          </div>
-        </div>
-      )}
+    <>
+      <TransactionModal
+        isOpen={openModal}
+        handleClose={() => setOpenModal(false)}
+        isLoading={loadingCreatingReply}
+        action='Posting your reply'
+        errorMsg={errorCreatingReply?.message}
+      />
       <div
-        style={{ marginLeft: REACTION_WIDTH }}
-        className={clsx('text-sm', 'mt-4')}
+        className={clsx(
+          'flex flex-col',
+          withBorderBottom && 'border-b-2 border-bg-200 pb-4',
+          className
+        )}
+        {...props}
       >
-        <SkeletonFallback isLoading={isLoading} width={100}>
-          {openCommentBox ? (
-            <form className={clsx('flex flex-col')} onSubmit={handleSubmit}>
-              <TextArea placeholder='Comment...' {...getFieldData('body')} />
-              <div className={clsx('flex', 'mt-3 space-x-2')}>
-                <Button size='small' variant='outlined-brand'>
-                  Submit
-                </Button>
-                <Button
-                  size='small'
-                  variant='unstyled'
-                  type='button'
-                  onClick={() => setOpenCommentBox(false)}
-                  className={clsx('text-text-secondary')}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          ) : (
-            <Link variant='primary' onClick={() => setOpenCommentBox(true)}>
-              Add a comment
-            </Link>
-          )}
-        </SkeletonFallback>
+        <div className={clsx('flex', 'w-full')}>
+          <div
+            className={clsx('flex flex-col items-start', 'flex-shrink-0')}
+            style={{ width: REACTION_WIDTH }}
+          >
+            <ReactionButtons
+              upVoteCount={usedPost?.post?.struct?.upvotesCount}
+              downVoteCount={usedPost?.post?.struct?.downvotesCount}
+              postId={usedPost?.id}
+              isLoading={isLoading}
+            />
+          </div>
+          <div className={clsx('flex flex-col', 'flex-1')}>
+            <div className={clsx('text-xl')}>
+              <IntegratedSkeleton
+                isLoading={isLoading}
+                content={post?.post?.content?.title}
+              >
+                {(title) => <p className={clsx('mb-6')}>{title}</p>}
+              </IntegratedSkeleton>
+            </div>
+            <div className={clsx('mb-4')}>
+              <IntegratedSkeleton
+                height={50}
+                content={post?.post?.content?.body}
+              >
+                {(body) => (
+                  <RichTextArea
+                    containerClassName={clsx('text-sm')}
+                    asReadOnlyContent={{ content: body }}
+                    name='body'
+                  />
+                )}
+              </IntegratedSkeleton>
+            </div>
+            <div className={clsx('flex justify-between items-end', 'mt-auto')}>
+              <TagList
+                tags={usedPost?.post?.content?.tags ?? []}
+                isLoading={isLoading}
+              />
+              <CreatorOverview
+                displayAskDate
+                isLoading={isLoading}
+                createDate={usedPost?.post?.struct?.createdAtTime}
+                creator={usedPost?.owner}
+                creatorId={usedPost?.post.struct.createdByAccount}
+              />
+            </div>
+          </div>
+        </div>
+        {comments.length > 0 && (
+          <div
+            className={clsx(
+              'border-t-2 border-dashed border-bg-200',
+              'pt-4 mt-8'
+            )}
+            style={{ marginLeft: REACTION_WIDTH }}
+          >
+            <div className={clsx('flex flex-col', 'space-y-4')}>
+              {comments.map((comment) => (
+                <Comment
+                  className={clsx('text-sm')}
+                  key={comment.id}
+                  comment={comment}
+                  commentId={comment.id}
+                  shouldFetchComment
+                />
+              ))}
+            </div>
+          </div>
+        )}
+        <div
+          style={{ marginLeft: REACTION_WIDTH }}
+          className={clsx('text-sm', 'mt-4')}
+        >
+          <SkeletonFallback isLoading={isLoading} width={100}>
+            {openCommentBox ? (
+              <form className={clsx('flex flex-col')} onSubmit={handleSubmit}>
+                <TextArea placeholder='Comment...' {...getFieldData('body')} />
+                <div className={clsx('flex', 'mt-3 space-x-2')}>
+                  <Button size='small' variant='outlined-brand'>
+                    Submit
+                  </Button>
+                  <Button
+                    size='small'
+                    variant='unstyled'
+                    type='button'
+                    onClick={() => setOpenCommentBox(false)}
+                    className={clsx('text-text-secondary')}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            ) : (
+              <Link variant='primary' onClick={() => setOpenCommentBox(true)}>
+                Add a comment
+              </Link>
+            )}
+          </SkeletonFallback>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

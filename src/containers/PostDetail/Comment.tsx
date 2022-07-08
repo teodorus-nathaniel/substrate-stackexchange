@@ -7,7 +7,8 @@ import { useGetPost } from '#/services/subsocial/queries'
 import { PostWithSomeDetails } from '@subsocial/types/dto'
 import { truncateMiddle } from '@talisman-connect/ui'
 import clsx from 'clsx'
-import { HTMLProps } from 'react'
+import { HTMLProps, useState } from 'react'
+import TransactionModal from '../TransactionModal'
 
 export interface CommentsProps extends HTMLProps<HTMLDivElement> {
   comment: PostWithSomeDetails
@@ -27,11 +28,14 @@ export default function Comment({
     { enabled: shouldFetchComment && !!commentId }
   )
 
+  const [openModal, setOpenModal] = useState(false)
   const {
     isUpVoted,
     onClickReaction,
+    action,
     userReaction: { isLoading },
-  } = useUserReactionInteraction(comment.id)
+    mutationData: { isLoading: isLoadingInteraction, error: errorInteraction },
+  } = useUserReactionInteraction(comment.id, 'Reply', () => setOpenModal(true))
 
   const usedComment = localComment ?? comment
   const upVoteCount = usedComment.post.struct.upvotesCount
@@ -41,36 +45,45 @@ export default function Comment({
   const commentBody = usedComment.post.content?.body
 
   return (
-    <div className={clsx('flex relative text-sm', className)} {...props}>
-      <span className={clsx('absolute', '-left-1 -translate-x-full')}>
-        {upVoteCount || ' '}
-      </span>
-      <div>
-        <Button
-          onClick={onClickReaction('Upvote')}
-          disabled={isLoading}
-          variant='unstyled'
-          size='icon-small'
-          rounded
-          className={clsx('mr-2')}
-        >
-          <ReactionArrowIcon type='Upvote' isActive={isUpVoted} />
-        </Button>
-      </div>
-      <p>
-        {commentBody} -{' '}
-        <Link
-          variant='primary'
-          className={clsx('font-bold')}
-          href={`/profile/${creator?.id}`}
-        >
-          {creator?.content?.name ?? truncateMiddle(creatorId)}
-        </Link>
-        <span className={clsx('text-text-disabled')}>
-          {' '}
-          {formatDate(createdAt)}
+    <>
+      <TransactionModal
+        action={action}
+        handleClose={() => setOpenModal(false)}
+        isOpen={openModal}
+        isLoading={isLoadingInteraction}
+        errorMsg={errorInteraction?.message}
+      />
+      <div className={clsx('flex relative text-sm', className)} {...props}>
+        <span className={clsx('absolute', '-left-1 -translate-x-full')}>
+          {upVoteCount || ' '}
         </span>
-      </p>
-    </div>
+        <div>
+          <Button
+            onClick={() => onClickReaction('Upvote')}
+            disabled={isLoading}
+            variant='unstyled'
+            size='icon-small'
+            rounded
+            className={clsx('mr-2')}
+          >
+            <ReactionArrowIcon type='Upvote' isActive={isUpVoted} />
+          </Button>
+        </div>
+        <p>
+          {commentBody} -{' '}
+          <Link
+            variant='primary'
+            className={clsx('font-bold')}
+            href={`/profile/${creator?.id}`}
+          >
+            {creator?.content?.name ?? truncateMiddle(creatorId)}
+          </Link>
+          <span className={clsx('text-text-disabled')}>
+            {' '}
+            {formatDate(createdAt)}
+          </span>
+        </p>
+      </div>
+    </>
   )
 }
