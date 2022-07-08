@@ -70,8 +70,8 @@ export default function ProfileSection() {
     })
   }
 
-  const isCurrentUser = useIsCurrentUser(id)
-  const displayCurrentUserProfile = !id || isCurrentUser
+  const _isCurrentUser = useIsCurrentUser(id)
+  const isCurrentUser = !id || _isCurrentUser
 
   return (
     <>
@@ -94,7 +94,7 @@ export default function ProfileSection() {
           />
           <div className={clsx('mt-3')}>
             <div className={clsx('flex items-center', 'space-x-3')}>
-              {displayCurrentUserProfile ? (
+              {isCurrentUser ? (
                 <>
                   <Link href='/profile/edit'>
                     <Button
