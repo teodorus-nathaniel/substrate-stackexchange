@@ -14,7 +14,7 @@ export default function ProfilePage() {
   const userId = query.id as string
 
   const isValidUserId = useMemo(() => {
-    return isValidAddress(userId)
+    return userId ? isValidAddress(userId) : true
   }, [userId])
 
   if (!isValidUserId) {
