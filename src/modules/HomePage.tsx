@@ -7,7 +7,7 @@ export default function HomePage() {
   return (
     <div className='pl-8'>
       <h1 className='text-2xl font-bold mb-8'>
-        Welcome to Substrate StackExchange!
+        Welcome to Substrate Stack<span className='text-brand'>Exchange</span>!
       </h1>
       <p className={paragraphClassNames}>
         <span className='text-text-secondary'>
