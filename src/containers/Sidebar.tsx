@@ -6,7 +6,7 @@ import { TransitionVariants } from '#/lib/helpers/types'
 import clsx from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
-import { HTMLProps, useState } from 'react'
+import React, { HTMLProps, useState } from 'react'
 import { BsChevronLeft } from 'react-icons/bs'
 
 const WIDTH = 225
@@ -25,7 +25,10 @@ const contentVariants: TransitionVariants = {
   open: { opacity: 1, x: 0, transition: NORMAL_TRANSITION },
 }
 
-interface Props extends HTMLProps<HTMLDivElement> {}
+interface Props extends HTMLProps<HTMLDivElement> {
+  isOpen?: boolean
+  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>
+}
 
 type LinkAuthType = 'user' | undefined
 type LinkData = { text: string; to: string; type?: LinkAuthType }
@@ -65,9 +68,16 @@ const checkAuthorization = (
   return true
 }
 
-export default function Sidebar({ className, ...props }: Props) {
+export default function Sidebar({
+  className,
+  isOpen,
+  setIsOpen,
+  ...props
+}: Props) {
   const { pathname } = useRouter()
-  const [isOpen, setIsOpen] = useState(true)
+  const [localIsOpen, setLocalIsOpen] = useState(true)
+  const usedIsOpen = isOpen ?? localIsOpen
+  const usedSetIsOpen = setIsOpen ?? setLocalIsOpen
 
   const [wallet] = useWalletContext()
   const currentUserType: LinkAuthType | undefined = wallet?.address
@@ -83,12 +93,12 @@ export default function Sidebar({ className, ...props }: Props) {
           'rounded-r-md',
           hoverRingClassName
         )}
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={() => usedSetIsOpen((prev) => !prev)}
       >
         <BsChevronLeft
           className={clsx(
             'transition duration-150',
-            isOpen ? '' : 'rotate-180'
+            usedIsOpen ? '' : 'rotate-180'
           )}
         />
       </button>
@@ -103,14 +113,14 @@ export default function Sidebar({ className, ...props }: Props) {
           width: WIDTH,
         }}
         animate={{
-          width: isOpen ? WIDTH : 0,
-          opacity: isOpen ? 1 : 0,
-          paddingLeft: !isOpen ? 0 : undefined,
-          paddingRight: !isOpen ? 0 : undefined,
+          width: usedIsOpen ? WIDTH : 0,
+          opacity: usedIsOpen ? 1 : 0,
+          paddingLeft: !usedIsOpen ? 0 : undefined,
+          paddingRight: !usedIsOpen ? 0 : undefined,
         }}
       >
         <AnimatePresence exitBeforeEnter>
-          {isOpen && wallet !== undefined && (
+          {usedIsOpen && wallet !== undefined && (
             <motion.div
               key={currentUserType}
               variants={containerVariants}

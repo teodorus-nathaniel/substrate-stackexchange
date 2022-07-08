@@ -3,12 +3,10 @@ import { BsCash } from 'react-icons/bs'
 
 export default function HomePage() {
   const highlightedTextClassNames = clsx('text-brand font-bold')
-  const paragraphClassNames = clsx(
-    'text-center max-w-[60ch] mx-auto mb-4 leading-loose'
-  )
+  const paragraphClassNames = clsx('max-w-[60ch] mb-4 leading-loose')
   return (
-    <div className='max-w-screen-md'>
-      <h1 className='text-center text-2xl font-bold mb-8'>
+    <div className='pl-8'>
+      <h1 className='text-2xl font-bold mb-8'>
         Welcome to Substrate StackExchange!
       </h1>
       <p className={paragraphClassNames}>

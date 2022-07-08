@@ -2,9 +2,7 @@ import QuestionDetailSection from './QuestionDetailSection'
 
 export default function QuestionDetailPage() {
   return (
-    <div className='max-w-screen-md'>
-      <QuestionDetailSection />
-    </div>
+    <QuestionDetailSection />
     // <TwoColumnsPageLayout
     //   leftSection={<QuestionDetailSection />}
     //   rightSection={<div>RIGHT SECTION</div>}
