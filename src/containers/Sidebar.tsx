@@ -41,7 +41,7 @@ const links: (NestedLinks | LinkData)[] = [
     content: [
       { text: 'New', to: '/questions/new' },
       { text: 'Unanswered', to: '/questions/unanswered' },
-      { text: 'Your Questions', to: '/profile/questions', type: 'user' },
+      { text: 'Your Questions', to: '/profile', type: 'user' },
     ],
   },
   {

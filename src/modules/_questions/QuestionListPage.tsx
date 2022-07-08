@@ -11,6 +11,12 @@ const titles: { [key in QuestionListFilters]?: string } = {
 
 export default function QuestionListPage({ type }: Props) {
   return (
-    <QuestionList title={titles[type]} type={type} className={clsx('pb-20')} />
+    <div className='max-w-screen-md'>
+      <QuestionList
+        title={titles[type]}
+        type={type}
+        className={clsx('pb-20')}
+      />
+    </div>
   )
 }

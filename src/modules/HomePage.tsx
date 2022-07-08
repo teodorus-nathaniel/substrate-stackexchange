@@ -7,7 +7,7 @@ export default function HomePage() {
     'text-center max-w-[60ch] mx-auto mb-4 leading-loose'
   )
   return (
-    <div>
+    <div className='max-w-screen-md'>
       <h1 className='text-center text-2xl font-bold mb-8'>
         Welcome to Substrate StackExchange!
       </h1>
