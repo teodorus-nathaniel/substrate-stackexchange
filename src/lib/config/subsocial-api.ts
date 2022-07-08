@@ -1,3 +1,4 @@
+import { chains } from '../constants/chains'
 import { getUseTestnet } from '../helpers/env'
 
 const testnetSubsocialConfig = {
@@ -13,6 +14,9 @@ const mainnetSubsocialConfig = {
 }
 
 const useTestnet = getUseTestnet()
+
+export const mainTokenTicker: keyof typeof chains = useTestnet ? 'SOON' : 'SUB'
+
 const subsocialConfig = useTestnet
   ? testnetSubsocialConfig
   : mainnetSubsocialConfig

@@ -4,13 +4,16 @@ import Link from '#/components/Link'
 import PopOver from '#/components/PopOver'
 import ProfileImage from '#/components/ProfileImage'
 import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
-import { encodeAddress } from '#/lib/helpers/chain'
+import { mainTokenTicker } from '#/lib/config/subsocial-api'
+import { encodeAddress, formatBalance } from '#/lib/helpers/chain'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
 import useLogout from '#/lib/hooks/useLogout'
+import { useGetTokenBalance } from '#/services/all-chains/queries'
 import { useGetCurrentUser } from '#/services/subsocial/queries'
 import { WalletAccount } from '@talisman-connect/wallets'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
+import { BsCash } from 'react-icons/bs'
 
 const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
   ssr: false,
@@ -32,6 +35,17 @@ export default function WalletProfile({
     isLoading,
     isFetched
   )
+
+  const {
+    data: balance,
+    isLoading: isLoadingBalance,
+    isFetched: isFetchedBalance,
+  } = useGetTokenBalance({
+    address: wallet.address,
+    network: mainTokenTicker,
+  })
+  const { IntegratedSkeleton: IntegratedBalanceSkeleton } =
+    useIntegratedSkeleton(isLoadingBalance, isFetchedBalance)
 
   const encodedWalletAddress = encodeAddress(wallet.address)
 
@@ -81,7 +95,7 @@ export default function WalletProfile({
             >
               {(name) => (
                 <div className={clsx('flex flex-col')}>
-                  <p className={clsx('leading-snug')}>{name}</p>
+                  <p className={clsx('leading-snug', 'font-bold')}>{name}</p>
                   <AddressCopy className={clsx('text-xs text-text-secondary')}>
                     {encodedWalletAddress}
                   </AddressCopy>
@@ -90,8 +104,16 @@ export default function WalletProfile({
             </IntegratedSkeleton>
           </div>
         </div>
-        <div className='flex flex-col mt-3'>
-          <p className='text-text-secondary text-xs'>
+        <div className='flex flex-col mt-3 text-xs'>
+          <IntegratedBalanceSkeleton content={balance}>
+            {(value) => (
+              <p className={clsx('mb-1', 'flex items-center')}>
+                <BsCash className='inline mr-1.5' /> {formatBalance(value)}{' '}
+                {mainTokenTicker}
+              </p>
+            )}
+          </IntegratedBalanceSkeleton>
+          <p className='text-text-secondary'>
             <IntegratedSkeleton content={content?.about}>
               {(about) => (
                 <RichTextArea
