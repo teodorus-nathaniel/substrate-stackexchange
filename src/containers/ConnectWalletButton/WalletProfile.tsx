@@ -107,7 +107,7 @@ export default function WalletProfile({
         </div>
         <div className='flex flex-col mt-3 text-xs'>
           <div className={clsx('flex items-center', 'mb-1', 'space-x-4')}>
-            <IntegratedBalanceSkeleton content={balance}>
+            <IntegratedBalanceSkeleton content={balance} width={75}>
               {(value) => (
                 <p className={clsx('flex items-center')}>
                   <BsCash className='inline mr-1.5' /> {formatBalance(value)}{' '}
