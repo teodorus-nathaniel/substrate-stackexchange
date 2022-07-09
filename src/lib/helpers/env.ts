@@ -34,3 +34,11 @@ export function getAddressPrefix() {
     ) ?? '28'
   )
 }
+
+export function getIndexingService() {
+  return checkEnv(
+    process.env['NEXT_PUBLIC_INDEXING_SERVICE'],
+    'NEXT_PUBLIC_INDEXING_SERVICE',
+    false
+  )
+}

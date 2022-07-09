@@ -1,9 +1,16 @@
+import { useGetReputationByAddress } from '#/services/indexing/queries'
 import clsx from 'clsx'
 import { BsCash } from 'react-icons/bs'
 
 export default function HomePage() {
   const highlightedTextClassNames = clsx('text-brand font-bold')
   const paragraphClassNames = clsx('max-w-[60ch] mb-4 leading-loose')
+
+  const { data } = useGetReputationByAddress(
+    '3omeLMCdtrojRPf7KyvTg78EvLxyJMo7mb2bqM28EEvxmXFM'
+  )
+  console.log(data?.reputation)
+
   return (
     <div className='pl-8'>
       <h1 className='text-2xl font-bold mb-8'>
