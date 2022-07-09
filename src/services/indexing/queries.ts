@@ -1,3 +1,4 @@
+import { encodeAddress } from '#/lib/helpers/chain'
 import queryClient from '../client'
 import { generateQueryWrapper } from '../common/base'
 import { QueryConfig } from '../common/types'
@@ -31,7 +32,9 @@ export const invalidateGetReputationByPostId = async (postId: string) => {
     }
   )
   if (!post.post?.owner) return
-  const params: ReputationByIdQueryVariables = { id: post.post.owner }
+  const params: ReputationByIdQueryVariables = {
+    id: encodeAddress(post.post.owner),
+  }
   queryClient.invalidateQueries([
     getReputationByAddressKey,
     { document, ...params },

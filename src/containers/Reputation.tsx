@@ -1,6 +1,7 @@
 import SkeletonFallback, {
   useIntegratedSkeleton,
 } from '#/components/SkeletonFallback'
+import { encodeAddress } from '#/lib/helpers/chain'
 import { useGetReputationByAddress } from '#/services/indexing/queries'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
@@ -15,7 +16,9 @@ export default function Reputation({
   address,
   ...props
 }: ReputationProps) {
-  const { data, isLoading, isFetched } = useGetReputationByAddress(address)
+  const { data, isLoading, isFetched } = useGetReputationByAddress(
+    encodeAddress(address)
+  )
   const { loadingChecker, getContent } = useIntegratedSkeleton(
     isLoading,
     isFetched
