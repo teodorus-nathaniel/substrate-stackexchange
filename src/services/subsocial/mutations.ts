@@ -3,6 +3,10 @@ import { getSpaceId } from '#/lib/helpers/env'
 import { IpfsContent } from '@subsocial/types/substrate/classes'
 import { truncateMiddle } from '@talisman-connect/ui'
 import { MutationConfig } from '../common/base'
+import {
+  invalidateGetReputationByAddress,
+  invalidateGetReputationByPostId,
+} from '../indexing/queries'
 import { Transaction, useSubsocialMutation } from './base'
 import {
   invalidateGetAllQuestions,
@@ -64,8 +68,9 @@ export function useCreatePost(config?: MutationConfig<CreateQuestionPayload>) {
     },
     config,
     {
-      onTxSuccess: () => {
+      onTxSuccess: (_, address) => {
         invalidateGetAllQuestions()
+        invalidateGetReputationByAddress({ id: address })
       },
     }
   )
@@ -145,6 +150,7 @@ export function useUpsertReaction(
         invalidateGetPost({
           postId: data.postId,
         })
+        invalidateGetReputationByPostId(data.postId)
       },
     }
   )
