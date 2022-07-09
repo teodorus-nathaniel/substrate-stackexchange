@@ -11,6 +11,7 @@ import { ProfileData } from '@subsocial/types/dto'
 import { truncateMiddle } from '@talisman-connect/ui'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
+import Reputation from '../Reputation'
 import TippingButton from '../TippingButton'
 
 export interface CreatorProps extends HTMLProps<HTMLDivElement> {
@@ -65,17 +66,14 @@ export default function CreatorOverview({
             getImageUrlFromIPFS(creator?.content.avatar)
           }
         />
-        <div className={clsx('flex flex-col')}>
+        <div className={clsx('flex flex-col', 'flex-1')}>
           <div
-            className={clsx(
-              'text-sm font-bold',
-              'mb-0.5',
-              'flex justify-between items-center'
-            )}
+            className={clsx('text-sm font-bold', 'mb-0.5', 'flex items-center')}
           >
             <Link
               variant='primary'
               href={`/profile/${isCurrentUser ? '' : creatorId}`}
+              className={clsx('mr-4')}
             >
               <IntegratedSkeleton
                 content={isCurrentUser ? 'You' : usedCreator?.content?.name}
@@ -85,9 +83,15 @@ export default function CreatorOverview({
                 {(name) => (isCurrentUser ? 'You' : name)}
               </IntegratedSkeleton>
             </Link>
+            {!isCurrentUser && (
+              <Reputation
+                className={clsx('font-normal ml-auto', 'text-text-secondary')}
+                address={creatorId ?? ''}
+              />
+            )}
             {creatorId && (
               <TippingButton
-                className={clsx('ml-2', 'text-lg')}
+                className={clsx('ml-3', 'text-lg')}
                 dest={creatorId}
                 profile={usedCreator}
               />

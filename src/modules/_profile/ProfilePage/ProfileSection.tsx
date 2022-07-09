@@ -4,6 +4,7 @@ import Link from '#/components/Link'
 import ProfileImage from '#/components/ProfileImage'
 import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
 import FollowingFollowerCount from '#/containers/FollowingFollowerCount'
+import Reputation from '#/containers/Reputation'
 import TippingButton from '#/containers/TippingButton'
 import TransactionModal from '#/containers/TransactionModal'
 import { useWalletContext } from '#/contexts/WalletContext'
@@ -149,8 +150,9 @@ export default function ProfileSection() {
           isLoading={loadingChecker(data?.struct)}
           followingCount={data?.struct.followingAccountsCount}
           followerCount={data?.struct.followersCount}
-          className={clsx('mt-2')}
+          className={clsx('mt-')}
         />
+        <Reputation address={address} className={clsx('text-sm')} />
         <IntegratedSkeleton className={clsx('mt-6')} content={content?.about}>
           {(about) => (
             <div className={clsx('text-text-secondary text-sm', 'mt-6')}>

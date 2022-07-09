@@ -14,6 +14,7 @@ import { WalletAccount } from '@talisman-connect/wallets'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { BsCash } from 'react-icons/bs'
+import Reputation from '../Reputation'
 
 const RichTextArea = dynamic(() => import('#/components/inputs/RichTextArea'), {
   ssr: false,
@@ -105,14 +106,17 @@ export default function WalletProfile({
           </div>
         </div>
         <div className='flex flex-col mt-3 text-xs'>
-          <IntegratedBalanceSkeleton content={balance}>
-            {(value) => (
-              <p className={clsx('mb-1', 'flex items-center')}>
-                <BsCash className='inline mr-1.5' /> {formatBalance(value)}{' '}
-                {mainTokenTicker}
-              </p>
-            )}
-          </IntegratedBalanceSkeleton>
+          <div className={clsx('flex items-center', 'mb-1', 'space-x-4')}>
+            <IntegratedBalanceSkeleton content={balance}>
+              {(value) => (
+                <p className={clsx('flex items-center')}>
+                  <BsCash className='inline mr-1.5' /> {formatBalance(value)}{' '}
+                  {mainTokenTicker}
+                </p>
+              )}
+            </IntegratedBalanceSkeleton>
+            <Reputation address={wallet.address} />
+          </div>
           <p className='text-text-secondary'>
             <IntegratedSkeleton content={content?.about}>
               {(about) => (
