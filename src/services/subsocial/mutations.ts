@@ -209,10 +209,11 @@ export function useToggleFollowAccount(
     {
       onTxSuccess: (data, address) => {
         invalidateGetIsCurrentUserFollowing({
-          currentUserAddress: address,
-          target: data.target,
+          currentUserAddress: encodeAddress(address),
+          target: encodeAddress(data.target),
         })
-        invalidateGetProfile({ address: data.target })
+        invalidateGetProfile({ address: encodeAddress(data.target) })
+        invalidateGetProfile({ address: encodeAddress(address) })
         invalidateGetFollowers({ address: encodeAddress(address) })
         invalidateGetFollowing({ address: encodeAddress(address) })
       },

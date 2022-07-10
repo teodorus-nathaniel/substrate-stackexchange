@@ -49,7 +49,7 @@ export default function ProfileSection() {
     isLoading: isLoadingCheckFollowing,
     isFetched: isFetchedCheckFollowing,
   } = useGetIsCurrentUserFollowing({
-    currentUserAddress: wallet?.address,
+    currentUserAddress: encodeAddress(wallet?.address),
     target: id,
   })
   const { IntegratedSkeleton: IntegratedSkeletonCheckFollowing } =
@@ -73,8 +73,6 @@ export default function ProfileSection() {
 
   const _isCurrentUser = useIsCurrentUser(id)
   const isCurrentUser = !id || _isCurrentUser
-
-  console.log(content)
 
   return (
     <>
@@ -135,7 +133,9 @@ export default function ProfileSection() {
           <IntegratedSkeleton
             content={content?.name}
             defaultContent={
-              <AddressCopy>{encodeAddress(id ?? wallet?.address)}</AddressCopy>
+              <AddressCopy>
+                {encodeAddress(id ?? encodeAddress(wallet?.address))}
+              </AddressCopy>
             }
           >
             {(name) => <p>{name}</p>}

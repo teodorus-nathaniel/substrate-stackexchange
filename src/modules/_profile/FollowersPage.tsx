@@ -2,6 +2,7 @@ import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
 import TwoColumnsPageLayout from '#/containers/layouts/TwoColumnsPageLayout'
 import UserGridView from '#/containers/UserGridView'
 import { useWalletContext } from '#/contexts/WalletContext'
+import { encodeAddress } from '#/lib/helpers/chain'
 import { useGetFollowers } from '#/services/subsocial/queries'
 import clsx from 'clsx'
 import ProfileSection from './ProfilePage/ProfileSection'
@@ -9,7 +10,7 @@ import ProfileSection from './ProfilePage/ProfileSection'
 export default function FollowersPage() {
   const [wallet] = useWalletContext()
   const { data, isFetched, isLoading } = useGetFollowers({
-    address: wallet?.address,
+    address: encodeAddress(wallet?.address),
   })
   const { loadingChecker } = useIntegratedSkeleton(isLoading, isFetched)
 

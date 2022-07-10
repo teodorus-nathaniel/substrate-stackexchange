@@ -5,6 +5,7 @@ import TextField from '#/components/inputs/TextField'
 import { useIntegratedSkeleton } from '#/components/SkeletonFallback'
 import TransactionModal from '#/containers/TransactionModal'
 import { useWalletContext } from '#/contexts/WalletContext'
+import { encodeAddress } from '#/lib/helpers/chain'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
 import { useResetForm } from '#/lib/hooks/useResetForm'
@@ -34,7 +35,7 @@ export default function EditProfilePage() {
     data: profile,
     isLoading: isLoadingProfile,
     isFetched,
-  } = useGetProfile({ address: wallet?.address })
+  } = useGetProfile({ address: encodeAddress(wallet?.address) })
   const { loadingChecker } = useIntegratedSkeleton(isLoadingProfile, isFetched)
 
   const [formError, setFormError] = useState('')

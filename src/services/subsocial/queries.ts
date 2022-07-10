@@ -1,4 +1,5 @@
 import { useWalletContext } from '#/contexts/WalletContext'
+import { encodeAddress } from '#/lib/helpers/chain'
 import { ProfileData } from '@subsocial/types/dto'
 import queryClient from '../client'
 import { createQueryInvalidation } from '../common/base'
@@ -54,7 +55,7 @@ export function useGetCurrentUser() {
   return useSubsocialQuery(
     {
       key: getProfileKey,
-      data: { address: wallet?.address ?? '' },
+      data: { address: encodeAddress(wallet?.address) ?? '' },
     },
     getProfile,
     { enabled: !!wallet?.address }
@@ -145,7 +146,7 @@ export function useGetUserReactionByPostId(
   data: Partial<Omit<GetReactionByPostIdAndAccountParam, 'address'>>
 ) {
   const [wallet] = useWalletContext()
-  const address = wallet?.address ?? ''
+  const address = encodeAddress(wallet?.address) ?? ''
   const postId = data.postId ?? ''
   const usedData: GetReactionByPostIdAndAccountParam = {
     address,
