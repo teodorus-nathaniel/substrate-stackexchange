@@ -62,8 +62,8 @@ export default function CreatorOverview({
           className={clsx('w-8')}
           isLoading={loadingChecker(usedCreator?.content?.avatar)}
           src={
-            creator?.content?.avatar &&
-            getImageUrlFromIPFS(creator?.content.avatar)
+            usedCreator?.content?.avatar &&
+            getImageUrlFromIPFS(usedCreator?.content.avatar)
           }
         />
         <div className={clsx('flex flex-col', 'flex-1')}>
