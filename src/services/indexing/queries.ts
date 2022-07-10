@@ -1,12 +1,8 @@
 import { encodeAddress } from '#/lib/helpers/chain'
 import queryClient from '../client'
-import { generateQueryWrapper } from '../common/base'
+import { createQueryInvalidation } from '../common/base'
 import { QueryConfig } from '../common/types'
-import {
-  callIndexer,
-  createIndexingQueryInvalidation,
-  useIndexingQuery,
-} from './base'
+import { callIndexer, useIndexingQuery } from './base'
 import {
   PostById,
   PostByIdQuery,
@@ -16,13 +12,10 @@ import {
   ReputationByIdQueryVariables,
 } from './graphql'
 
-const queryWrapper = generateQueryWrapper(async () => null)
-
 export const getReputationByAddressKey = 'getReputationByAddress'
 export const invalidateGetReputationByAddress =
-  createIndexingQueryInvalidation<ReputationByIdQueryVariables>(
-    getReputationByAddressKey,
-    ReputationById
+  createQueryInvalidation<ReputationByIdQueryVariables>(
+    getReputationByAddressKey
   )
 export const invalidateGetReputationByPostId = async (postId: string) => {
   const post = await callIndexer<PostByIdQuery, PostByIdQueryVariables>(
@@ -35,10 +28,7 @@ export const invalidateGetReputationByPostId = async (postId: string) => {
   const params: ReputationByIdQueryVariables = {
     id: encodeAddress(post.post.owner),
   }
-  queryClient.invalidateQueries([
-    getReputationByAddressKey,
-    { document, ...params },
-  ])
+  queryClient.invalidateQueries([getReputationByAddressKey, params])
 }
 export function useGetReputationByAddress(
   address: string | undefined,

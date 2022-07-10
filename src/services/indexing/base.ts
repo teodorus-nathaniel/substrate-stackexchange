@@ -2,7 +2,6 @@ import { getIndexingService } from '#/lib/helpers/env'
 import { DocumentNode } from 'graphql'
 import { request } from 'graphql-request'
 import { useQuery } from 'react-query'
-import queryClient from '../client'
 import { generateQueryWrapper, mergeQueryConfig } from '../common/base'
 import { QueryConfig } from '../common/types'
 import { IndexingParam } from './types'
@@ -18,17 +17,8 @@ export function callIndexer<ReturnValue, Params>(
   return res
 }
 
-export function createIndexingQueryInvalidation<Param>(
-  key: string,
-  document: DocumentNode
-) {
-  return (data?: Param) => {
-    queryClient.invalidateQueries([key, { ...data, document }])
-  }
-}
-
 export function useIndexingQuery<Params, ReturnValue>(
-  data: { key: string; params: IndexingParam<Params> | null },
+  data: { key: string; params: IndexingParam<Params> },
   config?: QueryConfig<any, any>,
   defaultConfig?: QueryConfig<any, Params>
 ) {
@@ -36,10 +26,11 @@ export function useIndexingQuery<Params, ReturnValue>(
     mergeQueryConfig(config, defaultConfig),
     { enabled: !!indexingService }
   )
+  const { document, ...otherParams } = data.params
   return useQuery(
-    [data.key, data.params],
-    indexingQueryWrapper(({ params }: { params: IndexingParam<Params> }) => {
-      return callIndexer<ReturnValue, Params>(params.document, params)
+    [data.key, otherParams],
+    indexingQueryWrapper(({ params }: { params: Params }) => {
+      return callIndexer<ReturnValue, Params>(document, params)
     }, null),
     mergedConfig as any
   )

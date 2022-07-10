@@ -1,4 +1,5 @@
 import { DEFAULT_SPACE_PERMISSIONS } from '#/lib/constants/subsocial'
+import { encodeAddress } from '#/lib/helpers/chain'
 import { getSpaceId } from '#/lib/helpers/env'
 import { IpfsContent } from '@subsocial/types/substrate/classes'
 import { truncateMiddle } from '@talisman-connect/ui'
@@ -70,7 +71,7 @@ export function useCreatePost(config?: MutationConfig<CreateQuestionPayload>) {
     {
       onTxSuccess: (_, address) => {
         invalidateGetAllQuestions()
-        invalidateGetReputationByAddress({ id: address })
+        invalidateGetReputationByAddress({ id: encodeAddress(address) })
       },
     }
   )
@@ -173,13 +174,14 @@ export function useCreateReply(config?: MutationConfig<CreateAnswerPayload>) {
     },
     config,
     {
-      onTxSuccess: (data) => {
+      onTxSuccess: (data, address) => {
         invalidateGetReplyIdsByPostId({
           postId: data.rootPostId,
         })
         invalidateGetReplies({
           postId: data.rootPostId,
         })
+        invalidateGetReputationByAddress({ id: encodeAddress(address) })
       },
     }
   )
