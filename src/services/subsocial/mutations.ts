@@ -146,7 +146,7 @@ export function useUpsertReaction(
       onTxSuccess: (data, address) => {
         invalidateGetReactionByPostIdAndAccount({
           postId: data.postId,
-          address,
+          address: encodeAddress(address),
         })
         invalidateGetPost({
           postId: data.postId,
