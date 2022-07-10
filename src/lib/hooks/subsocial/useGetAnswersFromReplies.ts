@@ -6,7 +6,7 @@ export function useFilterAnswersAndComments(replies?: PostWithSomeDetails[]) {
     const answers: PostWithSomeDetails[] = []
     const comments: PostWithSomeDetails[] = []
     replies?.forEach((reply) => {
-      if (!(reply.post.content as any).isAnswer) {
+      if ((reply.post.content as any).isAnswer) {
         answers.push(reply)
       } else {
         comments.push(reply)
