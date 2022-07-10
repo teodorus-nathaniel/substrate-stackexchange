@@ -41,7 +41,7 @@ export function mergeQueryConfig<T, V>(
 }
 
 export function createQueryInvalidation<Param>(key: string) {
-  return (data?: Param) => {
+  return (data: Param | null = null) => {
     queryClient.invalidateQueries([key, data])
   }
 }
