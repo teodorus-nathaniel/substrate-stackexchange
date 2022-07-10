@@ -3,6 +3,8 @@ import Link from '#/components/Link'
 import TwoColumnsPageLayout from '#/containers/layouts/TwoColumnsPageLayout'
 import QuestionList from '#/containers/QuestionList'
 import { isValidAddress } from '#/lib/helpers/chain'
+import { useGetProfile } from '#/services/subsocial/queries'
+import { truncateMiddle } from '@talisman-connect/ui'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
@@ -12,6 +14,7 @@ export default function ProfilePage() {
   const router = useRouter()
   const { query } = router
   const userId = query.id as string
+  const { data: profile } = useGetProfile({ address: userId })
 
   const isValidUserId = useMemo(() => {
     return userId ? isValidAddress(userId) : true
@@ -33,11 +36,13 @@ export default function ProfilePage() {
     )
   }
 
+  const profileName = profile?.content?.name ?? truncateMiddle(userId)
+
   return (
     <TwoColumnsPageLayout
       leftSection={
         <QuestionList
-          title='Your Questions'
+          title={!userId ? 'Your Questions' : `${profileName} Questions`}
           type={userId ? 'other-user' : 'user'}
           otherUserAddress={userId}
           className={clsx('pb-20')}
