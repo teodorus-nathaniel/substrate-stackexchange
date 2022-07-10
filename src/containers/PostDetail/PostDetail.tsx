@@ -147,6 +147,7 @@ export default function PostDetail({
               />
               <CreatorOverview
                 displayAskDate
+                shouldFetchCreator
                 isLoading={isLoading}
                 createDate={usedPost?.post?.struct?.createdAtTime}
                 creator={usedPost?.owner}
