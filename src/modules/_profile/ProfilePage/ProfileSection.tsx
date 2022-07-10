@@ -34,7 +34,7 @@ export default function ProfileSection() {
 
   const { query } = useRouter()
   const id = query.id as string | undefined
-  const address = id ?? encodeAddress(wallet?.address) ?? ''
+  const address = id ? encodeAddress(id) : encodeAddress(wallet?.address) ?? ''
   const { data, isLoading, isFetched } = useGetProfile({
     address,
   })
@@ -73,6 +73,8 @@ export default function ProfileSection() {
 
   const _isCurrentUser = useIsCurrentUser(id)
   const isCurrentUser = !id || _isCurrentUser
+
+  console.log(content)
 
   return (
     <>
@@ -133,7 +135,7 @@ export default function ProfileSection() {
           <IntegratedSkeleton
             content={content?.name}
             defaultContent={
-              <AddressCopy>{encodeAddress(wallet?.address ?? '')}</AddressCopy>
+              <AddressCopy>{encodeAddress(id ?? wallet?.address)}</AddressCopy>
             }
           >
             {(name) => <p>{name}</p>}
@@ -167,7 +169,7 @@ export default function ProfileSection() {
           <div className='mt-8 text-sm'>
             <IntegratedSkeletonCheckFollowing
               width={100}
-              content={content}
+              content={{}}
               className={clsx('h-8')}
             >
               {() => (

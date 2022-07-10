@@ -3,5 +3,5 @@ import { encodeAddress } from '../helpers/chain'
 
 export default function useIsCurrentUser(profileId?: string) {
   const [wallet] = useWalletContext()
-  return encodeAddress(wallet?.address) === profileId
+  return encodeAddress(wallet?.address) === encodeAddress(profileId)
 }

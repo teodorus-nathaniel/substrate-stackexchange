@@ -58,7 +58,7 @@ export default function EditProfilePage() {
       setIsOpenModal(true)
       updateProfile({
         ...submittedValues,
-        profileId: profile?.id,
+        profileId: profile?.content ? profile?.id : undefined,
       })
     },
   })
@@ -99,7 +99,7 @@ export default function EditProfilePage() {
       <TransactionModal
         isLoading={isLoadingUpdate}
         errorMsg={error?.message ?? ''}
-        action='Creating Subsocial Space'
+        action='Updating Profile'
         isOpen={isOpenModal}
         handleClose={() => setIsOpenModal(false)}
         hash={data?.toString()}

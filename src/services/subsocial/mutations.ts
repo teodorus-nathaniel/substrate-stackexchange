@@ -102,12 +102,12 @@ export function useUpdateProfile(
       } else {
         tx = substrateApi.tx.profiles.createProfile(IpfsContent(profileCid))
       }
-      return { tx: tx as unknown as Transaction, summary: `Creating Post` }
+      return { tx: tx as unknown as Transaction, summary: `Updating Profile` }
     },
     config,
     {
       onTxSuccess: (_, address) => {
-        invalidateGetProfile({ address })
+        invalidateGetProfile({ address: encodeAddress(address) })
       },
     }
   )
@@ -213,8 +213,8 @@ export function useToggleFollowAccount(
           target: data.target,
         })
         invalidateGetProfile({ address: data.target })
-        invalidateGetFollowers({ address })
-        invalidateGetFollowing({ address })
+        invalidateGetFollowers({ address: encodeAddress(address) })
+        invalidateGetFollowing({ address: encodeAddress(address) })
       },
     }
   )
