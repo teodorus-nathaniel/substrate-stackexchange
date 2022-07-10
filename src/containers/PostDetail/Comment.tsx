@@ -3,7 +3,7 @@ import Link from '#/components/Link'
 import ReactionArrowIcon from '#/components/ReactionArrowIcon'
 import { formatDate } from '#/lib/helpers/date'
 import useUserReactionInteraction from '#/lib/hooks/subsocial/useUserReactionInteraction'
-import { useGetPost } from '#/services/subsocial/queries'
+import { useGetPost, useGetProfile } from '#/services/subsocial/queries'
 import { PostWithSomeDetails } from '@subsocial/types/dto'
 import { truncateMiddle } from '@talisman-connect/ui'
 import clsx from 'clsx'
@@ -39,8 +39,11 @@ export default function Comment({
 
   const usedComment = localComment ?? comment
   const upVoteCount = usedComment.post.struct.upvotesCount
-  const creator = usedComment.owner
   const creatorId = usedComment.post.struct.createdByAccount
+
+  const { data: profile } = useGetProfile({ address: creatorId })
+  const creator = usedComment.owner ?? profile
+
   const createdAt = usedComment.post.struct.createdAtTime
   const commentBody = usedComment.post.content?.body
 
