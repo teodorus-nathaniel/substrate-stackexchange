@@ -156,14 +156,18 @@ export default function Sidebar({
                       {title}
                     </motion.p>
                     <div className={clsx('px-2 flex flex-col', 'space-y-1')}>
-                      {content.map((link) => (
-                        <SidebarLink
-                          {...link}
-                          className={clsx('!px-6')}
-                          selected={link.to === pathname}
-                          key={link.to}
-                        />
-                      ))}
+                      {content.map((link) => {
+                        if (!checkAuthorization(link.type, currentUserType))
+                          return null
+                        return (
+                          <SidebarLink
+                            {...link}
+                            className={clsx('!px-6')}
+                            selected={link.to === pathname}
+                            key={link.to}
+                          />
+                        )
+                      })}
                     </div>
                   </motion.div>
                 )
