@@ -1,12 +1,17 @@
 # Subsocial StackExchange
 
-Made for Polkadot NA Hackaton 2022.  
-This project is served at [https://substrate-stackexchange.vercel.app/](https://substrate-stackexchange.vercel.app/)
+Made for Polkadot NA Hackaton 2022.
 
 ## Summary
 
 This project is a forum for developers Q&A regarding substrate development.
 The difference between this and current Substrate StackExchange is the fact that this one uses Subsocial SDK, making it decentralized and all the posts and interactions are saved in blockchain and IPFS.
+
+# Try it out
+
+This project is served at [https://substrate-stackexchange.vercel.app/](https://substrate-stackexchange.vercel.app/)
+The indexing service is served at [https://108.136.47.177/](https://108.136.47.177/)
+Note: to enable the reputation feature, as the indexing service is served with self-signed certificate, you need to allow it in your browser by enabling [chrome://flags/#allow-insecure-localhost](chrome://flags/#allow-insecure-localhost).
 
 ## How to Run
 
