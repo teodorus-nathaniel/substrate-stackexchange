@@ -7,6 +7,10 @@ Made for Polkadot NA Hackaton 2022.
 This project is a forum for developers Q&A regarding substrate development.
 The difference between this and current Substrate StackExchange is the fact that this one uses Subsocial SDK, making it decentralized and all the posts and interactions are saved in blockchain and IPFS.
 
+# Related Repo
+
+Subquery Indexer for reputation system: [subsocial-subql](https://github.com/teodorus-nathaniel/subsocial-subql)
+
 # Try it out
 
 This project is served at [https://substrate-stackexchange.vercel.app/](https://substrate-stackexchange.vercel.app/)
