@@ -1,5 +1,5 @@
 import { formatBalance } from '#/lib/helpers/chain'
-import { MutationConfig } from '../common/base'
+import { MutationConfig } from '../common/types'
 import { useAllChainsMutation } from './base'
 import { invalidateGetTokenBalance } from './queries'
 import { TransferPayload } from './types'

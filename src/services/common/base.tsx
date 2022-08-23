@@ -5,11 +5,10 @@ import { Hash } from '@polkadot/types/interfaces'
 import { isEmptyObj } from '@subsocial/utils'
 import { WalletAccount } from '@talisman-connect/wallets'
 import clsx from 'clsx'
-import { UseMutationOptions } from 'react-query'
 import { toast } from 'react-toastify'
 import queryClient from '../client'
 import { Transaction } from '../subsocial/base'
-import { QueryConfig } from './types'
+import { MutationConfig, QueryConfig } from './types'
 
 export function generateQueryWrapper<ReturnOfPreQuery, CommonParams>(
   preQueryRun: (data: CommonParams) => Promise<ReturnOfPreQuery>
@@ -56,13 +55,6 @@ export function makeCombinedCallback(
     config && config[attr] && config[attr](...data)
   }
 }
-
-export type MutationConfig<Param> = UseMutationOptions<
-  Hash,
-  Error,
-  Param,
-  unknown
-> & { onTxSuccess?: (data: Param, address: string) => void }
 
 export async function createTxAndSend<Param, OtherParams extends unknown[]>(
   transactionGenerator: (

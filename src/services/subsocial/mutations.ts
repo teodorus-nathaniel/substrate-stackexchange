@@ -3,7 +3,7 @@ import { encodeAddress } from '#/lib/helpers/chain'
 import { getSpaceId } from '#/lib/helpers/env'
 import { IpfsContent } from '@subsocial/types/substrate/classes'
 import { truncateMiddle } from '@talisman-connect/ui'
-import { MutationConfig } from '../common/base'
+import { MutationConfig } from '../common/types'
 import {
   invalidateGetReputationByAddress,
   invalidateGetReputationByPostId,

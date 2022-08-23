@@ -12,9 +12,8 @@ import {
   generateQueryWrapper,
   makeCombinedCallback,
   mergeQueryConfig,
-  MutationConfig,
 } from '../common/base'
-import { QueryConfig } from '../common/types'
+import { MutationConfig, QueryConfig } from '../common/types'
 
 export type SubstrateApi = Awaited<
   FlatSubsocialApi['subsocial']['substrate']['api']
