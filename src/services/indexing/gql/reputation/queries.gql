@@ -1,6 +1,0 @@
-query ReputationById($id: String!) {
-  reputation(id: $id) {
-    id
-    value
-  }
-}

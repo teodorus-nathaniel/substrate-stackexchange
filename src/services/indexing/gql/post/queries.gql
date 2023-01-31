@@ -1,6 +1,0 @@
-query PostById($id: String!) {
-  post(id: $id) {
-    id
-    owner
-  }
-}
