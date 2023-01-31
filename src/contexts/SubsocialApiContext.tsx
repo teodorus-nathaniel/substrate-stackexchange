@@ -14,9 +14,15 @@ export const SubsocialApiContextProvider = ({
 
   useEffect(() => {
     async function connectToSubsocialApi() {
+      const { authHeader, ...config } = subsocialConfig
       const api = await SubsocialApi.create({
-        ...subsocialConfig,
+        ...config,
       })
+      if (authHeader) {
+        api.ipfs.setWriteHeaders({
+          authorization: `Basic ${authHeader}`,
+        })
+      }
       setSubsocialApi(api)
     }
     connectToSubsocialApi()

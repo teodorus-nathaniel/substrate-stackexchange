@@ -23,7 +23,7 @@ export async function getProfile({
 }: {
   params: GetProfileParam
   additionalData: SubsocialApi
-}): Promise<Profile> {
+}): Promise<Profile | undefined> {
   let profile: SpaceData | undefined
   let followersCount = 0
   let followedCount = 0
@@ -41,7 +41,7 @@ export async function getProfile({
   } catch {}
 
   if (!profile) {
-    throw new Error('Profile fetch fails for address ' + params.address)
+    return undefined
   }
 
   return {

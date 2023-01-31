@@ -8,7 +8,7 @@ export const chains = {
     icon: 'https://polkadot.js.org/apps/static/polkadot-circle.1eea41b2..svg',
   },
   SOON: {
-    rpc: 'wss://testnet.subsocial.network',
+    rpc: 'wss://rco-para.subsocial.network',
     icon: 'https://polkadot.js.org/apps/static/subsocialX.a4cdc4e5..svg',
   },
   SUB: {
