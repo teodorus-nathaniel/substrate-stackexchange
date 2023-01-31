@@ -75,10 +75,10 @@ export default function WalletProfile({
         <div className='flex items-center space-x-3'>
           <div className='w-10 h-10 shrink-0'>
             <ProfileImage
-              isLoading={loadingChecker(content?.avatar)}
+              isLoading={loadingChecker(content?.image)}
               src={
-                content?.avatar
-                  ? getImageUrlFromIPFS(content.avatar)
+                content?.image
+                  ? getImageUrlFromIPFS(content.image)
                   : (wallet as any).avatar
               }
             />

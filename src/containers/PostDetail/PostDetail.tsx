@@ -8,7 +8,7 @@ import { useFilterAnswersAndComments } from '#/lib/hooks/subsocial/useGetAnswers
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
 import { useCreateReply } from '#/services/subsocial/mutations'
 import { useGetPost, useGetReplies } from '#/services/subsocial/queries'
-import { PostWithSomeDetails } from '@subsocial/types/dto'
+import { PostWithSomeDetails } from '@subsocial/api/types'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 import { HTMLProps, useEffect, useState } from 'react'

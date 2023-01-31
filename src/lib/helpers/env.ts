@@ -6,7 +6,7 @@ function checkEnv(
   if (data === undefined && throwError) {
     throw new Error(`env ${envName} is not set`)
   }
-  return data
+  return data as string
 }
 
 export function getUseTestnet() {
@@ -17,7 +17,7 @@ export function getUseTestnet() {
   return useTestnet === 'true'
 }
 
-export function getSpaceId() {
+export function getSpaceId(): string {
   return checkEnv(
     process.env['NEXT_PUBLIC_SPACE_ID'],
     'NEXT_PUBLIC_SPACE_ID',

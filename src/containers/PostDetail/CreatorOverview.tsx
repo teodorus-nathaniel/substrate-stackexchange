@@ -7,7 +7,7 @@ import { formatDate } from '#/lib/helpers/date'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
 import useIsCurrentUser from '#/lib/hooks/isCurrentUser'
 import { useGetProfile } from '#/services/subsocial/queries'
-import { ProfileData } from '@subsocial/types/dto'
+import { SpaceData } from '@subsocial/api/types'
 import { truncateMiddle } from '@talisman-connect/ui'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
@@ -15,7 +15,7 @@ import Reputation from '../Reputation'
 import TippingButton from '../TippingButton'
 
 export interface CreatorProps extends HTMLProps<HTMLDivElement> {
-  creator?: ProfileData
+  creator?: SpaceData
   createDate?: number
   isLoading?: boolean
   creatorId?: string
@@ -60,10 +60,10 @@ export default function CreatorOverview({
       <div className={clsx('flex items-center', 'space-x-2.5')}>
         <ProfileImage
           className={clsx('w-8')}
-          isLoading={loadingChecker(usedCreator?.content?.avatar)}
+          isLoading={loadingChecker(usedCreator?.content?.image)}
           src={
-            usedCreator?.content?.avatar &&
-            getImageUrlFromIPFS(usedCreator?.content.avatar)
+            usedCreator?.content?.image &&
+            getImageUrlFromIPFS(usedCreator?.content.image)
           }
         />
         <div className={clsx('flex flex-col', 'flex-1')}>

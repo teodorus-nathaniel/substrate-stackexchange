@@ -90,8 +90,8 @@ export default function ProfileSection() {
         <div className={clsx('flex justify-between')}>
           <ProfileImage
             className='w-28 h-28'
-            isLoading={loadingChecker(content?.avatar)}
-            src={content?.avatar && getImageUrlFromIPFS(content.avatar)}
+            isLoading={loadingChecker(content?.image)}
+            src={content?.image && getImageUrlFromIPFS(content.image)}
           />
           <div className={clsx('mt-3')}>
             <div className={clsx('flex items-center', 'space-x-3')}>
@@ -150,8 +150,8 @@ export default function ProfileSection() {
         )}
         <FollowingFollowerCount
           isLoading={loadingChecker(data?.struct)}
-          followingCount={data?.struct.followingAccountsCount}
-          followerCount={data?.struct.followersCount}
+          followingCount={(data as any)?.struct?.followingAccountsCount}
+          followerCount={(data as any)?.struct?.followersCount}
           className={clsx('mt-')}
         />
         <Reputation address={address} className={clsx('text-sm')} />

@@ -3,8 +3,7 @@ import { useWalletContext } from '#/contexts/WalletContext'
 import subsocialConfig from '#/lib/config/subsocial-api'
 import { ApiPromise } from '@polkadot/api'
 import { Hash } from '@polkadot/types/interfaces'
-import { SubsocialIpfsApi } from '@subsocial/api'
-import { FlatSubsocialApi } from '@subsocial/api/flat-subsocial'
+import { SubsocialApi, SubsocialIpfsApi } from '@subsocial/api'
 import { useEffect, useRef } from 'react'
 import { useMutation, UseMutationResult, useQuery } from 'react-query'
 import {
@@ -15,9 +14,7 @@ import {
 } from '../common/base'
 import { MutationConfig, QueryConfig } from '../common/types'
 
-export type SubstrateApi = Awaited<
-  FlatSubsocialApi['subsocial']['substrate']['api']
->
+export type SubstrateApi = Awaited<SubsocialApi['substrateApi']>
 export type Transaction = ReturnType<ApiPromise['tx']['']['']>
 
 export const subsocialQueryWrapper = generateQueryWrapper(async () => null)
@@ -26,7 +23,7 @@ export function useSubsocialQuery<ReturnValue, Params>(
   params: { key: string; data: Params | null },
   func: (data: {
     params: Params
-    additionalData: FlatSubsocialApi
+    additionalData: SubsocialApi
   }) => Promise<ReturnValue>,
   config?: QueryConfig<any, any>,
   defaultConfig?: QueryConfig<ReturnValue, Params>
@@ -34,7 +31,7 @@ export function useSubsocialQuery<ReturnValue, Params>(
   const subsocialApi = useSubsocialApiContext()
   const mergedConfig = mergeQueryConfig(
     mergeQueryConfig(config, defaultConfig),
-    { enabled: !!(subsocialApi && (subsocialApi as any)._subsocial) }
+    { enabled: !!subsocialApi }
   )
   return useQuery(
     [params.key, params.data],
@@ -47,7 +44,7 @@ export function useSubsocialMutation<Param>(
   transactionGenerator: (
     params: Param,
     apis: {
-      subsocialApi: FlatSubsocialApi
+      subsocialApi: SubsocialApi
       ipfsApi: SubsocialIpfsApi
       substrateApi: SubstrateApi
     }
@@ -72,8 +69,8 @@ export function useSubsocialMutation<Param>(
       if (subsocialApiContext) resolve()
     })
     const subsocialApi = subsocialApiContext!
-    const substrateApi = await subsocialApi.subsocial.substrate.api
-    const ipfsApi = subsocialApi.subsocial.ipfs
+    const substrateApi = await subsocialApi.substrateApi
+    const ipfsApi = subsocialApi.ipfs
     return createTxAndSend(
       transactionGenerator,
       param,

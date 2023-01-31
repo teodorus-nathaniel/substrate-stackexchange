@@ -10,7 +10,7 @@ import { formatBalance, parseBalance } from '#/lib/helpers/chain'
 import useFormikWrapper from '#/lib/hooks/useFormikWrapper'
 import { useTransfer } from '#/services/all-chains/mutations'
 import { useGetTokenBalance } from '#/services/all-chains/queries'
-import { ProfileData } from '@subsocial/types/dto'
+import { SpaceData } from '@subsocial/api/types'
 import { truncateMiddle } from '@talisman-connect/ui'
 import clsx from 'clsx'
 import { BsCash } from 'react-icons/bs'
@@ -18,7 +18,7 @@ import { tippingForm } from './form/schema'
 
 export interface TippingModalProps extends ModalProps {
   dest: string
-  profile: ProfileData | undefined
+  profile: SpaceData | undefined
 }
 
 const options = Object.entries(chains).map<OptionType>(([token, { icon }]) => ({

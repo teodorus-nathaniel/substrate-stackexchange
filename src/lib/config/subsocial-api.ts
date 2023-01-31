@@ -8,9 +8,8 @@ const testnetSubsocialConfig = {
 }
 
 const mainnetSubsocialConfig = {
-  substrateNodeUrl: 'wss://rpc.subsocial.network',
-  offchainUrl: 'https://app.subsocial.network/offchain',
-  ipfsNodeUrl: 'https://app.subsocial.network/ipfs',
+  substrateNodeUrl: 'wss://para.subsocial.network',
+  ipfsNodeUrl: 'https://ipfs.subsocial.network',
 }
 
 const useTestnet = getUseTestnet()

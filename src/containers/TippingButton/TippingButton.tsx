@@ -1,7 +1,7 @@
 import Button, { ButtonProps } from '#/components/Button'
 import { useWalletContext } from '#/contexts/WalletContext'
 import { encodeAddress } from '#/lib/helpers/chain'
-import { ProfileData } from '@subsocial/types/dto'
+import { SpaceData } from '@subsocial/api/types'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { BsCash } from 'react-icons/bs'
@@ -9,7 +9,7 @@ import TippingModal from './TippingModal'
 
 export interface TippingButtonProps extends ButtonProps {
   dest: string
-  profile: ProfileData | undefined
+  profile: SpaceData | undefined
 }
 
 export default function TippingButton({

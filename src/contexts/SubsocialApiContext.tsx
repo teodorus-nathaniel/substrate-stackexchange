@@ -1,9 +1,8 @@
 import subsocialConfig from '#/lib/config/subsocial-api'
-import { newFlatSubsocialApi } from '@subsocial/api'
-import { FlatSubsocialApi } from '@subsocial/api/flat-subsocial'
+import { SubsocialApi } from '@subsocial/api'
 import { createContext, useContext, useEffect, useState } from 'react'
 
-export type SubsocialApiState = FlatSubsocialApi | null
+export type SubsocialApiState = SubsocialApi | null
 export const SubsocialApiContext = createContext<SubsocialApiState>(null)
 
 export const SubsocialApiContextProvider = ({
@@ -15,11 +14,8 @@ export const SubsocialApiContextProvider = ({
 
   useEffect(() => {
     async function connectToSubsocialApi() {
-      const api = await newFlatSubsocialApi({
+      const api = await SubsocialApi.create({
         ...subsocialConfig,
-        useServer: {
-          httpRequestMethod: 'get',
-        },
       })
       setSubsocialApi(api)
     }

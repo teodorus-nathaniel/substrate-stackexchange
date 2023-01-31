@@ -13,7 +13,7 @@ export function callIndexer<ReturnValue, Params>(
   document: DocumentNode,
   params: Params
 ) {
-  const res: Promise<ReturnValue> = request(indexingService, document, params)
+  const res: Promise<ReturnValue> = request(indexingService, document)
   return res
 }
 

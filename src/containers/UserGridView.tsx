@@ -1,11 +1,11 @@
 import { renderElementOrCustom } from '#/lib/helpers/renderer'
-import { ProfileData } from '@subsocial/types/dto'
+import { SpaceData } from '@subsocial/api/types'
 import clsx from 'clsx'
 import { HTMLProps } from 'react'
 import CreatorOverview from './PostDetail/CreatorOverview'
 
 export interface UserGridViewProps extends HTMLProps<HTMLDivElement> {
-  users: (ProfileData & { address: string })[]
+  users: (SpaceData & { address: string })[]
   isLoading?: boolean
   noDataNotice?: string | JSX.Element
   noticeClassName?: string

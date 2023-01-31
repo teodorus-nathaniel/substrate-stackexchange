@@ -1,6 +1,11 @@
-import { ReactionType } from '@subsocial/types/dto'
+import { ReactionType, SpaceData } from '@subsocial/api/types'
 
 // Important Types
+export interface Profile extends SpaceData {
+  followersCount: number
+  followedCount: number
+}
+
 export interface Reaction {
   created: {
     account: string

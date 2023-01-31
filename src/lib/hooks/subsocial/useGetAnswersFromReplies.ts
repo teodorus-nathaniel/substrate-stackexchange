@@ -1,4 +1,4 @@
-import { PostWithSomeDetails } from '@subsocial/types/dto'
+import { PostWithSomeDetails } from '@subsocial/api/types'
 import { useMemo } from 'react'
 
 export function useFilterAnswersAndComments(replies?: PostWithSomeDetails[]) {

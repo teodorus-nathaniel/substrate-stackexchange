@@ -6,13 +6,13 @@ import { DEFAULT_PROFILE_PIC } from '#/lib/constants/file'
 import { getImageUrlFromIPFS } from '#/lib/helpers/image-url-generator'
 import useIsCurrentUser from '#/lib/hooks/isCurrentUser'
 import { useGetProfile } from '#/services/subsocial/queries'
-import { ProfileData } from '@subsocial/types/dto'
+import { SpaceData } from '@subsocial/api/types'
 import { truncateMiddle } from '@talisman-connect/ui'
 import clsx from 'clsx'
 
 export interface UserProfileLinkProps extends LinkProps {
   isLoading?: boolean
-  profile?: ProfileData
+  profile?: SpaceData
   profileId?: string
 }
 
@@ -50,8 +50,8 @@ export default function UserProfileLink({
               aspectRatio='1:1'
               className='rounded-full'
               src={
-                usedProfile?.content?.avatar
-                  ? getImageUrlFromIPFS(usedProfile.content.avatar)
+                usedProfile?.content?.image
+                  ? getImageUrlFromIPFS(usedProfile.content.image)
                   : DEFAULT_PROFILE_PIC
               }
               alt='profile'

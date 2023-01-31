@@ -1,6 +1,6 @@
 import { useWalletContext } from '#/contexts/WalletContext'
 import { encodeAddress } from '#/lib/helpers/chain'
-import { ProfileData } from '@subsocial/types/dto'
+import { SpaceData } from '@subsocial/api/types'
 import queryClient from '../client'
 import { createQueryInvalidation } from '../common/base'
 import { QueryConfig } from '../common/types'
@@ -29,7 +29,7 @@ import {
 } from './types'
 
 const setProfilesQueryCache = (
-  profiles: (ProfileData & { address: string })[]
+  profiles: (SpaceData & { address: string })[]
 ) => {
   const promises = profiles.map((profile) => {
     return queryClient.setQueryData([getProfile, profile.address], profile)

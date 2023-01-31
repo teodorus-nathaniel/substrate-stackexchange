@@ -1,7 +1,7 @@
 import { DEFAULT_SPACE_PERMISSIONS } from '#/lib/constants/subsocial'
 import { encodeAddress } from '#/lib/helpers/chain'
 import { getSpaceId } from '#/lib/helpers/env'
-import { IpfsContent } from '@subsocial/types/substrate/classes'
+import { IpfsContent } from '@subsocial/api/substrate/wrappers'
 import { truncateMiddle } from '@talisman-connect/ui'
 import { MutationConfig } from '../common/types'
 import {
@@ -42,8 +42,6 @@ export function useCreateSpace(config?: MutationConfig<CreateSpacePayload>) {
       image: avatarCid,
     } as any)
     const tx = substrateApi.tx.spaces.createSpace(
-      null,
-      null,
       IpfsContent(spaceCid),
       DEFAULT_SPACE_PERMISSIONS
     ) as unknown as Transaction
@@ -55,7 +53,7 @@ export function useCreatePost(config?: MutationConfig<CreateQuestionPayload>) {
   return useSubsocialMutation(
     async (data, { ipfsApi, substrateApi }) => {
       const { title, body, tags } = data
-      const postCid = await ipfsApi.savePost({
+      const postCid = await ipfsApi.saveContent({
         title,
         body,
         tags,
@@ -89,18 +87,18 @@ export function useUpdateProfile(
       } else if (typeof avatar === 'string') {
         avatarCid = avatar
       }
-      const profileCid = await ipfsApi.savePost({
-        avatar: avatarCid,
+      const profileCid = await ipfsApi.saveContent({
+        image: avatarCid,
         name,
         about,
       } as any)
       let tx
       if (profileId) {
-        tx = substrateApi.tx.profiles.updateProfile({
+        tx = substrateApi.tx.spaces.updateSpace(profileId, {
           content: IpfsContent(profileCid),
         })
       } else {
-        tx = substrateApi.tx.profiles.createProfile(IpfsContent(profileCid))
+        tx = substrateApi.tx.spaces.createSpace(IpfsContent(profileCid), null)
       }
       return { tx: tx as unknown as Transaction, summary: `Updating Profile` }
     },
@@ -137,7 +135,11 @@ export function useUpsertReaction(
           )
         }
       } else {
-        tx = substrateApi.tx.reactions.createPostReaction(postId, kind)
+        if (kind) {
+          tx = substrateApi.tx.reactions.createPostReaction(postId, kind)
+        } else {
+          throw new Error('Reaction cannot be empty')
+        }
       }
       return { tx: tx as unknown as Transaction, summary }
     },
@@ -166,7 +168,7 @@ export function useCreateReply(config?: MutationConfig<CreateAnswerPayload>) {
         isAnswer,
       } as any)
       const tx = substrateApi.tx.posts.createPost(
-        getSpaceId(),
+        parseInt(getSpaceId()),
         { Comment: { parentId: null, rootPostId } },
         IpfsContent(postCid)
       ) as unknown as Transaction

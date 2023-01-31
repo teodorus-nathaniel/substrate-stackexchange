@@ -69,7 +69,7 @@ export default function EditProfilePage() {
     setValues({
       name: profile.content?.name ?? '',
       about: profile.content?.about ?? '',
-      avatar: profile.content?.avatar ?? '',
+      avatar: profile.content?.image ?? '',
     })
   }, [profile, setValues])
 

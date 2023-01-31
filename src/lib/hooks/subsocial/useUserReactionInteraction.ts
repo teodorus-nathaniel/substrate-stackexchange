@@ -1,6 +1,6 @@
 import { useUpsertReaction } from '#/services/subsocial/mutations'
 import { useGetUserReactionByPostId } from '#/services/subsocial/queries'
-import { ReactionType } from '@subsocial/types/dto'
+import { ReactionType } from '@subsocial/api/types'
 import { useRef } from 'react'
 
 export default function useUserReactionInteraction(

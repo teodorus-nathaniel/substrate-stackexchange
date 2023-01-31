@@ -1,4 +1,4 @@
-import { ReactionType } from '@subsocial/types/dto'
+import { ReactionType } from '@subsocial/api/types'
 import clsx from 'clsx'
 import { IconType } from 'react-icons'
 import { BsTriangle, BsTriangleFill } from 'react-icons/bs'
