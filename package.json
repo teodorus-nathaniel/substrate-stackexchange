@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "analyze": "set ANALYZE=true && yarn build",
+    "analyze": "ANALYZE=true yarn build",
     "start": "next start",
     "check-types": "tsc --noemit",
     "lint": "yarn run check-types && next lint",

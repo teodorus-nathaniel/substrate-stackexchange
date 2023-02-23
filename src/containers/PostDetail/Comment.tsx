@@ -77,7 +77,7 @@ export default function Comment({
           <Link
             variant='primary'
             className={clsx('font-bold')}
-            href={`/profile/${creator?.id}`}
+            href={`/profile/${creatorId}`}
           >
             {creator?.content?.name ?? truncateMiddle(creatorId)}
           </Link>
