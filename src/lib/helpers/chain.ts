@@ -11,7 +11,7 @@ export function encodeAddress(address: string | undefined) {
 }
 
 export function getBlockExplorerBlockInfoLink(rpc: string, blockHash: string) {
-  return `https://polkadot.js.org/apps/?${rpc}#/explorer/query/${blockHash}`
+  return `https://polkadot.js.org/apps/?rpc=${rpc}#/explorer/query/${blockHash}`
 }
 
 export function isValidAddress(address: string) {
